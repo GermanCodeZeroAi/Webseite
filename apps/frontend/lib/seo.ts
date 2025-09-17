@@ -45,6 +45,174 @@ const BASE_URL = 'https://germancodezero.ai';
 const DEFAULT_OG_IMAGE = '/og/default-black-gold.png';
 
 // i18n content
+// Service and pricing data for JSON-LD
+const SERVICES_DATA = {
+  de: {
+    services: [
+      {
+        name: 'E-Mail Orchestrierung',
+        description: 'Premium-E-Mail-Orchestrierung für Journeys, die öffnen, klicken, konvertieren – von Begrüßung bis Re-Engagement.',
+        category: 'Email',
+        benefits: ['Höhere Zustell- und Öffnungsraten', 'Dynamische Segmente ohne Mehraufwand', 'Compliance & Marken-konsistentes Design']
+      },
+      {
+        name: 'Telefonie-Orchestrierung',
+        description: 'Gesprächsfluss in Studio-Qualität – Routing, Aufzeichnung, Auswertung. Jeder Call sitzt.',
+        category: 'Telefonie',
+        benefits: ['Intelligentes Routing nach Intent & Priorität', 'Klarheit durch Aufzeichnung und Auswertung', 'Höhere Abschlussquote im Inbound/Outbound']
+      },
+      {
+        name: 'Bild-Orchestrierung',
+        description: 'Bildgenerierung und -optimierung für performante Creatives in jeder Journey-Phase.',
+        category: 'Bild',
+        benefits: ['Schnelle Variantenbildung für Tests', 'Markenkonforme Assets in Gold/Schwarz', 'Ladezeiten und CTR optimiert']
+      },
+      {
+        name: 'Video-Orchestrierung',
+        description: 'Video in Premium-Anmutung – Snippets, Demos, Stories. Bereitstellen, messen, skalieren.',
+        category: 'Video',
+        benefits: ['Schneller Schnitt & Untertitel automatisch', 'Personalisierte Intros/CTAs', 'Messbare Impact-Kurven je Kanal']
+      },
+      {
+        name: 'Musik-Orchestrierung',
+        description: 'Lizenzsichere Sound-Signaturen für Markenmomente, die bleiben.',
+        category: 'Musik',
+        benefits: ['Kuratierte Library für Premium-Marken', 'Rechte geklärt, global nutzbar', 'Konsistente akustische Identität']
+      },
+      {
+        name: 'Website-Orchestrierung',
+        description: 'High-performance-Sites in Gold/Schwarz – schnell, zugänglich, vertriebsstark.',
+        category: 'Webseiten',
+        benefits: ['Lighthouse-stark und SEO-ready', 'Modularer Aufbau, leicht pflegbar', 'Conversion-optimierte Templates']
+      }
+    ],
+    plans: [
+      {
+        name: 'Core Plan',
+        description: 'Starter baseline für SMEs',
+        priceCurrency: 'EUR',
+        billingCycle: 'monthly'
+      },
+      {
+        name: 'Growth Plan',
+        description: 'Erweiterte Funktionen für wachsende Unternehmen',
+        priceCurrency: 'EUR',
+        billingCycle: 'monthly'
+      },
+      {
+        name: 'Enterprise Plan',
+        description: 'Enterprise baseline mit erweiterten Kontrollen',
+        priceCurrency: 'EUR',
+        billingCycle: 'monthly'
+      }
+    ],
+    faq: [
+      {
+        question: 'Welche Leistungen bietet German Code Zero AI?',
+        answer: 'Wir bieten Premium B2B Services für Revenue- und Service-Orchestrierung in den Bereichen E-Mail, Telefonie, Bild, Video, Musik und Webseiten.'
+      },
+      {
+        question: 'Wie funktioniert die Preisgestaltung?',
+        answer: 'Wir bieten transparente Pläne (Core, Growth, Enterprise) mit monatlicher oder jährlicher Abrechnung. Alle Preise sind klar kalkuliert ohne versteckte Kosten.'
+      },
+      {
+        question: 'Ist die Lösung DSGVO-konform?',
+        answer: 'Ja, alle unsere Services sind vollständig DSGVO-konform und bieten umfassende Compliance-Features für den deutschen und europäischen Markt.'
+      },
+      {
+        question: 'Welche Branchen werden unterstützt?',
+        answer: 'Wir unterstützen SaaS, E-Commerce, Services und Finance mit branchenpräzisen Lösungen und vorkonfigurierten Playbooks.'
+      },
+      {
+        question: 'Wie schnell kann ich starten?',
+        answer: 'Mit unseren kuratierten Paketen können Sie in Tagen statt Wochen starten. Concierge-Onboarding ist inklusive.'
+      }
+    ]
+  },
+  en: {
+    services: [
+      {
+        name: 'Email Orchestration',
+        description: 'Premium email orchestration for journeys that open, click, convert—from welcome to re-engagement.',
+        category: 'Email',
+        benefits: ['Higher deliverability and open rates', 'Dynamic segments without extra ops', 'Compliance and brand-consistent design']
+      },
+      {
+        name: 'Telephony Orchestration',
+        description: 'Studio-grade call flows—routing, recording, analytics. Every call on point.',
+        category: 'Telephony',
+        benefits: ['Intent- and priority-based routing', 'Clarity via recordings and analytics', 'Higher conversion across inbound/outbound']
+      },
+      {
+        name: 'Image Orchestration',
+        description: 'Image generation and optimization for high-performing creatives in every journey stage.',
+        category: 'Image',
+        benefits: ['Rapid variant creation for testing', 'On-brand assets in gold/black', 'Optimized load time and CTR']
+      },
+      {
+        name: 'Video Orchestration',
+        description: 'Premium-grade video—snippets, demos, stories. Ship, measure, scale.',
+        category: 'Video',
+        benefits: ['Fast editing and auto-captions', 'Personalized intros/CTAs', 'Measurable impact per channel']
+      },
+      {
+        name: 'Music Orchestration',
+        description: 'License-safe sonic signatures for brand moments that stick.',
+        category: 'Music',
+        benefits: ['Curated library for premium brands', 'Rights cleared, globally usable', 'Consistent sonic identity']
+      },
+      {
+        name: 'Website Orchestration',
+        description: 'High-performance sites in gold/black—fast, accessible, sales-ready.',
+        category: 'Websites',
+        benefits: ['Strong Lighthouse and SEO-ready', 'Modular build, easy to maintain', 'Conversion-optimized templates']
+      }
+    ],
+    plans: [
+      {
+        name: 'Core Plan',
+        description: 'Starter baseline for SMEs',
+        priceCurrency: 'EUR',
+        billingCycle: 'monthly'
+      },
+      {
+        name: 'Growth Plan',
+        description: 'Enhanced features for growing businesses',
+        priceCurrency: 'EUR',
+        billingCycle: 'monthly'
+      },
+      {
+        name: 'Enterprise Plan',
+        description: 'Enterprise baseline with extended controls',
+        priceCurrency: 'EUR',
+        billingCycle: 'monthly'
+      }
+    ],
+    faq: [
+      {
+        question: 'What services does German Code Zero AI offer?',
+        answer: 'We provide Premium B2B Services for Revenue and Service Orchestration across Email, Telephony, Image, Video, Music, and Website domains.'
+      },
+      {
+        question: 'How does pricing work?',
+        answer: 'We offer transparent plans (Core, Growth, Enterprise) with monthly or annual billing. All pricing is clearly calculated with no hidden fees.'
+      },
+      {
+        question: 'Is the solution GDPR compliant?',
+        answer: 'Yes, all our services are fully GDPR compliant and offer comprehensive compliance features for the German and European markets.'
+      },
+      {
+        question: 'Which industries are supported?',
+        answer: 'We support SaaS, e-commerce, services, and finance with industry-precise solutions and preconfigured playbooks.'
+      },
+      {
+        question: 'How quickly can I get started?',
+        answer: 'With our curated packages, you can start in days instead of weeks. Concierge onboarding is included.'
+      }
+    ]
+  }
+};
+
 const CONTENT = {
   de: {
     organization: {
@@ -220,6 +388,7 @@ export function buildOpenGraph(page: PageType, locale: Locale, options?: { categ
  */
 export function buildSchema(page: PageType, locale: Locale, options?: { category?: string; industry?: string; modules?: string[] }): object {
   const content = CONTENT[locale];
+  const servicesData = SERVICES_DATA[locale];
   const localeCode = locale === 'de' ? 'de-DE' : 'en-US';
   
   const baseSchema = {
@@ -237,7 +406,19 @@ export function buildSchema(page: PageType, locale: Locale, options?: { category
           contactType: 'customer service',
           availableLanguage: [localeCode],
           areaServed: locale === 'de' ? 'DE' : 'US'
-        }
+        },
+        makesOffer: servicesData.services.map(service => ({
+          '@type': 'Offer',
+          name: service.name,
+          description: service.description,
+          category: service.category,
+          priceCurrency: 'EUR',
+          availability: 'https://schema.org/InStock',
+          seller: {
+            '@type': 'Organization',
+            name: content.organization.name
+          }
+        }))
       },
       {
         '@type': 'WebSite',
@@ -254,12 +435,27 @@ export function buildSchema(page: PageType, locale: Locale, options?: { category
     ]
   };
   
+  // Add FAQ schema for home and pricing pages
+  if (page === 'home' || page === 'pricing') {
+    baseSchema['@graph'].push({
+      '@type': 'FAQPage',
+      mainEntity: servicesData.faq.map(faq => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq.answer
+        }
+      }))
+    });
+  }
+  
   // Add page-specific schema
   const pageSchema = {
     '@type': 'WebPage',
     name: buildTitle(page, locale, options),
     description: buildMetaDescription(page, locale, options),
-    url: `${content.organization.url}/${page}`,
+    url: `${content.organization.url}/${page === 'home' ? '' : page}`,
     inLanguage: localeCode,
     isPartOf: {
       '@type': 'WebSite',
@@ -321,26 +517,82 @@ export function buildSchema(page: PageType, locale: Locale, options?: { category
     };
   }
   
+  // Add pricing page breadcrumbs
+  if (page === 'pricing') {
+    pageSchema['breadcrumb'] = {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: content.organization.url
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: locale === 'de' ? 'Preise' : 'Pricing',
+          item: `${content.organization.url}/pricing`
+        }
+      ]
+    };
+  }
+  
   // Add product schema for category pages
   if (page === 'category' && options?.category) {
-    baseSchema['@graph'].push({
-      '@type': 'Product',
-      name: `Premium ${options.category}`,
-      description: `${options.category} in Markenqualität – schneller, konsistenter, messbar.`,
-      brand: {
-        '@type': 'Brand',
-        name: content.organization.name
-      },
-      category: options.category,
-      offers: {
-        '@type': 'Offer',
-        priceCurrency: 'EUR',
-        availability: 'https://schema.org/InStock',
-        seller: {
-          '@type': 'Organization',
+    const categoryService = servicesData.services.find(s => 
+      s.category.toLowerCase() === options.category?.toLowerCase()
+    );
+    
+    if (categoryService) {
+      baseSchema['@graph'].push({
+        '@type': 'Product',
+        name: categoryService.name,
+        description: categoryService.description,
+        brand: {
+          '@type': 'Brand',
           name: content.organization.name
+        },
+        category: categoryService.category,
+        offers: {
+          '@type': 'Offer',
+          priceCurrency: 'EUR',
+          availability: 'https://schema.org/InStock',
+          seller: {
+            '@type': 'Organization',
+            name: content.organization.name
+          }
         }
-      }
+      });
+    }
+  }
+  
+  // Add pricing offers for pricing page
+  if (page === 'pricing') {
+    servicesData.plans.forEach(plan => {
+      baseSchema['@graph'].push({
+        '@type': 'Product',
+        name: plan.name,
+        description: plan.description,
+        brand: {
+          '@type': 'Brand',
+          name: content.organization.name
+        },
+        offers: {
+          '@type': 'Offer',
+          name: plan.name,
+          priceCurrency: plan.priceCurrency,
+          availability: 'https://schema.org/InStock',
+          priceSpecification: {
+            '@type': 'UnitPriceSpecification',
+            billingIncrement: plan.billingCycle
+          },
+          seller: {
+            '@type': 'Organization',
+            name: content.organization.name
+          }
+        }
+      });
     });
   }
   
