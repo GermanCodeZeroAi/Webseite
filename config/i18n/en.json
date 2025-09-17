@@ -7,5 +7,18 @@
   "cta": {
     "primary": "Get a demo",
     "secondary": "Talk to sales"
+  },
+  "consent": {
+    "banner": {
+      "title": "Privacy Settings",
+      "description": "We use cookies and similar technologies to provide you with the best user experience, improve our website and display relevant content. You can adjust your settings at any time.",
+      "acceptAll": "Accept All",
+      "rejectAll": "Reject All",
+      "customize": "Customize Settings",
+      "privacy": "Privacy Policy",
+      "statusAccepted": "All cookies have been accepted",
+      "statusRejected": "All cookies have been rejected",
+      "statusCustomized": "Cookie settings have been customized"
+    }
   }
 }

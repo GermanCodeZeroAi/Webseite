@@ -7,5 +7,18 @@
   "cta": {
     "primary": "Demo anfordern",
     "secondary": "Mit dem Vertrieb sprechen"
+  },
+  "consent": {
+    "banner": {
+      "title": "Datenschutz-Einstellungen",
+      "description": "Wir verwenden Cookies und ähnliche Technologien, um Ihnen die bestmögliche Nutzererfahrung zu bieten, unsere Website zu verbessern und relevante Inhalte anzuzeigen. Sie können Ihre Einstellungen jederzeit anpassen.",
+      "acceptAll": "Alle akzeptieren",
+      "rejectAll": "Alle ablehnen",
+      "customize": "Einstellungen anpassen",
+      "privacy": "Datenschutzerklärung",
+      "statusAccepted": "Alle Cookies wurden akzeptiert",
+      "statusRejected": "Alle Cookies wurden abgelehnt",
+      "statusCustomized": "Cookie-Einstellungen wurden angepasst"
+    }
   }
 }
