@@ -65,5 +65,67 @@
         "Onboarding in days, not weeks."
       ]
     }
+  },
+  "solutions": {
+    "eco": {
+      "h1": "E‑commerce: More revenue per visit—automated, on‑brand",
+      "p1": "Increase conversion and order value with personalized journeys that orchestrate channels and reduce friction.",
+      "p2": "From discovery to checkout: playbooks for merchandising, support, and retention deliver measurable KPIs—without custom overhead.",
+      "faqs": [
+        {
+          "q": "How does this improve my conversion rate?",
+          "a": "By using dynamic content, A/B variants, and targeted triggers we reduce drop‑offs and lift add‑to‑cart and checkout completion—measured by clear KPIs."
+        },
+        {
+          "q": "Does it work with my commerce stack?",
+          "a": "We support common commerce stacks via standard interfaces and files. Scope and sequencing of integrations are defined collaboratively."
+        },
+        {
+          "q": "What about returns and support?",
+          "a": "Predefined flows for self‑service and assisted contact minimize workload while keeping satisfaction high; escalations follow a clear path."
+        }
+      ],
+      "cta": "Book e‑commerce demo"
+    },
+    "mfg": {
+      "h1": "Manufacturing: Less downtime, higher quality—digital at the shopfloor",
+      "p1": "Standardized workflows support shift handovers, incident logging, and quality documentation—more speed, fewer errors.",
+      "p2": "Multilingual assistants and routing clarify ownership and deliver measurable productivity gains.",
+      "faqs": [
+        {
+          "q": "How does it match my production lines?",
+          "a": "Playbooks are tailored to roles, equipment, and sites without changing the core—updates stay simple."
+        },
+        {
+          "q": "Can I connect existing systems?",
+          "a": "Yes, via standard interfaces and file imports. Scope and priorities of integrations are defined together."
+        },
+        {
+          "q": "Is it usable offline or on‑prem?",
+          "a": "Designed for plant‑adjacent environments; operating models are agreed per project."
+        }
+      ],
+      "cta": "View manufacturing playbooks"
+    },
+    "fin": {
+      "h1": "Financial Services: Compliance‑ready automation for higher conversion",
+      "p1": "Accelerate applications, advice, and communications—with transparent processes and clear governance.",
+      "p2": "Content is created and approved consistently; reporting and audit trails support reviews.",
+      "faqs": [
+        {
+          "q": "How do you ensure compliance?",
+          "a": "Via policies, approval stages, and logging. Specific constraints (e.g., wording, disclaimers) are configured per customer."
+        },
+        {
+          "q": "How do you handle sensitive data?",
+          "a": "Only necessary data is processed; safeguards align to industry standards. See the public privacy notice for details."
+        },
+        {
+          "q": "Does it work across channels?",
+          "a": "Yes. Templates and journeys deliver consistent communications across email, web, and other channels."
+        }
+      ],
+      "cta": "Request finance demo"
+    }
   }
 }

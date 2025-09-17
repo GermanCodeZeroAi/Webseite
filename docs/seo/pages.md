@@ -255,3 +255,40 @@ EN:
 - Intro: Let’s talk impact, not just features.
 - Options: Request a demo, discuss your use case, get a quote.
 - Compliance: GDPR‑ready, NDA on request.
+
+---
+
+## Industry i18n keys (DE/EN)
+
+The following public-safe keys are available in `config/i18n/de.json` and `config/i18n/en.json` under the `solutions` namespace.
+
+- E‑Commerce — `solutions.eco.*`
+  - `solutions.eco.h1`: Page H1
+  - `solutions.eco.p1`: Short paragraph (benefit/outcome)
+  - `solutions.eco.p2`: Short paragraph (benefit/outcome)
+  - `solutions.eco.faqs[0].q` / `.a`: FAQ 1 question/answer
+  - `solutions.eco.faqs[1].q` / `.a`: FAQ 2 question/answer
+  - `solutions.eco.faqs[2].q` / `.a`: FAQ 3 question/answer
+  - `solutions.eco.cta`: Primary CTA label
+
+- Manufacturing — `solutions.mfg.*`
+  - `solutions.mfg.h1`: Page H1
+  - `solutions.mfg.p1`: Short paragraph (benefit/outcome)
+  - `solutions.mfg.p2`: Short paragraph (benefit/outcome)
+  - `solutions.mfg.faqs[0].q` / `.a`: FAQ 1 question/answer
+  - `solutions.mfg.faqs[1].q` / `.a`: FAQ 2 question/answer
+  - `solutions.mfg.faqs[2].q` / `.a`: FAQ 3 question/answer
+  - `solutions.mfg.cta`: Primary CTA label
+
+- Financial Services — `solutions.fin.*`
+  - `solutions.fin.h1`: Page H1
+  - `solutions.fin.p1`: Short paragraph (benefit/outcome)
+  - `solutions.fin.p2`: Short paragraph (benefit/outcome)
+  - `solutions.fin.faqs[0].q` / `.a`: FAQ 1 question/answer
+  - `solutions.fin.faqs[1].q` / `.a`: FAQ 2 question/answer
+  - `solutions.fin.faqs[2].q` / `.a`: FAQ 3 question/answer
+  - `solutions.fin.cta`: Primary CTA label
+
+Notes:
+- Keys are mirrored in DE/EN with identical structure.
+- Copy is public‑safe and free of internal implementation details.

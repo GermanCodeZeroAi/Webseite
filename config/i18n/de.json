@@ -65,5 +65,67 @@
         "Onboarding in Tagen statt Wochen."
       ]
     }
+  },
+  "solutions": {
+    "eco": {
+      "h1": "E‑Commerce: Mehr Umsatz pro Besuch – automatisiert, markenkonform",
+      "p1": "Steigern Sie Conversion und Warenkorbwert mit personalisierten Journeys, die Kanäle orchestrieren und Reibung minimieren.",
+      "p2": "Von Produktsuche bis Checkout: Playbooks für Merchandising, Support und Retention liefern messbare KPIs – ohne Custom‑Overhead.",
+      "faqs": [
+        {
+          "q": "Wie verbessert die Lösung meine Conversion‑Rate?",
+          "a": "Durch dynamische Inhalte, A/B‑Varianten und gezielte Trigger senken wir Drop‑offs und erhöhen Add‑to‑Cart und Checkout‑Abschluss – gemessen an klaren KPIs."
+        },
+        {
+          "q": "Funktioniert das mit meinem Shop‑System?",
+          "a": "Wir unterstützen gängige Shop‑Stacks über standardisierte Schnittstellen und Files. Umfang und Reihenfolge der Anbindung werden im Projekt gemeinsam definiert."
+        },
+        {
+          "q": "Was ist mit Retouren und Support?",
+          "a": "Vordefinierte Flows für Self‑Service und Kontakt minimieren Aufwand und halten die Zufriedenheit hoch; Eskalationen laufen geordnet."
+        }
+      ],
+      "cta": "E‑Commerce‑Demo buchen"
+    },
+    "mfg": {
+      "h1": "Fertigung: Weniger Stillstand, bessere Qualität – digital am Shopfloor",
+      "p1": "Standardisierte Workflows unterstützen Schichtübergaben, Störungsmeldungen und Qualitätsdokumentation – mehr Tempo, weniger Fehler.",
+      "p2": "Multilinguale Assistenten und Routing sorgen für klare Zuständigkeiten und messbare Produktivitätsgewinne.",
+      "faqs": [
+        {
+          "q": "Wie passt sich die Lösung an meine Linien an?",
+          "a": "Playbooks werden an Rollen, Anlagen und Standorte angepasst, ohne den Kern zu verändern – so bleiben Updates einfach."
+        },
+        {
+          "q": "Kann ich bestehende Systeme einbinden?",
+          "a": "Ja, über standardisierte Schnittstellen und Dateiimporte. Umfang und Prioritäten der Anbindung werden gemeinsam festgelegt."
+        },
+        {
+          "q": "Ist das offline bzw. werksnah nutzbar?",
+          "a": "Die Lösung ist für werksnahe Umgebungen konzipiert; Betriebsmodelle werden projektbezogen vereinbart."
+        }
+      ],
+      "cta": "Fertigungs‑Playbooks ansehen"
+    },
+    "fin": {
+      "h1": "Financial Services: Compliance‑sichere Automatisierung für mehr Abschlussquote",
+      "p1": "Beschleunigen Sie Anträge, Beratung und Kommunikation – mit nachvollziehbaren Prozessen und klarer Governance.",
+      "p2": "Inhalte werden konsistent erstellt und freigegeben; Reporting und Audit‑Trails unterstützen Prüfungen.",
+      "faqs": [
+        {
+          "q": "Wie stellen Sie Compliance sicher?",
+          "a": "Durch Richtlinien, Freigabestufen und Protokollierung. Konkrete Vorgaben (z. B. Formulierungen, Disclaimer) werden kundenindividuell hinterlegt."
+        },
+        {
+          "q": "Wie gehen Sie mit sensiblen Daten um?",
+          "a": "Es werden nur notwendige Daten verarbeitet; Schutzmaßnahmen entsprechen gängigen Standards. Details stehen in der öffentlichen Datenschutzerklärung."
+        },
+        {
+          "q": "Eignet sich das für mehrere Kanäle?",
+          "a": "Ja. Vorlagen und Journeys liefern konsistente Kommunikation über E‑Mail, Web und weitere Kanäle."
+        }
+      ],
+      "cta": "Finanz‑Demo anfragen"
+    }
   }
 }
