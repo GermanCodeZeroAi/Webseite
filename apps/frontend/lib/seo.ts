@@ -225,6 +225,18 @@ const CONTENT = {
         'https://x.com/germancodezeroai'
       ]
     },
+    hero: {
+      headline: 'Mehr Umsatz. Weniger Reibung.',
+      subheadline: 'Orchestrieren Sie Revenue- und Service-Prozesse Ende‑zu‑Ende – mit Premium-Erlebnis, konsistenten Journeys und planbarem Wachstum.',
+      bullets: [
+        'Schnellere Zyklen: von Anfrage bis Abschluss in Rekordzeit',
+        'Konsistente Qualität: jeder Touchpoint sitzt',
+        'Skalierbares Wachstum: mehr Pipeline, weniger Operatives'
+      ],
+      ctaText: 'Jetzt konfigurieren',
+      ctaAriaLabel: 'Zum Konfigurator wechseln',
+      benefitsAriaLabel: 'Hauptvorteile'
+    },
     pages: {
       home: {
         title: 'Autonomy Grid – Mehr Umsatz. Weniger Reibung. Premium B2B.',
@@ -274,6 +286,18 @@ const CONTENT = {
         'https://linkedin.com/company/germancodezeroai',
         'https://x.com/germancodezeroai'
       ]
+    },
+    hero: {
+      headline: 'More revenue. Less friction.',
+      subheadline: 'Orchestrate your revenue and service processes end‑to‑end—with premium experience, consistent journeys, and predictable growth.',
+      bullets: [
+        'Faster cycles: request to close in record time',
+        'Consistent quality: every touchpoint on point',
+        'Scalable growth: more pipeline, less busywork'
+      ],
+      ctaText: 'Configure now',
+      ctaAriaLabel: 'Go to configurator',
+      benefitsAriaLabel: 'Key benefits'
     },
     pages: {
       home: {
@@ -391,7 +415,7 @@ export function buildSchema(page: PageType, locale: Locale, options?: { category
   const servicesData = SERVICES_DATA[locale];
   const localeCode = locale === 'de' ? 'de-DE' : 'en-US';
   
-  const baseSchema = {
+  const baseSchema: any = {
     '@context': 'https://schema.org',
     '@graph': [
       {
@@ -451,7 +475,7 @@ export function buildSchema(page: PageType, locale: Locale, options?: { category
   }
   
   // Add page-specific schema
-  const pageSchema = {
+  const pageSchema: any = {
     '@type': 'WebPage',
     name: buildTitle(page, locale, options),
     description: buildMetaDescription(page, locale, options),
@@ -675,6 +699,13 @@ export function getPricingSeo(locale: Locale): SEOData {
  */
 export function getContactSeo(locale: Locale): SEOData {
   return getPageSeo('contact', locale);
+}
+
+/**
+ * Get hero content for localization
+ */
+export function getHeroContent(locale: Locale) {
+  return CONTENT[locale].hero;
 }
 
 /**

@@ -64,11 +64,6 @@ export default function MarketingPage({ params }: PageProps) {
   const locale: Locale = (params.locale as Locale) || 'de';
   const seoData = getPageSeo('home', locale);
 
-  const handleCtaClick = () => {
-    // Navigate to shop configurator
-    window.location.href = '/shop/configurator';
-  };
-
   return (
     <>
       {/* JSON-LD Structured Data */}
@@ -83,7 +78,6 @@ export default function MarketingPage({ params }: PageProps) {
       <main role="main">
         <Hero3D 
           locale={locale}
-          onCtaClick={handleCtaClick}
         />
         
         {/* Additional sections can be added here */}

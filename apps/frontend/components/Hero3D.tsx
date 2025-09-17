@@ -13,54 +13,24 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { buildTitle, buildMetaDescription, type Locale } from '../lib/seo';
+import { useRouter } from 'next/navigation';
+import { getHeroContent, type Locale } from '../lib/seo';
 
 interface Hero3DProps {
   locale: Locale;
   onCtaClick?: () => void;
 }
 
-interface HeroContent {
-  headline: string;
-  subheadline: string;
-  bullets: string[];
-  ctaText: string;
-  ctaAriaLabel: string;
-}
-
-const HERO_CONTENT = {
-  de: {
-    headline: 'Mehr Umsatz. Weniger Reibung.',
-    subheadline: 'Orchestrieren Sie Revenue- und Service-Prozesse Ende‑zu‑Ende – mit Premium-Erlebnis, konsistenten Journeys und planbarem Wachstum.',
-    bullets: [
-      'Schnellere Zyklen: von Anfrage bis Abschluss in Rekordzeit',
-      'Konsistente Qualität: jeder Touchpoint sitzt',
-      'Skalierbares Wachstum: mehr Pipeline, weniger Operatives'
-    ],
-    ctaText: 'Jetzt konfigurieren',
-    ctaAriaLabel: 'Zum Autonomy Grid Konfigurator wechseln'
-  },
-  en: {
-    headline: 'More revenue. Less friction.',
-    subheadline: 'Orchestrate your revenue and service processes end‑to‑end—with premium experience, consistent journeys, and predictable growth.',
-    bullets: [
-      'Faster cycles: request to close in record time',
-      'Consistent quality: every touchpoint on point',
-      'Scalable growth: more pipeline, less busywork'
-    ],
-    ctaText: 'Configure now',
-    ctaAriaLabel: 'Go to Autonomy Grid Configurator'
-  }
-} as const;
 
 export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
+  const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Get localized content
-  const content: HeroContent = useMemo(() => HERO_CONTENT[locale], [locale]);
+  // Get localized content from i18n
+  const content = useMemo(() => getHeroContent(locale), [locale]);
 
   // Check for reduced motion preference
   useEffect(() => {
@@ -216,8 +186,8 @@ export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
     if (onCtaClick) {
       onCtaClick();
     } else {
-      // Use window.location for external navigation or when Next.js router is not available
-      window.location.href = '/shop/configurator';
+      // Use Next.js router for client-side navigation
+      router.push('/shop/configurator');
     }
   };
 
@@ -268,7 +238,7 @@ export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
             <ul 
               className="hero-3d__bullets"
               role="list"
-              aria-label={locale === 'de' ? 'Hauptvorteile' : 'Key benefits'}
+              aria-label={content.benefitsAriaLabel}
             >
               {content.bullets.map((bullet, index) => (
                 <li 
