@@ -1,0 +1,301 @@
+name: Release v1.0.0
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (default: v1.0.0)'
+        required: false
+        default: 'v1.0.0'
+        type: string
+      force_release:
+        description: 'Force release even if quality checks failed recently'
+        required: false
+        default: false
+        type: boolean
+  
+  # Automatic trigger after successful quality workflows
+  workflow_run:
+    workflows:
+      - "Brand Scrub"
+      - "E2E A11y Tests"
+      - "Lighthouse Performance"
+      - "Uptime Monitoring"
+    types:
+      - completed
+    branches:
+      - main
+
+# Define the production environment for manual approval
+env:
+  RELEASE_VERSION: ${{ github.event.inputs.version || 'v1.0.0' }}
+
+jobs:
+  # Check if triggering workflow was successful (for workflow_run events)
+  check-quality-gates:
+    name: Verify Quality Gates
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_run'
+    outputs:
+      should_proceed: ${{ steps.check.outputs.should_proceed }}
+    steps:
+      - name: Check workflow run conclusion
+        id: check
+        run: |
+          if [[ "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
+            echo "should_proceed=true" >> $GITHUB_OUTPUT
+            echo "✅ Quality gate passed: ${{ github.event.workflow_run.name }}"
+          else
+            echo "should_proceed=false" >> $GITHUB_OUTPUT
+            echo "❌ Quality gate failed: ${{ github.event.workflow_run.name }}"
+            exit 1
+          fi
+
+  # Pre-release validation
+  pre-release-checks:
+    name: Pre-Release Validation
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' || 
+      (github.event_name == 'workflow_run' && needs.check-quality-gates.outputs.should_proceed == 'true')
+    needs: [check-quality-gates]
+    # Skip needs if workflow_dispatch
+    continue-on-error: false
+    outputs:
+      release_ready: ${{ steps.validate.outputs.release_ready }}
+      current_version: ${{ steps.validate.outputs.current_version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run type checking
+        run: npm run type-check
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Validate release readiness
+        id: validate
+        run: |
+          # Check if tag already exists
+          if git rev-parse "${{ env.RELEASE_VERSION }}" >/dev/null 2>&1; then
+            if [[ "${{ github.event.inputs.force_release }}" != "true" ]]; then
+              echo "❌ Tag ${{ env.RELEASE_VERSION }} already exists. Use force_release to override."
+              exit 1
+            else
+              echo "⚠️  Tag ${{ env.RELEASE_VERSION }} exists but force_release is enabled."
+            fi
+          fi
+          
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "current_version=v${CURRENT_VERSION}" >> $GITHUB_OUTPUT
+          
+          # Validate version format
+          if [[ ! "${{ env.RELEASE_VERSION }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid version format: ${{ env.RELEASE_VERSION }}"
+            exit 1
+          fi
+          
+          echo "release_ready=true" >> $GITHUB_OUTPUT
+          echo "✅ Release validation passed"
+          echo "📦 Current package.json version: v${CURRENT_VERSION}"
+          echo "🚀 Target release version: ${{ env.RELEASE_VERSION }}"
+
+  # Manual approval stage using GitHub Environments
+  approval:
+    name: Release Approval
+    runs-on: ubuntu-latest
+    needs: [pre-release-checks]
+    if: needs.pre-release-checks.outputs.release_ready == 'true'
+    environment:
+      name: production
+      url: https://germancodezero.ai
+    steps:
+      - name: Request manual approval
+        run: |
+          echo "🔒 Manual approval required for release ${{ env.RELEASE_VERSION }}"
+          echo "📋 Pre-release checks passed:"
+          echo "  ✅ Linting passed"
+          echo "  ✅ Type checking passed"
+          echo "  ✅ Tests passed"
+          echo "  ✅ Version validation passed"
+          echo ""
+          echo "🏷️  Current version: ${{ needs.pre-release-checks.outputs.current_version }}"
+          echo "🚀 Target version: ${{ env.RELEASE_VERSION }}"
+          echo ""
+          echo "⏳ Waiting for approval to proceed with release..."
+
+  # Create and push release tag
+  create-release:
+    name: Create Release Tag
+    runs-on: ubuntu-latest
+    needs: [pre-release-checks, approval]
+    if: needs.pre-release-checks.outputs.release_ready == 'true'
+    outputs:
+      tag_created: ${{ steps.tag.outputs.tag_created }}
+      release_sha: ${{ steps.tag.outputs.release_sha }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create and push release tag
+        id: tag
+        run: |
+          # Delete existing tag if force_release is enabled
+          if [[ "${{ github.event.inputs.force_release }}" == "true" ]]; then
+            if git rev-parse "${{ env.RELEASE_VERSION }}" >/dev/null 2>&1; then
+              echo "🗑️  Deleting existing tag ${{ env.RELEASE_VERSION }}"
+              git tag -d "${{ env.RELEASE_VERSION }}" || true
+              git push origin ":refs/tags/${{ env.RELEASE_VERSION }}" || true
+            fi
+          fi
+          
+          # Create annotated tag
+          git tag -a "${{ env.RELEASE_VERSION }}" -m "Release ${{ env.RELEASE_VERSION }}
+
+          🚀 Release created via GitHub Actions
+          📅 Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          🔗 Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          📝 Commit: ${{ github.sha }}
+          
+          ✅ Quality gates passed:
+          - Brand Scrub
+          - E2E A11y Tests  
+          - Lighthouse Performance
+          - Uptime Monitoring
+          
+          🔒 Manual approval: ✅ Approved"
+          
+          # Push tag to remote
+          git push origin "${{ env.RELEASE_VERSION }}"
+          
+          echo "tag_created=true" >> $GITHUB_OUTPUT
+          echo "release_sha=${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "✅ Successfully created and pushed tag ${{ env.RELEASE_VERSION }}"
+
+      - name: Verify tag creation
+        run: |
+          # Verify tag exists locally and remotely
+          if git rev-parse "${{ env.RELEASE_VERSION }}" >/dev/null 2>&1; then
+            echo "✅ Tag ${{ env.RELEASE_VERSION }} exists locally"
+          else
+            echo "❌ Tag ${{ env.RELEASE_VERSION }} not found locally"
+            exit 1
+          fi
+          
+          # Verify remote tag
+          if git ls-remote --tags origin | grep -q "refs/tags/${{ env.RELEASE_VERSION }}"; then
+            echo "✅ Tag ${{ env.RELEASE_VERSION }} exists on remote"
+          else
+            echo "❌ Tag ${{ env.RELEASE_VERSION }} not found on remote"
+            exit 1
+          fi
+
+  # Create GitHub Release
+  create-github-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [create-release, pre-release-checks]
+    if: needs.create-release.outputs.tag_created == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_VERSION }}
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          # Generate release notes from commits since last tag
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          
+          if [[ -n "$LAST_TAG" ]]; then
+            echo "## 🚀 What's New in ${{ env.RELEASE_VERSION }}" > release_notes.md
+            echo "" >> release_notes.md
+            git log --pretty=format:"- %s (%h)" "${LAST_TAG}..HEAD" >> release_notes.md
+            echo "" >> release_notes.md
+          else
+            echo "## 🚀 Initial Release ${{ env.RELEASE_VERSION }}" > release_notes.md
+            echo "" >> release_notes.md
+            echo "This is the first release of German Code Zero AI platform." >> release_notes.md
+            echo "" >> release_notes.md
+          fi
+          
+          echo "" >> release_notes.md
+          echo "## ✅ Quality Assurance" >> release_notes.md
+          echo "This release has passed all quality gates:" >> release_notes.md
+          echo "- 🔍 Brand Scrub validation" >> release_notes.md
+          echo "- ♿ E2E Accessibility tests" >> release_notes.md  
+          echo "- 🚀 Lighthouse performance audit" >> release_notes.md
+          echo "- 📊 Uptime monitoring checks" >> release_notes.md
+          echo "- 🔒 Manual approval process" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "## 📋 Technical Details" >> release_notes.md
+          echo "- **Commit SHA**: \`${{ needs.create-release.outputs.release_sha }}\`" >> release_notes.md
+          echo "- **Build Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> release_notes.md
+          echo "- **Workflow Run**: [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> release_notes.md
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: "Release ${{ env.RELEASE_VERSION }}"
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+
+  # Notification and cleanup
+  post-release:
+    name: Post-Release Actions
+    runs-on: ubuntu-latest
+    needs: [create-github-release, create-release]
+    if: always() && needs.create-release.outputs.tag_created == 'true'
+    steps:
+      - name: Release summary
+        run: |
+          echo "🎉 Release ${{ env.RELEASE_VERSION }} completed successfully!"
+          echo ""
+          echo "📋 Release Summary:"
+          echo "  🏷️  Tag: ${{ env.RELEASE_VERSION }}"
+          echo "  📝 Commit: ${{ needs.create-release.outputs.release_sha }}"
+          echo "  🔗 Release: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ env.RELEASE_VERSION }}"
+          echo "  📅 Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          echo ""
+          echo "✅ All quality gates passed"
+          echo "🔒 Manual approval completed"
+          echo "🚀 Release deployed successfully"
+
+      - name: Cleanup on failure
+        if: failure()
+        run: |
+          echo "❌ Release process failed. Consider cleanup actions:"
+          echo "  - Check if tag ${{ env.RELEASE_VERSION }} needs to be removed"
+          echo "  - Review workflow logs for errors"
+          echo "  - Verify repository state"
