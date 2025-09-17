@@ -1,0 +1,228 @@
+name: CD Backend - Deploy to Fly.io/Hetzner
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/backend/**'
+      - '.github/workflows/cd-backend.yml'
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.11'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/backend
+
+jobs:
+  # Build and test backend
+  build-and-test:
+    name: Build and Test Backend
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f apps/backend/requirements.txt ]; then pip install -r apps/backend/requirements.txt; fi
+          if [ -f apps/backend/requirements-dev.txt ]; then pip install -r apps/backend/requirements-dev.txt; fi
+
+      - name: Run linting
+        run: |
+          if [ -d apps/backend/src ]; then
+            pip install flake8
+            flake8 apps/backend/src
+          fi
+
+      - name: Run type checking
+        run: |
+          if [ -d apps/backend/src ]; then
+            pip install mypy
+            mypy apps/backend/src || echo "MyPy checks completed with warnings"
+          fi
+
+      - name: Run tests
+        run: |
+          if [ -d apps/backend ]; then
+            pip install pytest pytest-cov
+            if [ -d apps/backend/tests ]; then
+              pytest apps/backend/tests --cov=apps/backend/src
+            else
+              echo "No backend tests found, skipping pytest"
+            fi
+          fi
+
+  # Build Docker image
+  build-image:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    outputs:
+      image: ${{ steps.image.outputs.image }}
+      digest: ${{ steps.build.outputs.digest }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: ./apps/backend
+          file: ./apps/backend/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Output image
+        id: image
+        run: |
+          echo "image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}" >> $GITHUB_OUTPUT
+
+  # Deploy to Fly.io
+  deploy-fly:
+    name: Deploy to Fly.io
+    runs-on: ubuntu-latest
+    needs: build-image
+    environment: production
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Fly CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io
+        run: |
+          cd apps/backend
+          flyctl deploy --remote-only --image ${{ needs.build-image.outputs.image }}
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  # Alternative: Deploy to Hetzner Cloud
+  deploy-hetzner:
+    name: Deploy to Hetzner Cloud
+    runs-on: ubuntu-latest
+    needs: build-image
+    environment: production
+    if: github.ref == 'refs/heads/main' && false  # Disabled by default, enable by changing to true
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Hetzner Cloud
+        run: |
+          echo "Deploying to Hetzner Cloud..."
+          # Add your Hetzner deployment script here
+          # This could involve:
+          # 1. SSH into your Hetzner server
+          # 2. Pull the new Docker image
+          # 3. Update docker-compose.yml or Kubernetes manifests
+          # 4. Restart services
+        env:
+          HETZNER_API_TOKEN: ${{ secrets.HETZNER_API_TOKEN }}
+          HETZNER_SERVER_IP: ${{ secrets.HETZNER_SERVER_IP }}
+          HETZNER_SSH_KEY: ${{ secrets.HETZNER_SSH_KEY }}
+
+  # Health check after deployment
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+    needs: [deploy-fly]  # Add deploy-hetzner if using Hetzner
+    if: always() && needs.deploy-fly.result == 'success'
+    
+    steps:
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Health check
+        run: |
+          # Replace with your actual backend health check endpoint
+          curl -f https://your-backend-app.fly.dev/health || exit 1
+          echo "✅ Backend health check passed!"
+
+      - name: Run API tests
+        run: |
+          # Add API integration tests here
+          echo "Running API integration tests..."
+          # Example: newman run postman-collection.json
+
+  # Database migration (if needed)
+  migrate-database:
+    name: Database Migration
+    runs-on: ubuntu-latest
+    needs: build-image
+    environment: production
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Run database migrations
+        run: |
+          # Add your database migration commands here
+          echo "Running database migrations..."
+          # Example for Django: python manage.py migrate
+          # Example for Alembic: alembic upgrade head
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+  # Notify deployment status
+  notify:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [deploy-fly, health-check]  # Add deploy-hetzner if using
+    if: always()
+    
+    steps:
+      - name: Notify success
+        if: needs.deploy-fly.result == 'success' && needs.health-check.result == 'success'
+        run: |
+          echo "✅ Backend deployment successful!"
+          echo "🚀 API available at: https://your-backend-app.fly.dev"
+
+      - name: Notify failure
+        if: needs.deploy-fly.result == 'failure' || needs.health-check.result == 'failure'
+        run: |
+          echo "❌ Backend deployment failed!"
+          echo "Check the logs for details."

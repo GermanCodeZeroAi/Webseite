@@ -1,0 +1,136 @@
+name: CD Frontend - Deploy to Vercel
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/frontend/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/cd-frontend.yml'
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  deploy-frontend:
+    name: Deploy Frontend to Vercel
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run type checking
+        run: npm run type-check
+
+      - name: Build project
+        run: npm run build
+        env:
+          # Add any build-time environment variables here
+          NODE_ENV: production
+
+      - name: Run tests
+        run: npm run test:coverage
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: ./
+
+  # Post-deployment verification
+  verify-deployment:
+    name: Verify Deployment
+    runs-on: ubuntu-latest
+    needs: deploy-frontend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Run smoke tests against production
+        run: |
+          # Replace with your actual production URL
+          export BASE_URL="https://germancodezero.ai"
+          npm run test:e2e
+        env:
+          BASE_URL: https://germancodezero.ai
+
+      - name: Run Lighthouse audit
+        run: |
+          npm install -g lighthouse
+          lighthouse https://germancodezero.ai --output=json --output-path=./lighthouse-report.json --chrome-flags="--headless --no-sandbox"
+
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: lighthouse-report
+          path: lighthouse-report.json
+          retention-days: 30
+
+      - name: Run accessibility audit
+        run: |
+          npm install -g @axe-core/cli
+          axe https://germancodezero.ai --reporter json --output ./a11y-report.json || echo "Accessibility audit completed with warnings"
+
+      - name: Upload accessibility report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: a11y-report
+          path: a11y-report.json
+          retention-days: 30
+
+  # Notify deployment status
+  notify:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [deploy-frontend, verify-deployment]
+    if: always()
+    
+    steps:
+      - name: Notify success
+        if: needs.deploy-frontend.result == 'success' && needs.verify-deployment.result == 'success'
+        run: |
+          echo "✅ Frontend deployment successful!"
+          echo "🌐 Live at: https://germancodezero.ai"
+
+      - name: Notify failure
+        if: needs.deploy-frontend.result == 'failure' || needs.verify-deployment.result == 'failure'
+        run: |
+          echo "❌ Frontend deployment failed!"
+          echo "Check the logs for details."
