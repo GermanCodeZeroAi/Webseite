@@ -1,3 +1,25 @@
+### Potential secret locations (report only)
+
+Generated: 2025-09-17
+
+This report lists possible secret locations found by pattern scanning. Values are intentionally omitted.
+
+Findings (path:line — type):
+- apps/frontend/lib/__tests__/security.test.ts:200 — Token literal in test code
+- apps/frontend/lib/__tests__/security.test.ts:211 — Token literal in test code
+- apps/frontend/lib/__tests__/security.test.ts:226 — Token key/value in test request body
+- apps/frontend/lib/__tests__/security.test.ts:500 — CSRF token literal in test code
+- docs/security/secrets.md:34 — Database URL with username:password pattern (documentation example)
+
+Notes:
+- No PEM/SSH private keys, AWS keys, GitHub or Stripe/Twilio/SendGrid tokens were detected by the patterns used.
+
+Recommended actions:
+- Rotate any affected credentials and tokens as a precaution.
+- Clean git history if real secrets were ever committed:
+  - Prefer `git filter-repo` (modern) or use `BFG Repo-Cleaner` to remove or replace secrets across history.
+- Add pre-commit secret scanning (e.g., gitleaks/trufflehog) and enforce protected branches.
+
 # Secret Scan Report
 
 Scan date: 2025-09-17T18:41:46Z (UTC)
