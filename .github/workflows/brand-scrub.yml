@@ -1,0 +1,79 @@
+name: Brand Scrub
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  brand-scrub:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install ripgrep
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ripgrep
+        
+    - name: Scan for forbidden terms
+      id: scan
+      run: |
+        # Define forbidden terms (case-insensitive)
+        FORBIDDEN_TERMS="OpenAI|OpenAPI|API|Llama|Mistral|Qwen|Whisper|Ollama|Stable Diffusion|SDXL|ControlNet|DirectML|CUDA|ROCm|ComfyUI|RVC|Coqui|Hugging Face|Model|Modell|Token|Embedding"
+        
+        # Create results file
+        RESULTS_FILE="brand-scrub-results.txt"
+        echo "Brand Scrub Results - $(date)" > "$RESULTS_FILE"
+        echo "=================================" >> "$RESULTS_FILE"
+        echo "" >> "$RESULTS_FILE"
+        
+        # Scan apps/frontend directory
+        echo "Scanning apps/frontend..." >> "$RESULTS_FILE"
+        if [ -d "apps/frontend" ]; then
+          rg -i -n -H --no-heading "$FORBIDDEN_TERMS" apps/frontend/ >> "$RESULTS_FILE" 2>/dev/null || true
+        else
+          echo "Directory apps/frontend not found" >> "$RESULTS_FILE"
+        fi
+        
+        echo "" >> "$RESULTS_FILE"
+        
+        # Scan config/i18n directory
+        echo "Scanning config/i18n..." >> "$RESULTS_FILE"
+        if [ -d "config/i18n" ]; then
+          rg -i -n -H --no-heading "$FORBIDDEN_TERMS" config/i18n/ >> "$RESULTS_FILE" 2>/dev/null || true
+        else
+          echo "Directory config/i18n not found" >> "$RESULTS_FILE"
+        fi
+        
+        # Check if any forbidden terms were found
+        MATCHES=$(rg -i -c "$FORBIDDEN_TERMS" apps/frontend/ config/i18n/ 2>/dev/null | awk -F: '{sum+=$2} END {print sum+0}')
+        
+        echo "Total matches found: $MATCHES" >> "$RESULTS_FILE"
+        
+        if [ "$MATCHES" -gt 0 ]; then
+          echo "❌ Found $MATCHES forbidden terms!"
+          echo "found_violations=true" >> $GITHUB_OUTPUT
+          exit 1
+        else
+          echo "✅ No forbidden terms found"
+          echo "found_violations=false" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Upload scan results as artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: brand-scrub-results
+        path: brand-scrub-results.txt
+        retention-days: 30
+        
+    - name: Fail job if violations found
+      if: steps.scan.outputs.found_violations == 'true'
+      run: |
+        echo "❌ Brand scrub failed - forbidden terms detected!"
+        echo "Check the uploaded artifact for details."
+        exit 1
