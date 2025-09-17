@@ -1,11 +1,11 @@
 {
   "hero": {
-    "headline": "Local‑first automation that scales results",
-    "sub": "Automate critical workflows securely on your infrastructure—for faster results, meaningful time savings, and reliable scale.",
-    "bullets": ["Local‑first by design: your data stays on your infrastructure.", "Automation that saves teams time and boosts measurable results.", "Built for scale: from one team to the entire organization."]
+    "headline": "Local‑first automation that scales business outcomes",
+    "sub": "Orchestrate and automate critical processes on your infrastructure—for faster time‑to‑value, measurable efficiency gains, and reliable scale.",
+    "bullets": ["Local‑first: data ownership without compromise.", "Productivity: automated workflows reduce effort and cycle times.", "Scale: from first team to enterprise—without friction."]
   },
   "cta": {
-    "primary": "Get a demo",
-    "secondary": "Talk to sales"
+    "primary": "Request a demo",
+    "secondary": "Speak with an expert"
   }
 }
