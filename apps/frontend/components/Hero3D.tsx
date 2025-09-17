@@ -1,5 +1,5 @@
 /**
- * Hero3D Component for German Code Zero AI
+ * Hero3D Component for Autonomy Grid
  * 
  * Premium 3D hero section with performance optimization and accessibility.
  * Features:

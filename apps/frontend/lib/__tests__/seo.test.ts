@@ -44,17 +44,17 @@ describe('SEO Utilities', () => {
 
     it('should generate correct title for category page', () => {
       const title = buildTitle('category', 'de', { category: 'Email' });
-      expect(title).toBe('Email – Premium Email | German Code Zero AI');
+      expect(title).toBe('Email – Premium Email | Autonomy Grid');
     });
 
     it('should generate correct title for industry page', () => {
       const title = buildTitle('industry', 'en', { industry: 'Manufacturing' });
-      expect(title).toBe('Branchenlösungen – Manufacturing | German Code Zero AI');
+      expect(title).toBe('Branchenlösungen – Manufacturing | Autonomy Grid');
     });
 
     it('should fallback to organization name for unknown page', () => {
       const title = buildTitle('unknown' as any, 'de');
-      expect(title).toBe('German Code Zero AI');
+      expect(title).toBe('Autonomy Grid');
     });
   });
 
@@ -118,9 +118,9 @@ describe('SEO Utilities', () => {
       // Check Organization schema
       const organization = schema['@graph'].find((item: any) => item['@type'] === 'Organization');
       expect(organization).toBeDefined();
-      expect(organization.name).toBe('German Code Zero AI');
-      expect(organization.url).toBe('https://germancodezero.ai');
-      expect(organization.logo).toBe('https://germancodezero.ai/logo/gcz-logo-black-gold.svg');
+      expect(organization.name).toBe('Autonomy Grid');
+      expect(organization.url).toBe('https://autonomy-grid.com');
+      expect(organization.logo).toBe('https://autonomy-grid.com/logo/autonomy-grid-logo-black-gold.svg');
     });
 
     it('should generate valid JSON-LD schema for category page', () => {
@@ -158,25 +158,25 @@ describe('SEO Utilities', () => {
     it('should generate correct hreflang attributes for home page', () => {
       const hreflang = buildHreflang('home');
       
-      expect(hreflang.de).toBe('https://germancodezero.ai');
-      expect(hreflang.en).toBe('https://germancodezero.ai/en');
-      expect(hreflang['x-default']).toBe('https://germancodezero.ai');
+      expect(hreflang.de).toBe('https://autonomy-grid.com');
+      expect(hreflang.en).toBe('https://autonomy-grid.com/en');
+      expect(hreflang['x-default']).toBe('https://autonomy-grid.com');
     });
 
     it('should generate correct hreflang attributes for category page', () => {
       const hreflang = buildHreflang('category', { category: 'Email' });
       
-      expect(hreflang.de).toBe('https://germancodezero.ai/shop/Email');
-      expect(hreflang.en).toBe('https://germancodezero.ai/en/shop/Email');
-      expect(hreflang['x-default']).toBe('https://germancodezero.ai/shop/Email');
+      expect(hreflang.de).toBe('https://autonomy-grid.com/shop/Email');
+      expect(hreflang.en).toBe('https://autonomy-grid.com/en/shop/Email');
+      expect(hreflang['x-default']).toBe('https://autonomy-grid.com/shop/Email');
     });
 
     it('should generate correct hreflang attributes for industry page', () => {
       const hreflang = buildHreflang('industry', { industry: 'Manufacturing' });
       
-      expect(hreflang.de).toBe('https://germancodezero.ai/industries/Manufacturing');
-      expect(hreflang.en).toBe('https://germancodezero.ai/en/industries/Manufacturing');
-      expect(hreflang['x-default']).toBe('https://germancodezero.ai/industries/Manufacturing');
+      expect(hreflang.de).toBe('https://autonomy-grid.com/industries/Manufacturing');
+      expect(hreflang.en).toBe('https://autonomy-grid.com/en/industries/Manufacturing');
+      expect(hreflang['x-default']).toBe('https://autonomy-grid.com/industries/Manufacturing');
     });
   });
 
@@ -188,7 +188,7 @@ describe('SEO Utilities', () => {
       expect(seo.description).toBeDefined();
       expect(seo.og).toBeDefined();
       expect(seo.jsonLd).toBeDefined();
-      expect(seo.canonical).toBe('https://germancodezero.ai');
+      expect(seo.canonical).toBe('https://autonomy-grid.com');
       expect(seo.hreflang).toBeDefined();
     });
 
@@ -197,7 +197,7 @@ describe('SEO Utilities', () => {
       
       expect(seo.title).toContain('Email');
       expect(seo.description).toContain('Email in Markenqualität');
-      expect(seo.canonical).toBe('https://germancodezero.ai/shop/Email');
+      expect(seo.canonical).toBe('https://autonomy-grid.com/shop/Email');
     });
 
     it('should return complete SEO data for industry page', () => {
@@ -205,7 +205,7 @@ describe('SEO Utilities', () => {
       
       expect(seo.title).toContain('Manufacturing');
       expect(seo.description).toContain('Manufacturing');
-      expect(seo.canonical).toBe('https://germancodezero.ai/industries/Manufacturing');
+      expect(seo.canonical).toBe('https://autonomy-grid.com/industries/Manufacturing');
     });
   });
 
@@ -238,7 +238,7 @@ describe('SEO Utilities', () => {
       expect(Array.isArray(sitemapData)).toBe(true);
       expect(sitemapData.length).toBeGreaterThan(0);
       
-      const homePage = sitemapData.find(item => item.url === 'https://germancodezero.ai');
+      const homePage = sitemapData.find(item => item.url === 'https://autonomy-grid.com');
       expect(homePage).toBeDefined();
       expect(homePage?.priority).toBe(1.0);
       expect(homePage?.changefreq).toBe('weekly');
@@ -248,24 +248,24 @@ describe('SEO Utilities', () => {
       const sitemapData = buildSitemapData();
       const urls = sitemapData.map(item => item.url);
       
-      expect(urls).toContain('https://germancodezero.ai');
-      expect(urls).toContain('https://germancodezero.ai/shop');
-      expect(urls).toContain('https://germancodezero.ai/industries');
-      expect(urls).toContain('https://germancodezero.ai/pricing');
-      expect(urls).toContain('https://germancodezero.ai/about');
-      expect(urls).toContain('https://germancodezero.ai/contact');
+      expect(urls).toContain('https://autonomy-grid.com');
+      expect(urls).toContain('https://autonomy-grid.com/shop');
+      expect(urls).toContain('https://autonomy-grid.com/industries');
+      expect(urls).toContain('https://autonomy-grid.com/pricing');
+      expect(urls).toContain('https://autonomy-grid.com/about');
+      expect(urls).toContain('https://autonomy-grid.com/contact');
     });
   });
 
   describe('Edge cases and error handling', () => {
     it('should handle undefined options gracefully', () => {
       const title = buildTitle('category', 'de', undefined);
-      expect(title).toBe('German Code Zero AI');
+      expect(title).toBe('Autonomy Grid');
     });
 
     it('should handle empty category name', () => {
       const title = buildTitle('category', 'de', { category: '' });
-      expect(title).toBe('German Code Zero AI');
+      expect(title).toBe('Autonomy Grid');
     });
 
     it('should handle special characters in category names', () => {
@@ -304,8 +304,8 @@ describe('SEO Utilities', () => {
       const seoDe = getPageSeo('home', 'de');
       const seoEn = getPageSeo('home', 'en');
       
-      expect(seoDe.canonical).toBe('https://germancodezero.ai');
-      expect(seoEn.canonical).toBe('https://germancodezero.ai');
+      expect(seoDe.canonical).toBe('https://autonomy-grid.com');
+      expect(seoEn.canonical).toBe('https://autonomy-grid.com');
       
       expect(seoDe.og.image).toBe(seoEn.og.image);
       expect(seoDe.og.type).toBe(seoEn.og.type);

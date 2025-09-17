@@ -1,5 +1,5 @@
 /**
- * Marketing Landing Page for German Code Zero AI
+ * Marketing Landing Page for Autonomy Grid
  * 
  * Premium B2B landing page with Hero3D component.
  * Features:
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: seoData.og.title,
       description: seoData.og.description,
       url: seoData.canonical,
-      siteName: 'German Code Zero AI',
+      siteName: 'Autonomy Grid',
       images: [
         {
           url: seoData.og.image,

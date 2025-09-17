@@ -1,5 +1,5 @@
 /**
- * Test Utilities for German Code Zero AI Frontend
+ * Test Utilities for Autonomy Grid Frontend
  * 
  * Provides comprehensive testing utilities including:
  * - Component testing helpers
@@ -15,7 +15,7 @@ import { PerformanceMonitor } from './performance';
 import { CSPManager, XSSProtection, CSRFManager } from './security';
 
 export interface TestConfig {
-  mockAPIs: boolean;
+  mockBackends: boolean;
   mockStripe: boolean;
   mockAnalytics: boolean;
   enablePerformanceMonitoring: boolean;
@@ -122,7 +122,7 @@ export class MockUtils {
   private static mocks: Map<string, any> = new Map();
 
   /**
-   * Mock fetch API
+   * Mock fetch requests
    */
   static mockFetch(responses: Record<string, any> = {}): void {
     const originalFetch = window.fetch;
@@ -145,7 +145,7 @@ export class MockUtils {
   }
 
   /**
-   * Mock Stripe API
+   * Mock Stripe integration
    */
   static mockStripe(): void {
     const mockStripe = {
@@ -509,7 +509,7 @@ export class TestConfigManager {
 
   constructor(config: Partial<TestConfig> = {}) {
     this.config = {
-      mockAPIs: true,
+      mockBackends: true,
       mockStripe: true,
       mockAnalytics: true,
       enablePerformanceMonitoring: true,
@@ -522,11 +522,11 @@ export class TestConfigManager {
    * Setup test environment
    */
   setup(): void {
-    if (this.config.mockAPIs) {
+    if (this.config.mockBackends) {
       MockUtils.mockFetch({
-        '/api/pricing': { status: 200, body: TestDataGenerator.generatePricing() },
-        '/api/modules': { status: 200, body: { modules: [] } },
-        '/api/checkout/session': { status: 200, body: { session_id: 'cs_test_123' } }
+        '/data/pricing': { status: 200, body: TestDataGenerator.generatePricing() },
+        '/data/modules': { status: 200, body: { modules: [] } },
+        '/services/checkout/session': { status: 200, body: { session_id: 'cs_test_123' } }
       });
     }
 
