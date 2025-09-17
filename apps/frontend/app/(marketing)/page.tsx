@@ -10,10 +10,29 @@
  * - Accessibility and performance optimized
  */
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Metadata } from 'next';
-import Hero3D from '../../components/Hero3D';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import { getPageSeo, type Locale } from '../../lib/seo';
+
+// Lazy load Hero3D component for better initial performance
+const Hero3D = dynamic(() => import('../../components/Hero3D'), {
+  loading: () => (
+    <div className="hero-loading">
+      <div className="hero-loading__container">
+        <div className="hero-loading__content">
+          <h1 className="hero-loading__headline">Mehr Umsatz. Weniger Reibung.</h1>
+          <p className="hero-loading__subheadline">
+            Orchestrieren Sie Revenue- und Service-Prozesse Ende‑zu‑Ende – mit Premium-Erlebnis, konsistenten Journeys und planbarem Wachstum.
+          </p>
+          <div className="hero-loading__skeleton" />
+        </div>
+      </div>
+    </div>
+  ),
+  ssr: false // Disable SSR for 3D components to avoid hydration issues
+});
 
 interface PageProps {
   params: { locale?: string };
@@ -57,6 +76,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     other: {
       'application/ld+json': JSON.stringify(seoData.jsonLd),
     },
+    // Performance optimizations - preconnect to external services
+    // Note: These will be added via Next.js Link components in the component
   };
 }
 
@@ -71,6 +92,16 @@ export default function MarketingPage({ params }: PageProps) {
 
   return (
     <>
+      {/* Performance optimizations - preconnect to external services */}
+      <Head>
+        <link rel="preconnect" href="https://js.stripe.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://api.stripe.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://checkout.stripe.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://hooks.stripe.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+      </Head>
+
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
@@ -103,6 +134,74 @@ export default function MarketingPage({ params }: PageProps) {
         @media (prefers-reduced-motion: reduce) {
           html {
             scroll-behavior: auto;
+          }
+        }
+
+        /* Hero loading placeholder */
+        .hero-loading {
+          position: relative;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        }
+
+        .hero-loading__container {
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 2rem;
+          text-align: center;
+        }
+
+        .hero-loading__content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2rem;
+        }
+
+        .hero-loading__headline {
+          font-size: clamp(2.5rem, 5vw, 4rem);
+          font-weight: 700;
+          color: #FFD700;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+          margin: 0;
+          line-height: 1.1;
+        }
+
+        .hero-loading__subheadline {
+          font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+          color: #ffffff;
+          max-width: 800px;
+          margin: 0;
+          line-height: 1.6;
+          opacity: 0.95;
+        }
+
+        .hero-loading__skeleton {
+          width: 200px;
+          height: 50px;
+          background: linear-gradient(90deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.3) 50%, rgba(255, 215, 0, 0.1) 100%);
+          background-size: 200% 100%;
+          border-radius: 0.5rem;
+          animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+          0% {
+            background-position: -200% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hero-loading__skeleton {
+            animation: none;
+            background: rgba(255, 215, 0, 0.2);
           }
         }
 

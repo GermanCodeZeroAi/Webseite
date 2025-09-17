@@ -26,8 +26,9 @@
     "clean": "rm -rf dist node_modules/.cache",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "bundle-analyze": "webpack-bundle-analyzer dist/stats.json",
-    "performance:audit": "lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json",
+    "bundle-analyze": "ANALYZE=true npm run build",
+    "performance:audit": "node scripts/performance-audit.js",
+    "performance:lighthouse": "lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json",
     "a11y:audit": "axe http://localhost:3000 --reporter json --output ./a11y-report.json"
   },
   "keywords": [
@@ -57,6 +58,7 @@
     "npm": ">=8.0.0"
   },
   "dependencies": {
+    "next": "^14.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.0.0"

@@ -2,11 +2,92 @@
  * Checkout Page
  * 
  * Mock implementation for testing purposes
+ * Code-split and lazy-loaded for better performance
  */
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import Head from 'next/head';
+
+// Loading component for better UX during code-splitting
+const CheckoutLoading = () => (
+  <div className="checkout-loading">
+    <div className="container">
+      <div className="loading-header">
+        <div className="loading-skeleton loading-title" />
+        <div className="loading-skeleton loading-subtitle" />
+      </div>
+      <div className="loading-content">
+        <div className="loading-form">
+          <div className="loading-skeleton loading-section" />
+          <div className="loading-skeleton loading-section" />
+          <div className="loading-skeleton loading-section" />
+        </div>
+        <div className="loading-summary">
+          <div className="loading-skeleton loading-section" />
+        </div>
+      </div>
+    </div>
+    <style jsx>{`
+      .checkout-loading {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        color: #ffffff;
+        padding: 2rem 0;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+      .loading-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      .loading-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 3rem;
+      }
+      .loading-skeleton {
+        background: linear-gradient(90deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.3) 50%, rgba(255, 215, 0, 0.1) 100%);
+        background-size: 200% 100%;
+        border-radius: 8px;
+        animation: shimmer 2s infinite;
+      }
+      .loading-title {
+        height: 60px;
+        width: 300px;
+        margin: 0 auto 1rem;
+      }
+      .loading-subtitle {
+        height: 20px;
+        width: 200px;
+        margin: 0 auto;
+      }
+      .loading-section {
+        height: 200px;
+        margin-bottom: 2rem;
+      }
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .loading-skeleton {
+          animation: none;
+          background: rgba(255, 215, 0, 0.2);
+        }
+      }
+      @media (max-width: 768px) {
+        .loading-content {
+          grid-template-columns: 1fr;
+        }
+      }
+    `}</style>
+  </div>
+);
 
 interface OrderSummary {
   items: Array<{
@@ -136,12 +217,22 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div data-testid="checkout-container" className="checkout-page">
-      <div className="container">
-        <header className="page-header">
-          <h1>Checkout</h1>
-          <p>Complete your order</p>
-        </header>
+    <>
+      {/* Performance optimizations - preconnect to Stripe for faster payment processing */}
+      <Head>
+        <link rel="preconnect" href="https://js.stripe.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://api.stripe.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://checkout.stripe.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://hooks.stripe.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://m.stripe.com" crossOrigin="anonymous" />
+      </Head>
+      
+      <div data-testid="checkout-container" className="checkout-page">
+        <div className="container">
+          <header className="page-header">
+            <h1>Checkout</h1>
+            <p>Complete your order</p>
+          </header>
 
         <div className="checkout-content">
           <div className="checkout-form-section">
@@ -595,6 +686,7 @@ export default function CheckoutPage() {
           }
         }
       `}</style>
-    </div>
+      </div>
+    </>
   );
 }

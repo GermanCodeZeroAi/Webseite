@@ -2,11 +2,112 @@
  * Shop Configurator Page
  * 
  * Mock implementation for testing purposes
+ * Code-split and lazy-loaded for better performance
  */
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+
+// Loading component for better UX during code-splitting
+const ConfiguratorLoading = () => (
+  <div className="configurator-loading">
+    <div className="container">
+      <div className="loading-header">
+        <div className="loading-skeleton loading-title" />
+        <div className="loading-skeleton loading-subtitle" />
+      </div>
+      <div className="loading-content">
+        <div className="loading-options">
+          <div className="loading-skeleton loading-section-title" />
+          <div className="loading-options-grid">
+            <div className="loading-skeleton loading-option" />
+            <div className="loading-skeleton loading-option" />
+            <div className="loading-skeleton loading-option" />
+            <div className="loading-skeleton loading-option" />
+          </div>
+        </div>
+        <div className="loading-pricing">
+          <div className="loading-skeleton loading-section" />
+        </div>
+      </div>
+    </div>
+    <style jsx>{`
+      .configurator-loading {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        color: #ffffff;
+        padding: 2rem 0;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+      .loading-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      .loading-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 3rem;
+      }
+      .loading-options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .loading-skeleton {
+        background: linear-gradient(90deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.3) 50%, rgba(255, 215, 0, 0.1) 100%);
+        background-size: 200% 100%;
+        border-radius: 8px;
+        animation: shimmer 2s infinite;
+      }
+      .loading-title {
+        height: 60px;
+        width: 300px;
+        margin: 0 auto 1rem;
+      }
+      .loading-subtitle {
+        height: 20px;
+        width: 200px;
+        margin: 0 auto;
+      }
+      .loading-section-title {
+        height: 30px;
+        width: 250px;
+        margin-bottom: 1.5rem;
+      }
+      .loading-section {
+        height: 300px;
+        margin-bottom: 2rem;
+      }
+      .loading-option {
+        height: 120px;
+      }
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .loading-skeleton {
+          animation: none;
+          background: rgba(255, 215, 0, 0.2);
+        }
+      }
+      @media (max-width: 768px) {
+        .loading-content {
+          grid-template-columns: 1fr;
+        }
+        .loading-options-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    `}</style>
+  </div>
+);
 
 interface ConfigOption {
   id: string;

@@ -680,21 +680,116 @@ export function initializePerformance(): {
   // Set up resource hints for external services
   ResourceHints.preconnect('https://js.stripe.com', true);
   ResourceHints.preconnect('https://api.stripe.com', true);
+  ResourceHints.preconnect('https://checkout.stripe.com', true);
+  ResourceHints.preconnect('https://hooks.stripe.com', true);
   ResourceHints.dnsPrefetch('https://fonts.googleapis.com');
   ResourceHints.dnsPrefetch('https://fonts.gstatic.com');
 
   // Initialize performance monitoring
   const monitor = new PerformanceMonitor();
 
-  // Initialize lazy loading
+  // Initialize lazy loading with enhanced options
   const lazyLoader = new LazyLoader({
-    rootMargin: '100px',
+    rootMargin: '50px', // Reduced for better performance
     threshold: 0.1
   });
 
   // Start observing lazy load elements
   lazyLoader.observeAll('[data-lazy-src]');
   lazyLoader.observeAll('[data-lazy-component]');
+  lazyLoader.observeAll('.optimized-image'); // Support for our OptimizedImage component
+
+  // Preload critical images if available
+  const criticalImages = document.querySelectorAll('[data-priority="true"]');
+  criticalImages.forEach((img) => {
+    if (img instanceof HTMLImageElement && img.dataset.src) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = img.dataset.src;
+      document.head.appendChild(link);
+    }
+  });
 
   return { monitor, lazyLoader };
+}
+
+/**
+ * Image optimization utilities
+ */
+export class ImageOptimizer {
+  /**
+   * Check if browser supports modern image formats
+   */
+  static checkFormatSupport(): {
+    avif: boolean;
+    webp: boolean;
+  } {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = 1;
+    
+    return {
+      avif: canvas.toDataURL('image/avif').indexOf('data:image/avif') === 0,
+      webp: canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0
+    };
+  }
+
+  /**
+   * Get optimal image format for current browser
+   */
+  static getOptimalFormat(): 'avif' | 'webp' | 'jpeg' {
+    const support = this.checkFormatSupport();
+    if (support.avif) return 'avif';
+    if (support.webp) return 'webp';
+    return 'jpeg';
+  }
+
+  /**
+   * Calculate optimal image dimensions based on container and device
+   */
+  static calculateOptimalSize(
+    containerWidth: number,
+    containerHeight?: number,
+    devicePixelRatio: number = window.devicePixelRatio || 1
+  ): { width: number; height?: number } {
+    // Account for device pixel ratio but cap at 2x for performance
+    const ratio = Math.min(devicePixelRatio, 2);
+    
+    return {
+      width: Math.round(containerWidth * ratio),
+      height: containerHeight ? Math.round(containerHeight * ratio) : undefined
+    };
+  }
+
+  /**
+   * Preload critical images with modern format support
+   */
+  static preloadImage(src: string, priority: 'high' | 'low' = 'low'): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const formats = ['avif', 'webp', 'jpg'];
+      const support = this.checkFormatSupport();
+      
+      let format = 'jpg';
+      if (support.avif) format = 'avif';
+      else if (support.webp) format = 'webp';
+      
+      const optimizedSrc = src.replace(/\.[^.]+$/, `.${format}`);
+      
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = optimizedSrc;
+      link.crossOrigin = 'anonymous';
+      
+      if ('fetchPriority' in link) {
+        (link as any).fetchPriority = priority;
+      }
+      
+      link.onload = () => resolve();
+      link.onerror = () => reject(new Error(`Failed to preload image: ${optimizedSrc}`));
+      
+      document.head.appendChild(link);
+    });
+  }
 }

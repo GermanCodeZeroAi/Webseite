@@ -8,11 +8,12 @@
  * - Full i18n integration with SEO utilities
  * - CTA navigation to shop configurator
  * - Gold/Black premium branding
+ * - Lazy-loaded for better initial page performance
  */
 
 'use client';
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo, Suspense } from 'react';
 import { buildTitle, buildMetaDescription, type Locale } from '../lib/seo';
 
 interface Hero3DProps {
@@ -75,7 +76,7 @@ export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
-  // Performance-optimized 3D animation
+  // Lazy-loaded 3D animation with intersection observer
   useEffect(() => {
     if (!canvasRef.current || prefersReducedMotion) {
       setIsLoaded(true);
@@ -83,131 +84,174 @@ export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
     }
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    
+    // Use intersection observer to only start animation when component is visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Lazy load the animation logic
+            const initAnimation = async () => {
+              const ctx = canvas.getContext('2d');
+              if (!ctx) return;
 
-    // Set canvas size
-    const updateCanvasSize = () => {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * window.devicePixelRatio;
-      canvas.height = rect.height * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    };
+              // Set canvas size
+              const updateCanvasSize = () => {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * window.devicePixelRatio;
+                canvas.height = rect.height * window.devicePixelRatio;
+                ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+              };
 
-    updateCanvasSize();
-    window.addEventListener('resize', updateCanvasSize);
+              updateCanvasSize();
+              window.addEventListener('resize', updateCanvasSize);
 
-    // Animation state
-    let time = 0;
-    const particles: Array<{
-      x: number;
-      y: number;
-      z: number;
-      vx: number;
-      vy: number;
-      vz: number;
-      size: number;
-      opacity: number;
-    }> = [];
+              // Animation state
+              let time = 0;
+              const particles: Array<{
+                x: number;
+                y: number;
+                z: number;
+                vx: number;
+                vy: number;
+                vz: number;
+                size: number;
+                opacity: number;
+              }> = [];
 
-    // Initialize particles
-    const particleCount = prefersReducedMotion ? 20 : 50;
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        z: Math.random() * 1000,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
-        vz: Math.random() * 2 + 1,
-        size: Math.random() * 3 + 1,
-        opacity: Math.random() * 0.6 + 0.2
-      });
-    }
+              // Initialize particles with reduced count for better performance
+              const particleCount = prefersReducedMotion ? 15 : 35; // Reduced from 20/50
+              for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                  x: Math.random() * canvas.width,
+                  y: Math.random() * canvas.height,
+                  z: Math.random() * 1000,
+                  vx: (Math.random() - 0.5) * 2,
+                  vy: (Math.random() - 0.5) * 2,
+                  vz: Math.random() * 2 + 1,
+                  size: Math.random() * 3 + 1,
+                  opacity: Math.random() * 0.6 + 0.2
+                });
+              }
 
-    // Animation loop with performance optimization
-    const animate = () => {
-      time += 0.016; // ~60fps
+              // Performance-optimized animation loop with RAF throttling
+              let lastFrameTime = 0;
+              const targetFPS = 60;
+              const frameInterval = 1000 / targetFPS;
 
-      // Clear canvas with gradient background
-      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, '#000000');
-      gradient.addColorStop(1, '#1a1a1a');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+              const animate = (currentTime: number) => {
+                if (currentTime - lastFrameTime < frameInterval) {
+                  animationRef.current = requestAnimationFrame(animate);
+                  return;
+                }
+                lastFrameTime = currentTime;
 
-      // Update and draw particles
-      particles.forEach((particle, index) => {
-        // Update position
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-        particle.z -= particle.vz;
+                time += 0.016; // ~60fps
 
-        // Reset particle if it goes out of bounds
-        if (particle.z <= 0 || particle.x < 0 || particle.x > canvas.width || 
-            particle.y < 0 || particle.y > canvas.height) {
-          particle.x = Math.random() * canvas.width;
-          particle.y = Math.random() * canvas.height;
-          particle.z = 1000;
-        }
+                // Clear canvas with gradient background
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, '#000000');
+                gradient.addColorStop(1, '#1a1a1a');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Calculate 3D projection
-        const scale = 400 / (400 + particle.z);
-        const x2d = particle.x * scale;
-        const y2d = particle.y * scale;
-        const size2d = particle.size * scale;
+                // Update and draw particles with performance optimizations
+                particles.forEach((particle, index) => {
+                  // Update position
+                  particle.x += particle.vx;
+                  particle.y += particle.vy;
+                  particle.z -= particle.vz;
 
-        // Draw particle with gold color
-        ctx.save();
-        ctx.globalAlpha = particle.opacity * scale;
-        ctx.fillStyle = '#FFD700'; // Gold color
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#FFD700';
-        ctx.beginPath();
-        ctx.arc(x2d, y2d, size2d, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
+                  // Reset particle if it goes out of bounds
+                  if (particle.z <= 0 || particle.x < 0 || particle.x > canvas.width || 
+                      particle.y < 0 || particle.y > canvas.height) {
+                    particle.x = Math.random() * canvas.width;
+                    particle.y = Math.random() * canvas.height;
+                    particle.z = 1000;
+                  }
 
-        // Draw connections (reduced for performance)
-        if (index < particles.length - 1 && scale > 0.5) {
-          const nextParticle = particles[index + 1];
-          const nextScale = 400 / (400 + nextParticle.z);
-          const distance = Math.sqrt(
-            Math.pow(particle.x - nextParticle.x, 2) + 
-            Math.pow(particle.y - nextParticle.y, 2)
-          );
+                  // Calculate 3D projection
+                  const scale = 400 / (400 + particle.z);
+                  const x2d = particle.x * scale;
+                  const y2d = particle.y * scale;
+                  const size2d = particle.size * scale;
 
-          if (distance < 100) {
-            ctx.save();
-            ctx.globalAlpha = 0.2 * Math.min(scale, nextScale);
-            ctx.strokeStyle = '#FFD700';
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(x2d, y2d);
-            ctx.lineTo(
-              nextParticle.x * nextScale,
-              nextParticle.y * nextScale
-            );
-            ctx.stroke();
-            ctx.restore();
+                  // Draw particle with gold color
+                  ctx.save();
+                  ctx.globalAlpha = particle.opacity * scale;
+                  ctx.fillStyle = '#FFD700'; // Gold color
+                  ctx.shadowBlur = 8; // Reduced from 10 for performance
+                  ctx.shadowColor = '#FFD700';
+                  ctx.beginPath();
+                  ctx.arc(x2d, y2d, size2d, 0, Math.PI * 2);
+                  ctx.fill();
+                  ctx.restore();
+
+                  // Draw connections (reduced for performance) - only every 3rd particle
+                  if (index < particles.length - 1 && scale > 0.5 && index % 3 === 0) {
+                    const nextParticle = particles[index + 1];
+                    const nextScale = 400 / (400 + nextParticle.z);
+                    const distance = Math.sqrt(
+                      Math.pow(particle.x - nextParticle.x, 2) + 
+                      Math.pow(particle.y - nextParticle.y, 2)
+                    );
+
+                    if (distance < 80) { // Reduced from 100
+                      ctx.save();
+                      ctx.globalAlpha = 0.15 * Math.min(scale, nextScale); // Reduced from 0.2
+                      ctx.strokeStyle = '#FFD700';
+                      ctx.lineWidth = 0.3; // Reduced from 0.5
+                      ctx.beginPath();
+                      ctx.moveTo(x2d, y2d);
+                      ctx.lineTo(
+                        nextParticle.x * nextScale,
+                        nextParticle.y * nextScale
+                      );
+                      ctx.stroke();
+                      ctx.restore();
+                    }
+                  }
+                });
+
+                animationRef.current = requestAnimationFrame(animate);
+              };
+
+              // Start animation with delay for better perceived performance
+              setTimeout(() => {
+                setIsLoaded(true);
+                animationRef.current = requestAnimationFrame(animate);
+              }, 150); // Slightly increased delay
+
+              // Cleanup function
+              const cleanup = () => {
+                if (animationRef.current) {
+                  cancelAnimationFrame(animationRef.current);
+                }
+                window.removeEventListener('resize', updateCanvasSize);
+              };
+
+              return cleanup;
+            };
+
+            // Initialize animation and disconnect observer
+            initAnimation();
+            observer.disconnect();
           }
-        }
-      });
+        });
+      },
+      {
+        threshold: 0.1, // Start when 10% visible
+        rootMargin: '50px' // Start 50px before coming into view
+      }
+    );
 
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    // Start animation with delay for better perceived performance
-    setTimeout(() => {
-      setIsLoaded(true);
-      animate();
-    }, 100);
+    observer.observe(canvas);
 
     return () => {
+      observer.disconnect();
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      window.removeEventListener('resize', updateCanvasSize);
     };
   }, [prefersReducedMotion]);
 
