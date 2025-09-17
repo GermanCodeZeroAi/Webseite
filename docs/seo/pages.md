@@ -1,3 +1,75 @@
+## FAQs (DE/EN)
+
+This page contains 10 bilingual FAQs (German/English) covering purchase, privacy, support, and pricing. Wording is public-safe and avoids internal details.
+
+### Kauf / Purchase
+
+1) Zahlung / Payment
+- **Frage (DE)**: Welche Zahlungsarten werden unterstützt?
+- **Antwort (DE)**: Üblicherweise werden gängige Karten und andere verbreitete Zahlungsmethoden unterstützt. Details finden Sie jederzeit auf der öffentlichen Checkout-Seite.
+- **Question (EN)**: Which payment methods are supported?
+- **Answer (EN)**: Common cards and widely used payment methods are typically supported. Please refer to the public checkout page for current details.
+
+2) Rechnung / Invoice
+- **Frage (DE)**: Erhalte ich eine Rechnung für meinen Kauf?
+- **Antwort (DE)**: Ja. Nach Abschluss des Kaufs können Sie eine steuerkonforme Rechnung über die Bestätigungsseite oder per E‑Mail-Beleg abrufen.
+- **Question (EN)**: Will I receive an invoice for my purchase?
+- **Answer (EN)**: Yes. After completing your purchase, you can access a tax-compliant invoice from the confirmation page or the email receipt.
+
+3) Aktivierung / Activation
+- **Frage (DE)**: Wie lange dauert die Aktivierung nach dem Kauf?
+- **Antwort (DE)**: Digitale Zugänge werden in der Regel zeitnah bereitgestellt. Prüfen Sie Ihre Bestätigungs-E‑Mail und ggf. die Kontoseite für den Status.
+- **Question (EN)**: How long does activation take after purchase?
+- **Answer (EN)**: Digital access is typically provisioned shortly after checkout. Check your confirmation email and your account page for status.
+
+4) Bestelländerung / Order Changes
+- **Frage (DE)**: Kann ich meine Bestellung ändern oder stornieren?
+- **Antwort (DE)**: Solange die Verarbeitung nicht abgeschlossen ist, sind Änderungen oder Stornierungen in vielen Fällen möglich. Bitte nutzen Sie die Optionen in der Bestellübersicht oder kontaktieren Sie den Support.
+- **Question (EN)**: Can I modify or cancel my order?
+- **Answer (EN)**: While processing is pending, modifications or cancellations are often possible. Use the order management options or contact support.
+
+### Datenschutz / Privacy
+
+5) Datenerhebung / Data Collection
+- **Frage (DE)**: Welche personenbezogenen Daten werden erhoben und warum?
+- **Antwort (DE)**: Es werden nur notwendige Daten für Vertragserfüllung, Abrechnung, Sicherheitszwecke und Produktfunktionalität verarbeitet. Details stehen in der öffentlichen Datenschutzerklärung.
+- **Question (EN)**: What personal data do you collect and why?
+- **Answer (EN)**: Only data needed for contract performance, billing, security, and product functionality is processed. See the public privacy notice for details.
+
+6) Speicherung & Sicherheit / Storage & Security
+- **Frage (DE)**: Wo werden meine Daten gespeichert und wie werden sie geschützt?
+- **Antwort (DE)**: Daten werden mit branchenüblichen Sicherheitsmaßnahmen verarbeitet. Näheres zu Speicherorten, Schutzmaßnahmen und Aufbewahrungsfristen entnehmen Sie der Datenschutzerklärung.
+- **Question (EN)**: Where is my data stored and how is it protected?
+- **Answer (EN)**: Data is processed using industry-standard security controls. See the privacy notice for storage locations, safeguards, and retention information.
+
+7) Betroffenenrechte / Data Subject Rights
+- **Frage (DE)**: Wie kann ich meine Daten exportieren oder löschen lassen?
+- **Antwort (DE)**: Sie können einen Auskunfts-, Export- oder Löschantrag über die in der Datenschutzerklärung genannten Kontaktwege stellen. Wir bestätigen den Eingang und informieren über den Fortschritt.
+- **Question (EN)**: How can I request an export or deletion of my data?
+- **Answer (EN)**: Submit an access, export, or deletion request using the contact methods listed in the privacy notice. We will acknowledge receipt and provide progress updates.
+
+### Support
+
+8) Kontakt & Reaktionszeit / Contact & Response Time
+- **Frage (DE)**: Wie erreiche ich den Support und wie schnell erhalte ich eine Antwort?
+- **Antwort (DE)**: Nutzen Sie das Kontaktformular oder die auf der Support-Seite genannten Kanäle. Wir bemühen uns um zeitnahe Antworten innerhalb der üblichen Geschäftszeiten.
+- **Question (EN)**: How do I contact support and how fast is the response?
+- **Answer (EN)**: Use the contact form or the channels listed on the support page. We aim to respond promptly during standard business hours.
+
+9) Wissensdatenbank / Knowledge Base
+- **Frage (DE)**: Gibt es eine Wissensdatenbank oder Selbsthilfeartikel?
+- **Antwort (DE)**: Ja. Auf der öffentlichen Hilfe- oder Dokumentationsseite finden Sie Anleitungen, häufige Fragen und Best Practices.
+- **Question (EN)**: Is there a knowledge base or self-help articles?
+- **Answer (EN)**: Yes. The public help or documentation site provides guides, FAQs, and best practices.
+
+### Preise / Pricing
+
+10) Rabatte, Testphasen & Erstattungen / Discounts, Trials & Refunds
+- **Frage (DE)**: Bieten Sie Rabatte, Testphasen oder Erstattungen an?
+- **Antwort (DE)**: Angebote können je nach Tarif oder Kampagne variieren. Aktuelle Konditionen, Testzeiträume und Erstattungsregeln entnehmen Sie bitte der öffentlichen Preisseite und den geltenden AGB.
+- **Question (EN)**: Do you offer discounts, trials, or refunds?
+- **Answer (EN)**: Offers may vary by plan or campaign. Please see the public pricing page and applicable terms for current trial options, discounts, and refund rules.
+
 ## Pages Copy (DE/EN)
 
 ### Homepage
