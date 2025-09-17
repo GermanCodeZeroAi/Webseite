@@ -1,5 +1,5 @@
 /**
- * Hero3D Component for German Code Zero AI
+ * Hero3D Component for Premium B2B Services
  * 
  * Premium 3D hero section with performance optimization and accessibility.
  * Features:
@@ -13,45 +13,13 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { buildTitle, buildMetaDescription, type Locale } from '../lib/seo';
+import { getHeroContent, type Locale } from '../lib/seo';
 
 interface Hero3DProps {
   locale: Locale;
   onCtaClick?: () => void;
 }
 
-interface HeroContent {
-  headline: string;
-  subheadline: string;
-  bullets: string[];
-  ctaText: string;
-  ctaAriaLabel: string;
-}
-
-const HERO_CONTENT = {
-  de: {
-    headline: 'Mehr Umsatz. Weniger Reibung.',
-    subheadline: 'Orchestrieren Sie Revenue- und Service-Prozesse Ende‑zu‑Ende – mit Premium-Erlebnis, konsistenten Journeys und planbarem Wachstum.',
-    bullets: [
-      'Schnellere Zyklen: von Anfrage bis Abschluss in Rekordzeit',
-      'Konsistente Qualität: jeder Touchpoint sitzt',
-      'Skalierbares Wachstum: mehr Pipeline, weniger Operatives'
-    ],
-    ctaText: 'Jetzt konfigurieren',
-    ctaAriaLabel: 'Zum Autonomy Grid Konfigurator wechseln'
-  },
-  en: {
-    headline: 'More revenue. Less friction.',
-    subheadline: 'Orchestrate your revenue and service processes end‑to‑end—with premium experience, consistent journeys, and predictable growth.',
-    bullets: [
-      'Faster cycles: request to close in record time',
-      'Consistent quality: every touchpoint on point',
-      'Scalable growth: more pipeline, less busywork'
-    ],
-    ctaText: 'Configure now',
-    ctaAriaLabel: 'Go to Autonomy Grid Configurator'
-  }
-} as const;
 
 export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -59,8 +27,8 @@ export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Get localized content
-  const content: HeroContent = useMemo(() => HERO_CONTENT[locale], [locale]);
+  // Get localized content from i18n system
+  const content = useMemo(() => getHeroContent(locale), [locale]);
 
   // Check for reduced motion preference
   useEffect(() => {
@@ -110,8 +78,9 @@ export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
       opacity: number;
     }> = [];
 
-    // Initialize particles
-    const particleCount = prefersReducedMotion ? 20 : 50;
+    // Initialize particles with performance considerations
+    const particleCount = prefersReducedMotion ? 15 : 
+                         (window.devicePixelRatio > 1 ? 35 : 50);
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * canvas.width,
@@ -126,7 +95,15 @@ export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
     }
 
     // Animation loop with performance optimization
-    const animate = () => {
+    let lastFrameTime = 0;
+    const animate = (currentTime: number = 0) => {
+      // Throttle frame rate on slower devices
+      if (currentTime - lastFrameTime < 16) { // ~60fps max
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      lastFrameTime = currentTime;
+      
       time += 0.016; // ~60fps
 
       // Clear canvas with gradient background
