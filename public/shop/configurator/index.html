@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Service Configurator - German Code Zero AI</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        :focus-visible {
+            outline: 2px solid #FFD700;
+            outline-offset: 2px;
+        }
+        .configurator-page {
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #FFD700;
+            margin-bottom: 0.5rem;
+        }
+        .configurator-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+        }
+        .configuration-options h2 {
+            color: #FFD700;
+            margin-bottom: 1.5rem;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .option-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .option-card:hover {
+            border-color: #FFD700;
+        }
+        .option-card.selected {
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+        .option-header h3 {
+            margin: 0 0 0.5rem 0;
+            color: #ffffff;
+        }
+        .option-price {
+            color: #FFD700;
+            font-weight: bold;
+        }
+        .billing-cycle-selector {
+            margin-bottom: 2rem;
+        }
+        .billing-cycle-selector label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #FFD700;
+        }
+        .billing-cycle-selector select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #FFD700;
+            color: #ffffff;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        .coupon-section {
+            margin-bottom: 2rem;
+        }
+        .coupon-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .coupon-input-group input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #FFD700;
+            color: #ffffff;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        .coupon-input-group button {
+            background: #FFD700;
+            color: #000000;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .coupon-input-group button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .coupon-success {
+            color: #00ff00;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .pricing-sidebar {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+        .price-summary h3 {
+            color: #FFD700;
+            margin-bottom: 1.5rem;
+        }
+        .price-breakdown {
+            margin-bottom: 2rem;
+        }
+        .price-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .price-line.total {
+            border-top: 1px solid #FFD700;
+            padding-top: 0.5rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .price-line.discount {
+            color: #00ff00;
+            display: none;
+        }
+        .vat-section {
+            margin: 1rem 0;
+            padding: 0.5rem 0;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        .billing-info {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+        }
+        .checkout-button {
+            width: 100%;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000000;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .checkout-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+        .checkout-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        @media (max-width: 768px) {
+            .configurator-content {
+                grid-template-columns: 1fr;
+            }
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div data-testid="configurator-container" class="configurator-page">
+        <div class="container">
+            <header class="page-header">
+                <h1>Service Configurator</h1>
+                <p>Configure your perfect service package</p>
+            </header>
+
+            <div class="configurator-content">
+                <div class="configuration-options">
+                    <h2>Select Your Services</h2>
+                    
+                    <div class="options-grid">
+                        <div data-testid="config-option" class="option-card" onclick="toggleOption(this, 'base-starter', 99)">
+                            <div class="option-header">
+                                <h3>Base Starter</h3>
+                                <div class="option-price">€99/<span id="billing-suffix">mo</span></div>
+                            </div>
+                            <div class="option-checkbox">
+                                <input type="checkbox" id="base-starter" aria-label="Select Base Starter package" onchange="event.stopPropagation()">
+                            </div>
+                        </div>
+                        <div data-testid="config-option" class="option-card" onclick="toggleOption(this, 'base-enterprise', 299)">
+                            <div class="option-header">
+                                <h3>Base Enterprise</h3>
+                                <div class="option-price">€299/<span class="billing-suffix">mo</span></div>
+                            </div>
+                            <div class="option-checkbox">
+                                <input type="checkbox" id="base-enterprise" aria-label="Select Base Enterprise package" onchange="event.stopPropagation()">
+                            </div>
+                        </div>
+                        <div data-testid="config-option" class="option-card" onclick="toggleOption(this, 'addon-analytics', 49)">
+                            <div class="option-header">
+                                <h3>Analytics Module</h3>
+                                <div class="option-price">€49/<span class="billing-suffix">mo</span></div>
+                            </div>
+                            <div class="option-checkbox">
+                                <input type="checkbox" id="addon-analytics" aria-label="Select Analytics Module" onchange="event.stopPropagation()">
+                            </div>
+                        </div>
+                        <div data-testid="config-option" class="option-card" onclick="toggleOption(this, 'addon-security', 79)">
+                            <div class="option-header">
+                                <h3>Security Module</h3>
+                                <div class="option-price">€79/<span class="billing-suffix">mo</span></div>
+                            </div>
+                            <div class="option-checkbox">
+                                <input type="checkbox" id="addon-security" aria-label="Select Security Module" onchange="event.stopPropagation()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="billing-cycle-selector">
+                        <label for="billing-cycle">Billing Cycle:</label>
+                        <select id="billing-cycle" data-testid="billing-cycle-selector" onchange="updateBillingCycle(this.value)">
+                            <option value="monthly">Monthly</option>
+                            <option value="annual">Annual (2 months free)</option>
+                        </select>
+                    </div>
+
+                    <div class="coupon-section">
+                        <div class="coupon-input-group">
+                            <input type="text" data-testid="coupon-input" placeholder="Enter coupon code" id="coupon-code">
+                            <button data-testid="apply-coupon" onclick="applyCoupon()">Apply</button>
+                        </div>
+                        
+                        <div data-testid="coupon-success" class="coupon-success" id="coupon-success">
+                            ✓ Coupon applied successfully!
+                        </div>
+                        
+                        <div data-testid="validation-error" class="error-message" id="coupon-error">
+                            Invalid coupon code
+                        </div>
+                        
+                        <div data-testid="error-message" class="error-message" id="pricing-error" style="display: none;">
+                            Pricing service unavailable
+                        </div>
+                    </div>
+                </div>
+
+                <div data-testid="pricing-section" class="pricing-sidebar">
+                    <div data-testid="price-display" class="price-summary">
+                        <h3>Pricing Summary</h3>
+                        
+                        <div class="price-breakdown">
+                            <div data-testid="base-price" class="price-line">
+                                <span>Base Price:</span>
+                                <span id="base-price-amount">€0.00</span>
+                            </div>
+                            
+                            <div data-testid="discount-amount" class="price-line discount" id="discount-line">
+                                <span>Discount (LAUNCH50):</span>
+                                <span id="discount-amount">-€0.00</span>
+                            </div>
+                            
+                            <div data-testid="vat-breakdown" class="vat-section">
+                                <div data-testid="vat-amount" class="price-line">
+                                    <span>VAT (19%):</span>
+                                    <span id="vat-amount">€0.00</span>
+                                </div>
+                            </div>
+                            
+                            <div data-testid="total-price" class="price-line total">
+                                <span>Total Price:</span>
+                                <span id="total-price">€0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="billing-info">
+                            <small>Billed <span id="billing-cycle-text">monthly</span></small>
+                        </div>
+                    </div>
+
+                    <button data-testid="checkout-button" class="checkout-button" onclick="goToCheckout()" disabled>
+                        Proceed to Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedOptions = [];
+        let billingCycle = 'monthly';
+        let couponApplied = false;
+        let couponCode = '';
+
+        const prices = {
+            'base-starter': 99,
+            'base-enterprise': 299,
+            'addon-analytics': 49,
+            'addon-security': 79
+        };
+
+        function toggleOption(card, optionId, price) {
+            const checkbox = card.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                card.classList.add('selected');
+                selectedOptions.push({id: optionId, price: price});
+            } else {
+                card.classList.remove('selected');
+                selectedOptions = selectedOptions.filter(opt => opt.id !== optionId);
+            }
+            
+            updatePricing();
+        }
+
+        function updateBillingCycle(cycle) {
+            billingCycle = cycle;
+            document.getElementById('billing-cycle-text').textContent = cycle;
+            
+            const suffixes = document.querySelectorAll('.billing-suffix, #billing-suffix');
+            suffixes.forEach(suffix => {
+                suffix.textContent = cycle === 'monthly' ? 'mo' : 'year';
+            });
+            
+            updatePricing();
+        }
+
+        function applyCoupon() {
+            const input = document.getElementById('coupon-code');
+            const code = input.value.trim().toUpperCase();
+            
+            // Simulate loading
+            const button = document.querySelector('[data-testid="apply-coupon"]');
+            button.textContent = 'Applying...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                if (code === 'LAUNCH50') {
+                    couponApplied = true;
+                    couponCode = code;
+                    document.getElementById('coupon-success').style.display = 'block';
+                    document.getElementById('coupon-error').style.display = 'none';
+                } else {
+                    couponApplied = false;
+                    couponCode = '';
+                    document.getElementById('coupon-success').style.display = 'none';
+                    document.getElementById('coupon-error').style.display = 'block';
+                }
+                
+                button.textContent = 'Apply';
+                button.disabled = false;
+                updatePricing();
+            }, 1000);
+        }
+
+        function updatePricing() {
+            let basePrice = selectedOptions.reduce((sum, opt) => sum + opt.price, 0);
+            let totalPrice = basePrice;
+            
+            // Apply billing cycle discount
+            if (billingCycle === 'annual' && basePrice > 0) {
+                totalPrice = basePrice * 10; // 10 months price for annual (2 months free)
+            }
+            
+            // Apply coupon discount
+            let discountAmount = 0;
+            if (couponApplied && couponCode === 'LAUNCH50' && totalPrice > 0) {
+                discountAmount = totalPrice * 0.5;
+                totalPrice = totalPrice * 0.5;
+                document.getElementById('discount-line').style.display = 'flex';
+                document.getElementById('discount-amount').textContent = '-€' + discountAmount.toFixed(2);
+            } else {
+                document.getElementById('discount-line').style.display = 'none';
+            }
+            
+            // Add VAT
+            const vatAmount = totalPrice * 0.19;
+            const finalTotal = totalPrice + vatAmount;
+            
+            // Update display - show billing cycle appropriate price
+            let displayBasePrice = basePrice;
+            if (billingCycle === 'annual' && basePrice > 0) {
+                displayBasePrice = basePrice * 10; // Show annual total before discount
+            }
+            
+            document.getElementById('base-price-amount').textContent = '€' + displayBasePrice.toFixed(2);
+            document.getElementById('vat-amount').textContent = '€' + vatAmount.toFixed(2);
+            document.getElementById('total-price').textContent = '€' + finalTotal.toFixed(2);
+            
+            // Enable/disable checkout button
+            const checkoutButton = document.querySelector('[data-testid="checkout-button"]');
+            checkoutButton.disabled = selectedOptions.length === 0;
+        }
+
+        function goToCheckout() {
+            console.log('Navigating to checkout...');
+            window.location.href = '/checkout/';
+        }
+
+        // Initialize pricing
+        updatePricing();
+    </script>
+</body>
+</html>
