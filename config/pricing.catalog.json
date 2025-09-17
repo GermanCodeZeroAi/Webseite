@@ -1,0 +1,35 @@
+{
+  "$schema": "https://example.com/schemas/pricing.catalog.schema.json",
+  "version": "0.1.0",
+  "currency": "EUR",
+  "billing_cycles": ["monthly", "semiannual", "annual", "biennial"],
+  "plans": [
+    {
+      "code": "base-starter",
+      "name": "Base Starter",
+      "description": "Starter baseline for SMEs",
+      "billing_cycles_allowed": ["monthly", "annual"]
+    },
+    {
+      "code": "base-enterprise",
+      "name": "Base Enterprise",
+      "description": "Enterprise baseline with extended controls",
+      "billing_cycles_allowed": ["monthly", "semiannual", "annual", "biennial"]
+    }
+  ],
+  "rules": {
+    "coupon": {
+      "LAUNCH50": {
+        "type": "percent",
+        "value": 50,
+        "applies_to": ["plan", "module", "addon"],
+        "notes": "Launch coupon, example only"
+      }
+    },
+    "pricing_formula": {
+      "description": "Compute total = base + sum(addons) - coupon",
+      "supports_one_time": true,
+      "supports_subscription": true
+    }
+  }
+}

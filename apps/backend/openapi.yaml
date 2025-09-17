@@ -1,0 +1,299 @@
+openapi: 3.1.0
+info:
+  title: German Code Zero AI – Public API (Draft)
+  version: 0.1.0
+  description: Draft OpenAPI – no implementation, subject to change.
+servers:
+  - url: https://api.germancodezero.ai
+    description: Production (placeholder)
+  - url: https://staging.api.germancodezero.ai
+    description: Staging (placeholder)
+
+paths:
+  /api/health:
+    get:
+      summary: Health/readiness probe
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /api/pricing:
+    get:
+      summary: Get live pricing for selection
+      parameters:
+        - in: query
+          name: billing_cycle
+          schema:
+            type: string
+            enum: [monthly, semiannual, annual, biennial]
+        - in: query
+          name: coupon
+          schema:
+            type: string
+        - in: query
+          name: modules
+          description: Comma-separated module codes
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Price breakdown
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PricingResponse'
+  /api/modules:
+    get:
+      summary: List modules and add-ons catalog
+      responses:
+        '200':
+          description: Catalog
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModulesCatalog'
+  /api/checkout/session:
+    post:
+      summary: Create a Stripe checkout session for the configured selection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+            examples:
+              sample:
+                value:
+                  plan_code: "base-enterprise"
+                  billing_cycle: "annual"
+                  modules: ["email-routing", "voicebot"]
+                  addons: ["signature-extract"]
+                  coupon: "LAUNCH50"
+                  referral_code: "REF-ABCD12"
+      responses:
+        '200':
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutSessionResponse'
+  /api/webhooks/stripe:
+    post:
+      summary: Receive Stripe webhook events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Event accepted (idempotent)
+  /api/orders/{id}:
+    get:
+      summary: Get order by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Not found
+  /api/referrals/create:
+    post:
+      summary: Create a referral code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReferralRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Referral'
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+        time:
+          type: string
+          format: date-time
+    Money:
+      type: object
+      properties:
+        currency:
+          type: string
+          example: EUR
+        amount:
+          type: number
+          format: float
+          example: 199.0
+    PricingBreakdownItem:
+      type: object
+      properties:
+        item_type:
+          type: string
+          enum: [plan, module, addon]
+        code:
+          type: string
+        quantity:
+          type: integer
+          default: 1
+        unit_price:
+          $ref: '#/components/schemas/Money'
+        total:
+          $ref: '#/components/schemas/Money'
+    PricingResponse:
+      type: object
+      properties:
+        billing_cycle:
+          type: string
+        coupon_applied:
+          type: boolean
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricingBreakdownItem'
+        subtotal:
+          $ref: '#/components/schemas/Money'
+        discount:
+          $ref: '#/components/schemas/Money'
+        total:
+          $ref: '#/components/schemas/Money'
+    Module:
+      type: object
+      properties:
+        code:
+          type: string
+        category:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        addons:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddOn'
+    AddOn:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    ModulesCatalog:
+      type: object
+      properties:
+        modules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Module'
+        plans:
+          type: array
+          items:
+            $ref: '#/components/schemas/Plan'
+    Plan:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        billing_cycles_allowed:
+          type: array
+          items:
+            type: string
+            enum: [monthly, semiannual, annual, biennial]
+    CheckoutRequest:
+      type: object
+      required: [plan_code, billing_cycle]
+      properties:
+        plan_code:
+          type: string
+        billing_cycle:
+          type: string
+          enum: [monthly, semiannual, annual, biennial]
+        modules:
+          type: array
+          items:
+            type: string
+        addons:
+          type: array
+          items:
+            type: string
+        coupon:
+          type: string
+        referral_code:
+          type: string
+    CheckoutSessionResponse:
+      type: object
+      properties:
+        session_id:
+          type: string
+        url:
+          type: string
+          format: uri
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, paid, failed, canceled]
+        plan_code:
+          type: string
+        billing_cycle:
+          type: string
+        currency:
+          type: string
+        total:
+          $ref: '#/components/schemas/Money'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricingBreakdownItem'
+    CreateReferralRequest:
+      type: object
+      properties:
+        referrer_user_id:
+          type: string
+          format: uuid
+    Referral:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        status:
+          type: string
+          enum: [created, converted, rejected]

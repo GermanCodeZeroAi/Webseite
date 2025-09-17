@@ -1,0 +1,68 @@
+{
+  "version": "0.1.0",
+  "categories": ["Email", "Telefonie", "Bild", "Video", "Musik", "Webseiten"],
+  "modules": [
+    {
+      "code": "email-routing",
+      "category": "Email",
+      "name": "E-Mail Routing",
+      "description": "Automated routing and triage",
+      "addons": ["signature-extract", "language-detection"],
+      "active": true
+    },
+    {
+      "code": "voicebot",
+      "category": "Telefonie",
+      "name": "Voicebot",
+      "description": "Enterprise voice assistant",
+      "addons": ["asr-premium", "realtime-analytics"],
+      "active": true
+    },
+    {
+      "code": "image-gen",
+      "category": "Bild",
+      "name": "Image Generation",
+      "description": "On-brand image generation",
+      "addons": ["brand-style-lock", "copyright-check"],
+      "active": true
+    },
+    {
+      "code": "video-synth",
+      "category": "Video",
+      "name": "Video Synthesis",
+      "description": "Tutorial and demo video synthesis",
+      "addons": ["captioning", "script-polish"],
+      "active": true
+    },
+    {
+      "code": "music-loop",
+      "category": "Musik",
+      "name": "Music Loops",
+      "description": "Royalty-friendly music loop generation",
+      "addons": ["mix-master", "length-variants"],
+      "active": true
+    },
+    {
+      "code": "web-content",
+      "category": "Webseiten",
+      "name": "Web Content Automation",
+      "description": "Governed content creation for websites",
+      "addons": ["translation-de-en", "a11y-review"],
+      "active": true
+    }
+  ],
+  "addons": [
+    { "code": "signature-extract", "name": "Signature Extraction", "description": "Extract signatures from emails" },
+    { "code": "language-detection", "name": "Language Detection", "description": "Detect language and route" },
+    { "code": "asr-premium", "name": "Premium ASR", "description": "High-accuracy speech-to-text" },
+    { "code": "realtime-analytics", "name": "Realtime Analytics", "description": "Call analytics in real time" },
+    { "code": "brand-style-lock", "name": "Brand Style Lock", "description": "Constrain outputs to brand style" },
+    { "code": "copyright-check", "name": "Copyright Check", "description": "Policy and license checks" },
+    { "code": "captioning", "name": "Captioning", "description": "Generate captions and subtitles" },
+    { "code": "script-polish", "name": "Script Polish", "description": "Improve scripts for narration" },
+    { "code": "mix-master", "name": "Mix & Master", "description": "Audio finishing" },
+    { "code": "length-variants", "name": "Length Variants", "description": "Multiple length exports" },
+    { "code": "translation-de-en", "name": "DE/EN Translation", "description": "Translate German/English" },
+    { "code": "a11y-review", "name": "Accessibility Review", "description": "Audit for WCAG 2.2 AA" }
+  ]
+}
