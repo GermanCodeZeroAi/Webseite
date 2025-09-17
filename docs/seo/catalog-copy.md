@@ -1,3 +1,89 @@
+## Catalog Copy (DE/EN)
+
+### E‑Mail
+DE Kurz (120–160): Premium-E-Mail-Orchestrierung für Journeys, die öffnen, klicken, konvertieren – von Begrüßung bis Re-Engagement.
+- Nutzen:
+  - Höhere Zustell- und Öffnungsraten
+  - Dynamische Segmente ohne Mehraufwand
+  - Compliance & Marken-konsistentes Design
+EN Short: Premium email orchestration for journeys that open, click, convert—from welcome to re‑engagement.
+- Benefits:
+  - Higher deliverability and open rates
+  - Dynamic segments without extra ops
+  - Compliance and brand‑consistent design
+
+### Telefonie
+DE Kurz: Gesprächsfluss in Studio‑Qualität – Routing, Aufzeichnung, Auswertung. Jeder Call sitzt.
+- Nutzen:
+  - Intelligentes Routing nach Intent & Priorität
+  - Klarheit durch Aufzeichnung und Auswertung
+  - Höhere Abschlussquote im Inbound/Outbound
+EN Short: Studio‑grade call flows—routing, recording, analytics. Every call on point.
+- Benefits:
+  - Intent- and priority‑based routing
+  - Clarity via recordings and analytics
+  - Higher conversion across inbound/outbound
+
+### Bild
+DE Kurz: Bildgenerierung und ‑optimierung für performante Creatives in jeder Journey‑Phase.
+- Nutzen:
+  - Schnelle Variantenbildung für Tests
+  - Markenkonforme Assets in Gold/Schwarz
+  - Ladezeiten und CTR optimiert
+EN Short: Image generation and optimization for high‑performing creatives in every journey stage.
+- Benefits:
+  - Rapid variant creation for testing
+  - On‑brand assets in gold/black
+  - Optimized load time and CTR
+
+### Video
+DE Kurz: Video in Premium‑Anmutung – Snippets, Demos, Stories. Bereitstellen, messen, skalieren.
+- Nutzen:
+  - Schneller Schnitt & Untertitel automatisch
+  - Personalisierte Intros/CTAs
+  - Messbare Impact‑Kurven je Kanal
+EN Short: Premium‑grade video—snippets, demos, stories. Ship, measure, scale.
+- Benefits:
+  - Fast editing and auto‑captions
+  - Personalized intros/CTAs
+  - Measurable impact per channel
+
+### Musik
+DE Kurz: Lizenzsichere Sound‑Signaturen für Markenmomente, die bleiben.
+- Nutzen:
+  - Kuratierte Library für Premium‑Marken
+  - Rechte geklärt, global nutzbar
+  - Konsistente akustische Identität
+EN Short: License‑safe sonic signatures for brand moments that stick.
+- Benefits:
+  - Curated library for premium brands
+  - Rights cleared, globally usable
+  - Consistent sonic identity
+
+### Webseiten
+DE Kurz: High‑performance‑Sites in Gold/Schwarz – schnell, zugänglich, vertriebsstark.
+- Nutzen:
+  - Lighthouse‑stark und SEO‑ready
+  - Modularer Aufbau, leicht pflegbar
+  - Conversion‑optimierte Templates
+EN Short: High‑performance sites in gold/black—fast, accessible, sales‑ready.
+- Benefits:
+  - Strong Lighthouse and SEO‑ready
+  - Modular build, easy to maintain
+  - Conversion‑optimized templates
+
+### Bundles
+DE Kurz: Kuratierte Pakete für sofortigen Impact – von Launch bis Enterprise.
+- Nutzen:
+  - Schneller Time‑to‑Value
+  - Klar kalkulierbar, skalierbar
+  - Concierge‑Onboarding inklusive
+EN Short: Curated bundles for immediate impact—from launch to enterprise.
+- Benefits:
+  - Faster time‑to‑value
+  - Clear, scalable pricing
+  - Concierge onboarding included
+
 # Catalog Copy (DE/EN)
 
 ## E‑Mail / Email

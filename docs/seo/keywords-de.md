@@ -1,3 +1,64 @@
+## Keyword-Sets DE (Intent-getrennt)
+
+Hinweis: Premium-B2B, Gold/Schwarz. Keine Interna; nur Leistungen/Resultate. "Refer-a-Friend (bald verfügbar)" optional in Snippets.
+
+### Navigational Intent
+- autonomy grid
+- autonomy grid suite
+- autonomy grid preise
+- autonomy grid demo
+
+### Commercial Investigation
+- premium marketing automation b2b
+- orchestrierung revenue service plattform
+- end-to-end customer journey orchestration
+- enterprise marketing suite gold schwarz
+- premium telefonie routing analytics b2b
+- premium email orchestration b2b
+- high performance websites b2b seo
+- video marketing premium b2b
+
+### Transactional
+- marketing automation demo buchen
+- orchestrierung plattform angebot anfordern
+- enterprise bundle konfigurator
+- concierge onboarding enterprise suite
+
+### Informational
+- was ist revenue orchestration
+- journeys konsistent gestalten b2b
+- nps steigern b2b service
+- vertriebszyklen beschleunigen tipps
+
+## Title-/Meta-Vorlagen (DE)
+
+- Title Home: Autonomy Grid – Mehr Umsatz. Weniger Reibung. Premium B2B.
+- Meta Home: Orchestrieren Sie Revenue- und Service-Prozesse Ende‑zu‑Ende – Premium-Erlebnis in Gold/Schwarz. Refer‑a‑Friend (bald verfügbar).
+
+- Title Shop: Autonomy Grid Konfigurator – Module & Bundles zusammenstellen
+- Meta Shop: Stellen Sie Module und Bundles transparent zusammen. Preise live, skalierbar, premium.
+
+- Title Branchen: Branchenlösungen – SaaS, E‑Commerce, Services, Finance
+- Meta Branchen: Branchenpräzise Journeys ohne Custom‑Overhead. Kürzere Ramp‑Up‑Zeit, höhere Abschlussquoten.
+
+- Title Preise: Preise & Pläne – Core, Growth, Enterprise
+- Meta Preise: Klare Pläne inkl. Premium‑Support. Monatlich oder jährlich. Refer‑a‑Friend (bald verfügbar).
+
+- Title Über uns: Über uns – Stille Infrastruktur, laute Ergebnisse
+- Meta Über uns: Fokus auf Orchestrierung, Qualität, Geschwindigkeit. Premium, präzise, verbindlich.
+
+- Title Kontakt: Kontakt – Gespräch vereinbaren
+- Meta Kontakt: Sprechen wir über Ihre Wachstumshebel. Formular, E‑Mail, Terminbuchung.
+
+## OpenGraph Guidelines (DE/EN)
+
+- OG Title: Klar, knapp, ≤60 Zeichen, ohne Jargon.
+- OG Description: 90–110 Zeichen, Outcome‑fokussiert, Call‑to‑Action.
+- OG Image: Gold/Schwarz, hoher Kontrast, 1200×630, Logo links oben, Claim rechts.
+- OG Type: website auf statischen Seiten, product auf Modulseiten.
+- OG Locale: de_DE / en_US je nach i18n.
+- Twitter Card: summary_large_image mit identischem Motiv.
+
 # SEO Grundlagen – DE
 
 ## Keyword‑Sets nach Intent

@@ -1,3 +1,43 @@
+## Brand Naming & Messaging (DE/EN)
+
+— Premium B2B positioning in Gold/Black. No internals, only outcomes.
+
+### 1) Namenslinien mit Claim/Tagline (DE/EN)
+
+1. Autonomy Grid  
+   - DE Claim: Mehr Umsatz. Weniger Reibung. Operative Exzellenz auf Autopilot.  
+   - EN Tagline: More revenue. Less friction. Operational excellence on autopilot.
+
+2. SpectraGold Suite  
+   - DE Claim: Premium-Automation für spürbare Performance in Vertrieb und Service.  
+   - EN Tagline: Premium automation for performance you can feel.
+
+3. Obsidian Ops  
+   - DE Claim: Präzise Abläufe. Boardroom-taugliche Resultate.  
+   - EN Tagline: Precision workflows. Boardroom-grade results.
+
+4. Velvet Engine  
+   - DE Claim: Nahtlose Wachstumsbewegungen mit Concierge-Anspruch.  
+   - EN Tagline: Seamless growth motions with concierge polish.
+
+5. Aurum Control  
+   - DE Claim: Pipeline im Griff. Skalierung ohne Lärm.  
+   - EN Tagline: Own your pipeline. Scale without noise.
+
+### 2) Favorit & Begründung
+
+— Favorit: Autonomy Grid  
+— Gründe:
+- Klarer Nutzenfokus: Autonomie und Grid als Bild für stabile, skalierbare Orchestrierung
+- International verständlich; wirkt modern und premium ohne Tech-Jargon
+- Breite Anwendbarkeit über Produktlinien, Bundles und Branchen hinweg
+- Starker Hero-Claim möglich (Revenue ↑, Friction ↓) und konsistent mit Gold/Schwarz-Ästhetik
+
+### 3) Markenbotschaft (Kurzform DE/EN)
+
+- DE: Wir orchestrieren Ihre Revenue- und Service-Prozesse Ende‑zu‑Ende – für schnellere Zyklen, konsistente Journeys und planbares Wachstum. Refer-a-Friend (bald verfügbar).
+- EN: We orchestrate your revenue and service processes end‑to‑end—for faster cycles, consistent journeys, and predictable growth. Refer‑a‑Friend (coming soon).
+
 # Brand Naming & Messaging (DE/EN)
 
 ## Naming Lines (5) + Claim/Tagline

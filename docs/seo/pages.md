@@ -1,3 +1,73 @@
+## Pages Copy (DE/EN)
+
+### Homepage
+DE:
+- Hero as in hero-copy.md
+- Value Block: Mehr Umsatz, weniger Reibung. Wir orchestrieren Ihre Revenue- und Service-Prozesse Ende‑zu‑Ende – von Kontaktpunkt bis Cash. Premium-Erlebnis in Gold/Schwarz.
+- Proof Block: Umsatzzyklen beschleunigt, NPS gesteigert, Operatives reduziert.
+- CTA: Demo anfragen | Refer‑a‑Friend (bald verfügbar)
+
+EN:
+- Hero as in hero-copy.md
+- Value Block: More revenue, less friction. We orchestrate your revenue and service processes end‑to‑end—from touchpoint to cash. Premium experience in gold/black.
+- Proof Block: Faster cycles, higher NPS, reduced busywork.
+- CTA: Request demo | Refer‑a‑Friend (coming soon)
+
+### Shop/Konfigurator
+DE:
+- Intro: Stellen Sie Ihre Autonomy‑Grid‑Module und Bundles nach Bedarf zusammen. Transparent, skalierbar, premium.
+- Guidance: Wählen Sie Kategorie, Umfang, Laufzeit. Preise live aktualisiert.
+- CTA: In den Warenkorb | Angebot anfordern
+
+EN:
+- Intro: Configure your Autonomy Grid modules and bundles on demand. Transparent, scalable, premium.
+- Guidance: Choose category, scope, term. Live pricing updates.
+- CTA: Add to cart | Request quote
+
+### Branchenlösungen
+DE:
+- Intro: Branchenpräzise Journeys ohne Custom‑Overhead. Vorlagen für SaaS, E‑Commerce, Professional Services, Financial Services.
+- Outcome: Kürzere Ramp‑Up‑Zeit, weniger Handovers, mehr Abschlussquote.
+- CTA: Branchen-Demo buchen
+
+EN:
+- Intro: Industry‑precise journeys without custom overhead. Blueprints for SaaS, e‑commerce, professional services, financial services.
+- Outcome: Shorter ramp‑up, fewer handovers, higher close rates.
+- CTA: Book industry demo
+
+### Preise
+DE:
+- Intro: Klare Pläne. Premium‑Support inklusive. Monatlich oder jährlich.
+- Plans: Core, Growth, Enterprise (mit Concierge‑Onboarding).
+- Note: Refer‑a‑Friend (bald verfügbar) – exklusive Gutschriften.
+
+EN:
+- Intro: Clear plans. Premium support included. Monthly or annual.
+- Plans: Core, Growth, Enterprise (with concierge onboarding).
+- Note: Refer‑a‑Friend (coming soon) – exclusive credits.
+
+### Über uns
+DE:
+- Story: Wir bauen stille Infrastruktur für laute Ergebnisse. Fokus: Orchestrierung, Qualität, Geschwindigkeit.
+- Prinzipien: Premium, präzise, verbindlich.
+- CTA: Team kennenlernen
+
+EN:
+- Story: We build quiet infrastructure for loud results. Focus: orchestration, quality, speed.
+- Principles: Premium, precise, dependable.
+- CTA: Meet the team
+
+### Kontakt
+DE:
+- Intro: Sprechen wir über Ihre Wachstumshebel.
+- Channels: Formular, E‑Mail, Terminbuchung.
+- CTA: Gespräch vereinbaren
+
+EN:
+- Intro: Let’s talk about your growth levers.
+- Channels: Form, email, scheduling link.
+- CTA: Schedule a call
+
 # Page Copy (DE/EN)
 
 ## Homepage / Startseite
