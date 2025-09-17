@@ -222,7 +222,60 @@ export function buildSchema(page: PageType, locale: Locale, options?: { category
   const content = CONTENT[locale];
   const localeCode = locale === 'de' ? 'de-DE' : 'en-US';
   
-  const baseSchema = {
+  // Service-focused offerings for JSON-LD
+  const services = locale === 'de' ? [
+    {
+      '@type': 'Service',
+      name: 'Revenue-Orchestrierung',
+      description: 'End-to-End Umsatzprozesse automatisieren und optimieren',
+      provider: { '@type': 'Organization', name: content.organization.name },
+      serviceType: 'Business Process Automation',
+      areaServed: 'DE'
+    },
+    {
+      '@type': 'Service', 
+      name: 'Service-Orchestrierung',
+      description: 'Kundenservice-Prozesse nahtlos orchestrieren',
+      provider: { '@type': 'Organization', name: content.organization.name },
+      serviceType: 'Customer Service Management',
+      areaServed: 'DE'
+    },
+    {
+      '@type': 'Service',
+      name: 'Premium B2B Lösungen',
+      description: 'Skalierbare Enterprise-Lösungen für nachhaltige Geschäftsergebnisse',
+      provider: { '@type': 'Organization', name: content.organization.name },
+      serviceType: 'Business Consulting',
+      areaServed: 'DE'
+    }
+  ] : [
+    {
+      '@type': 'Service',
+      name: 'Revenue Orchestration',
+      description: 'End-to-end revenue process automation and optimization',
+      provider: { '@type': 'Organization', name: content.organization.name },
+      serviceType: 'Business Process Automation',
+      areaServed: 'US'
+    },
+    {
+      '@type': 'Service',
+      name: 'Service Orchestration', 
+      description: 'Seamless customer service process orchestration',
+      provider: { '@type': 'Organization', name: content.organization.name },
+      serviceType: 'Customer Service Management',
+      areaServed: 'US'
+    },
+    {
+      '@type': 'Service',
+      name: 'Premium B2B Solutions',
+      description: 'Scalable enterprise solutions for sustainable business outcomes',
+      provider: { '@type': 'Organization', name: content.organization.name },
+      serviceType: 'Business Consulting',
+      areaServed: 'US'
+    }
+  ];
+
+  const baseSchema: any = {
     '@context': 'https://schema.org',
     '@graph': [
       {
@@ -237,7 +290,8 @@ export function buildSchema(page: PageType, locale: Locale, options?: { category
           contactType: 'customer service',
           availableLanguage: [localeCode],
           areaServed: locale === 'de' ? 'DE' : 'US'
-        }
+        },
+        makesOffer: services
       },
       {
         '@type': 'WebSite',
@@ -321,29 +375,221 @@ export function buildSchema(page: PageType, locale: Locale, options?: { category
     };
   }
   
-  // Add product schema for category pages
+  // Add service offering schema for category pages
   if (page === 'category' && options?.category) {
-    baseSchema['@graph'].push({
-      '@type': 'Product',
-      name: `Premium ${options.category}`,
-      description: `${options.category} in Markenqualität – schneller, konsistenter, messbar.`,
-      brand: {
-        '@type': 'Brand',
+    const categoryService = locale === 'de' ? {
+      '@type': 'Service',
+      name: `Premium ${options.category} Services`,
+      description: `${options.category} Lösungen in Markenqualität – schneller, konsistenter, messbar. Planbare Ergebnisse für nachhaltiges Wachstum.`,
+      provider: {
+        '@type': 'Organization',
         name: content.organization.name
       },
-      category: options.category,
+      serviceType: 'Business Service',
+      areaServed: 'DE',
       offers: {
         '@type': 'Offer',
         priceCurrency: 'EUR',
-        availability: 'https://schema.org/InStock',
+        availability: 'https://schema.org/Available',
         seller: {
           '@type': 'Organization',
           name: content.organization.name
         }
       }
-    });
+    } : {
+      '@type': 'Service',
+      name: `Premium ${options.category} Services`,
+      description: `${options.category} solutions in premium quality – faster, more consistent, measurable. Predictable results for sustainable growth.`,
+      provider: {
+        '@type': 'Organization',
+        name: content.organization.name
+      },
+      serviceType: 'Business Service',
+      areaServed: 'US',
+      offers: {
+        '@type': 'Offer',
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/Available',
+        seller: {
+          '@type': 'Organization',
+          name: content.organization.name
+        }
+      }
+    };
+    
+    baseSchema['@graph'].push(categoryService);
   }
   
+  // Add FAQ schema for pricing and service pages
+  if (page === 'pricing' || page === 'home') {
+    const faqItems = locale === 'de' ? [
+      {
+        '@type': 'Question',
+        name: 'Wie schnell sehe ich erste Ergebnisse?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Erste messbare Verbesserungen in Revenue- und Service-Prozessen sind bereits nach 2-4 Wochen sichtbar. Vollständige Orchestrierung erreichen Sie in 8-12 Wochen.'
+        }
+      },
+      {
+        '@type': 'Question', 
+        name: 'Welche Branchen profitieren am meisten?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Besonders SaaS, E-Commerce, Finanzdienstleister und Service-Unternehmen erzielen mit unseren Lösungen 20-40% höhere Abschlussquoten und reduzierte Reibung.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'Gibt es versteckte Kosten?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Nein. Alle Preise sind transparent dargestellt. Premium-Support und Standard-Integrationen sind bereits enthalten.'
+        }
+      }
+    ] : [
+      {
+        '@type': 'Question',
+        name: 'How quickly will I see results?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'First measurable improvements in revenue and service processes are visible within 2-4 weeks. Full orchestration is achieved in 8-12 weeks.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'Which industries benefit most?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'SaaS, e-commerce, financial services, and service companies achieve 20-40% higher close rates and reduced friction with our solutions.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'Are there hidden costs?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'No. All prices are transparently displayed. Premium support and standard integrations are already included.'
+        }
+      }
+    ];
+
+    baseSchema['@graph'].push({
+      '@type': 'FAQPage',
+      mainEntity: faqItems
+    });
+  }
+
+  // Add pricing offers for pricing page
+  if (page === 'pricing') {
+    const pricingOffers = locale === 'de' ? [
+      {
+        '@type': 'Offer',
+        name: 'Core Plan',
+        description: 'Grundlegende Revenue- und Service-Orchestrierung für wachsende Unternehmen',
+        priceCurrency: 'EUR',
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          price: '499',
+          priceCurrency: 'EUR',
+          unitCode: 'MON'
+        },
+        availability: 'https://schema.org/Available',
+        seller: {
+          '@type': 'Organization',
+          name: content.organization.name
+        }
+      },
+      {
+        '@type': 'Offer',
+        name: 'Growth Plan',
+        description: 'Erweiterte Orchestrierung mit Premium-Analytics und Multi-Channel-Support',
+        priceCurrency: 'EUR',
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          price: '999',
+          priceCurrency: 'EUR',
+          unitCode: 'MON'
+        },
+        availability: 'https://schema.org/Available',
+        seller: {
+          '@type': 'Organization',
+          name: content.organization.name
+        }
+      },
+      {
+        '@type': 'Offer',
+        name: 'Enterprise Plan',
+        description: 'Vollständige End-to-End-Orchestrierung mit dediziertem Success Management',
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/Available',
+        seller: {
+          '@type': 'Organization',
+          name: content.organization.name
+        }
+      }
+    ] : [
+      {
+        '@type': 'Offer',
+        name: 'Core Plan',
+        description: 'Essential revenue and service orchestration for growing businesses',
+        priceCurrency: 'EUR',
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          price: '499',
+          priceCurrency: 'EUR',
+          unitCode: 'MON'
+        },
+        availability: 'https://schema.org/Available',
+        seller: {
+          '@type': 'Organization',
+          name: content.organization.name
+        }
+      },
+      {
+        '@type': 'Offer',
+        name: 'Growth Plan',
+        description: 'Advanced orchestration with premium analytics and multi-channel support',
+        priceCurrency: 'EUR',
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          price: '999',
+          priceCurrency: 'EUR',
+          unitCode: 'MON'
+        },
+        availability: 'https://schema.org/Available',
+        seller: {
+          '@type': 'Organization',
+          name: content.organization.name
+        }
+      },
+      {
+        '@type': 'Offer',
+        name: 'Enterprise Plan',
+        description: 'Complete end-to-end orchestration with dedicated success management',
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/Available',
+        seller: {
+          '@type': 'Organization',
+          name: content.organization.name
+        }
+      }
+    ];
+
+    baseSchema['@graph'].push({
+      '@type': 'Product',
+      name: locale === 'de' ? 'Autonomy Grid Pläne' : 'Autonomy Grid Plans',
+      description: locale === 'de' ? 
+        'Skalierbare B2B-Orchestrierung für nachhaltiges Umsatzwachstum und optimierte Service-Prozesse' :
+        'Scalable B2B orchestration for sustainable revenue growth and optimized service processes',
+      brand: {
+        '@type': 'Brand',
+        name: content.organization.name
+      },
+      offers: pricingOffers
+    });
+  }
+
   baseSchema['@graph'].push(pageSchema);
   
   return baseSchema;
