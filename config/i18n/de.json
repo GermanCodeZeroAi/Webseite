@@ -1,0 +1,11 @@
+{
+  "hero": {
+    "headline": "Lokal‑first‑Automatisierung, die Ergebnisse skaliert",
+    "sub": "Automatisieren Sie geschäftskritische Workflows sicher auf Ihrer Infrastruktur – für schnellere Ergebnisse, deutliche Zeitersparnis und verlässliche Skalierung.",
+    "bullets": ["Lokal‑first: Ihre Daten bleiben auf Ihrer Infrastruktur.", "Spürbare Zeitersparnis durch Ende‑zu‑Ende‑Automatisierung.", "Für Skalierung gebaut: von einem Team bis zur gesamten Organisation."]
+  },
+  "cta": {
+    "primary": "Demo anfordern",
+    "secondary": "Mit dem Vertrieb sprechen"
+  }
+}
