@@ -1,5 +1,5 @@
 /**
- * SEO Utilities for German Code Zero AI Frontend
+ * SEO Utilities for Autonomy Grid Frontend
  * 
  * Provides comprehensive SEO primitives including titles, meta descriptions,
  * OpenGraph tags, and JSON-LD structured data for all pages.
@@ -41,20 +41,20 @@ export interface IndustrySEOData extends SEOData {
 }
 
 // Base configuration
-const BASE_URL = 'https://germancodezero.ai';
+const BASE_URL = 'https://autonomy-grid.com';
 const DEFAULT_OG_IMAGE = '/og/default-black-gold.png';
 
 // i18n content
 const CONTENT = {
   de: {
     organization: {
-      name: 'German Code Zero AI',
+      name: 'Autonomy Grid',
       description: 'Premium B2B Services für Revenue- und Service-Orchestrierung',
       url: BASE_URL,
-      logo: `${BASE_URL}/logo/gcz-logo-black-gold.svg`,
+      logo: `${BASE_URL}/logo/autonomy-grid-logo-black-gold.svg`,
       sameAs: [
-        'https://linkedin.com/company/germancodezeroai',
-        'https://x.com/germancodezeroai'
+        'https://linkedin.com/company/autonomygrid',
+        'https://x.com/autonomygrid'
       ]
     },
     pages: {
@@ -98,13 +98,13 @@ const CONTENT = {
   },
   en: {
     organization: {
-      name: 'German Code Zero AI',
+      name: 'Autonomy Grid',
       description: 'Premium B2B Services for Revenue and Service Orchestration',
       url: BASE_URL,
-      logo: `${BASE_URL}/logo/gcz-logo-black-gold.svg`,
+      logo: `${BASE_URL}/logo/autonomy-grid-logo-black-gold.svg`,
       sameAs: [
-        'https://linkedin.com/company/germancodezeroai',
-        'https://x.com/germancodezeroai'
+        'https://linkedin.com/company/autonomygrid',
+        'https://x.com/autonomygrid'
       ]
     },
     pages: {

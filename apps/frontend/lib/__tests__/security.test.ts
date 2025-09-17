@@ -219,7 +219,7 @@ describe('Security Utilities', () => {
       expect(updatedFormData.get('field1')).toBe('value1');
     });
 
-    it('should refresh token from API', async () => {
+    it('should refresh token from backend', async () => {
       MockUtils.mockFetch({
         '/api/csrf-token': { 
           status: 200, 

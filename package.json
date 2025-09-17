@@ -1,7 +1,7 @@
 {
-  "name": "germancodezero-ai",
+  "name": "autonomy-grid",
   "version": "0.1.0",
-  "description": "German Code Zero AI - Premium B2B Services Platform",
+  "description": "Autonomy Grid - Premium B2B Services Platform",
   "main": "index.js",
   "scripts": {
     "test": "jest",

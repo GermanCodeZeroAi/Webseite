@@ -1,5 +1,5 @@
 /**
- * Security Utilities for German Code Zero AI Frontend
+ * Security Utilities for Autonomy Grid Frontend
  * 
  * Provides comprehensive security features including:
  * - Content Security Policy (CSP) management
@@ -84,8 +84,8 @@ export class CSPManager {
       'connect-src': [
         "'self'",
         'https://api.stripe.com',
-        'https://api.germancodezero.ai',
-        'https://staging.api.germancodezero.ai'
+        'https://backend.autonomy-grid.com',
+        'https://staging.autonomy-grid.com'
       ],
       'frame-src': [
         "'self'",
@@ -307,7 +307,7 @@ export class CSRFManager {
    */
   async refreshToken(): Promise<void> {
     try {
-      const response = await fetch('/api/csrf-token', {
+      const response = await fetch('/auth/csrf-token', {
         method: 'GET',
         credentials: 'include'
       });

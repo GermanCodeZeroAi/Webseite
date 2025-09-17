@@ -1,5 +1,5 @@
 /**
- * Sitemap Generator for German Code Zero AI
+ * Sitemap Generator for Autonomy Grid
  * 
  * Generates XML sitemaps for search engines including:
  * - Static pages
@@ -16,7 +16,7 @@ import { join } from 'path';
 const modulesCatalog = JSON.parse(readFileSync(join(process.cwd(), 'config/modules.catalog.json'), 'utf8'));
 const industriesCatalog = JSON.parse(readFileSync(join(process.cwd(), 'config/industries.catalog.json'), 'utf8'));
 
-const BASE_URL = 'https://germancodezero.ai';
+const BASE_URL = 'https://autonomy-grid.com';
 
 export interface SitemapEntry {
   url: string;
@@ -181,9 +181,9 @@ Allow: /
 Sitemap: ${BASE_URL}/sitemap.xml
 Sitemap: ${BASE_URL}/sitemap-images.xml
 
-# Disallow admin and API routes
+# Disallow admin and backend routes
 Disallow: /admin/
-Disallow: /api/
+Disallow: /backend/
 Disallow: /_next/
 Disallow: /static/
 
