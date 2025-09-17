@@ -1,5 +1,5 @@
 /**
- * Performance Optimization Utilities for German Code Zero AI Frontend
+ * Performance Optimization Utilities for German Code Zero Frontend
  * 
  * Provides comprehensive performance monitoring and optimization including:
  * - Core Web Vitals monitoring

@@ -6,15 +6,15 @@
       "code": "email-routing",
       "category": "Email",
       "name": "E-Mail Routing",
-      "description": "Automated routing and triage",
+      "description": "Smart routing and triage",
       "addons": ["signature-extract", "language-detection"],
       "active": true
     },
     {
       "code": "voicebot",
       "category": "Telefonie",
-      "name": "Voicebot",
-      "description": "Enterprise voice assistant",
+      "name": "Voice Solution",
+      "description": "Enterprise voice solution",
       "addons": ["asr-premium", "realtime-analytics"],
       "active": true
     },
@@ -45,7 +45,7 @@
     {
       "code": "web-content",
       "category": "Webseiten",
-      "name": "Web Content Automation",
+      "name": "Web Content Orchestration",
       "description": "Governed content creation for websites",
       "addons": ["translation-de-en", "a11y-review"],
       "active": true

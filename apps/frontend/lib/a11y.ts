@@ -1,5 +1,5 @@
 /**
- * Accessibility Utilities for German Code Zero AI Frontend
+ * Accessibility Utilities for German Code Zero Frontend
  * 
  * Provides comprehensive accessibility features including:
  * - Focus management

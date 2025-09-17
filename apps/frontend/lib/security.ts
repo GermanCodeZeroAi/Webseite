@@ -1,5 +1,5 @@
 /**
- * Security Utilities for German Code Zero AI Frontend
+ * Security Utilities for German Code Zero Frontend
  * 
  * Provides comprehensive security features including:
  * - Content Security Policy (CSP) management

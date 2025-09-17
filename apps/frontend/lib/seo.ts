@@ -1,5 +1,5 @@
 /**
- * SEO Utilities for German Code Zero AI Frontend
+ * SEO Utilities for German Code Zero Frontend
  * 
  * Provides comprehensive SEO primitives including titles, meta descriptions,
  * OpenGraph tags, and JSON-LD structured data for all pages.
@@ -48,7 +48,7 @@ const DEFAULT_OG_IMAGE = '/og/default-black-gold.png';
 const CONTENT = {
   de: {
     organization: {
-      name: 'German Code Zero AI',
+      name: 'German Code Zero',
       description: 'Premium B2B Services für Revenue- und Service-Orchestrierung',
       url: BASE_URL,
       logo: `${BASE_URL}/logo/gcz-logo-black-gold.svg`,
@@ -98,7 +98,7 @@ const CONTENT = {
   },
   en: {
     organization: {
-      name: 'German Code Zero AI',
+      name: 'German Code Zero',
       description: 'Premium B2B Services for Revenue and Service Orchestration',
       url: BASE_URL,
       logo: `${BASE_URL}/logo/gcz-logo-black-gold.svg`,
