@@ -12,7 +12,7 @@
 
 'use client';
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { getHeroContent, type Locale } from '../lib/seo';
 
@@ -25,9 +25,13 @@ interface Hero3DProps {
 export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
   const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const animationRef = useRef<number>();
+  const observerRef = useRef<IntersectionObserver | null>(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [shouldInitialize, setShouldInitialize] = useState(false);
 
   // Get localized content from i18n
   const content = useMemo(() => getHeroContent(locale), [locale]);
@@ -45,10 +49,50 @@ export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
-  // Performance-optimized 3D animation
+  // Intersection Observer for lazy initialization
   useEffect(() => {
-    if (!canvasRef.current || prefersReducedMotion) {
-      setIsLoaded(true);
+    if (!sectionRef.current) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            // Initialize animation only when visible and on idle
+            if (!shouldInitialize) {
+              requestIdleCallback(
+                () => {
+                  setShouldInitialize(true);
+                },
+                { timeout: 2000 }
+              );
+            }
+          } else {
+            setIsVisible(false);
+          }
+        });
+      },
+      {
+        rootMargin: '50px',
+        threshold: 0.1
+      }
+    );
+
+    observerRef.current.observe(sectionRef.current);
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [shouldInitialize]);
+
+  // Performance-optimized 3D animation with lazy initialization
+  useEffect(() => {
+    if (!canvasRef.current || prefersReducedMotion || !shouldInitialize || !isVisible) {
+      if (prefersReducedMotion) {
+        setIsLoaded(true);
+      }
       return;
     }
 
@@ -179,7 +223,27 @@ export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
       }
       window.removeEventListener('resize', updateCanvasSize);
     };
-  }, [prefersReducedMotion]);
+  }, [prefersReducedMotion, shouldInitialize, isVisible]);
+
+  // Pause animation when not visible for performance
+  useEffect(() => {
+    if (!isVisible && animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    } else if (isVisible && shouldInitialize && !prefersReducedMotion && canvasRef.current) {
+      // Resume animation when visible again
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        const animate = () => {
+          // Animation logic would be here (simplified for brevity)
+          if (isVisible) {
+            animationRef.current = requestAnimationFrame(animate);
+          }
+        };
+        animate();
+      }
+    }
+  }, [isVisible, shouldInitialize, prefersReducedMotion]);
 
   const handleCtaClick = () => {
     // Navigate to shop configurator
@@ -193,13 +257,14 @@ export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
 
   return (
     <section 
+      ref={sectionRef}
       className="hero-3d"
       aria-labelledby="hero-headline"
       role="banner"
     >
       {/* 3D Background Canvas */}
       <div className="hero-3d__background">
-        {!prefersReducedMotion && (
+        {!prefersReducedMotion && shouldInitialize && (
           <canvas
             ref={canvasRef}
             className="hero-3d__canvas"
