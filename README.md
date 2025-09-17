@@ -1,106 +1,106 @@
 ## German Code Zero AI – B2B Services (DE/EN)
 
-This repository contains a comprehensive B2B services platform with configurator, checkout (Stripe), FastAPI backend, Postgres/Redis, SEO, accessibility, performance optimization, security, and testing. Production-ready implementation with enterprise-grade features.
+Dieses Repository enthält eine umfassende B2B-Services-Plattform mit Konfigurator, Checkout (Stripe), FastAPI Backend, Postgres/Redis, SEO, Barrierefreiheit, Performance-Optimierung, Sicherheit und Tests. Produktionsreife Implementierung mit Enterprise-Features.
 
-### What we offer (public overview)
-- Configurable service packages (base + add-ons) across Email, Telephony, Generative Media (Image/Video/Music), and Websites.
-- Enterprise-grade checkout and subscriptions via Stripe.
-- Clear pricing logic (rules-based), referrals, and invoices.
-- Premium B2B experience with gold/black branding.
+### Was wir anbieten (öffentliche Übersicht)
+- Konfigurierbare Service-Pakete (Basis + Add-ons) für E-Mail, Telefonie, Generative Medien (Bild/Video/Musik) und Websites.
+- Enterprise-Checkout und Abonnements über Stripe.
+- Klare Preisfindung (regelbasiert), Empfehlungen und Rechnungen.
+- Premium B2B-Erlebnis mit Gold/Schwarz-Branding.
 
-### Architecture overview
-- **Frontend**: React/TypeScript with comprehensive SEO, accessibility (WCAG 2.2 AA), and performance optimization
-- **Backend**: FastAPI with pricing, catalog, checkout session creation, Stripe webhook handling, orders, referrals
-- **Database**: Postgres (source of truth), Redis (cache/ratelimits/idempotency)
-- **Security**: CSP, XSS protection, CSRF tokens, rate limiting, secure storage
-- **Performance**: Core Web Vitals monitoring, lazy loading, image optimization, code splitting
-- **Testing**: Comprehensive test suites with 80%+ coverage, E2E testing, accessibility testing
+### Architektur-Übersicht
+- **Frontend**: React/TypeScript mit umfassendem SEO, Barrierefreiheit (WCAG 2.2 AA) und Performance-Optimierung
+- **Backend**: FastAPI mit Preisfindung, Katalog, Checkout-Session-Erstellung, Stripe-Webhook-Handling, Bestellungen, Empfehlungen
+- **Datenbank**: Postgres (Quelle der Wahrheit), Redis (Cache/Ratelimits/Idempotenz)
+- **Sicherheit**: CSP, XSS-Schutz, CSRF-Tokens, Rate Limiting, sichere Speicherung
+- **Performance**: Core Web Vitals Monitoring, Lazy Loading, Bildoptimierung, Code Splitting
+- **Tests**: Umfassende Test-Suites mit 80%+ Abdeckung, E2E-Tests, Barrierefreiheits-Tests
 
-### Key Features Implemented
+### Implementierte Hauptfunktionen
 
-#### SEO & Accessibility
-- Complete SEO utilities with DE/EN internationalization
-- JSON-LD structured data for all page types
-- OpenGraph optimization with proper meta tags
-- Sitemap generation with multi-language support
-- WCAG 2.2 AA compliance with focus management
-- ARIA live regions for dynamic content updates
-- Keyboard navigation and screen reader support
+#### SEO & Barrierefreiheit
+- Vollständige SEO-Utilities mit DE/EN-Internationalisierung
+- JSON-LD strukturierte Daten für alle Seitentypen
+- OpenGraph-Optimierung mit korrekten Meta-Tags
+- Sitemap-Generierung mit Mehrsprachen-Unterstützung
+- WCAG 2.2 AA-Konformität mit Fokus-Management
+- ARIA Live-Regionen für dynamische Inhalts-Updates
+- Tastaturnavigation und Screen-Reader-Unterstützung
 
-#### Performance Optimization
-- Core Web Vitals monitoring (LCP ≤ 2.5s, CLS ≤ 0.1, INP ≤ 200ms)
-- Bundle size analysis with 180KB JS limit enforcement
-- Lazy loading with IntersectionObserver
-- Image optimization (AVIF/WebP with fallbacks)
-- Code splitting with dynamic imports
-- Resource hints management (preconnect, prefetch, preload)
+#### Performance-Optimierung
+- Core Web Vitals Monitoring (LCP ≤ 2.5s, CLS ≤ 0.1, INP ≤ 200ms)
+- Bundle-Größen-Analyse mit 180KB JS-Limit-Durchsetzung
+- Lazy Loading mit IntersectionObserver
+- Bildoptimierung (AVIF/WebP mit Fallbacks)
+- Code Splitting mit dynamischen Imports
+- Resource Hints Management (preconnect, prefetch, preload)
 
-#### Security
-- Content Security Policy (CSP) with nonce-based inline scripts
-- XSS protection with input sanitization
-- CSRF token management
-- Secure storage with encryption
-- Rate limiting and input validation
-- Security headers management
+#### Sicherheit
+- Content Security Policy (CSP) mit Nonce-basierten Inline-Skripten
+- XSS-Schutz mit Input-Sanitization
+- CSRF-Token-Management
+- Sichere Speicherung mit Verschlüsselung
+- Rate Limiting und Input-Validierung
+- Security Headers Management
 
-#### Testing
-- Comprehensive test utilities and mock helpers
-- Unit tests for all core functionality
-- Accessibility testing with automated checks
-- Performance testing with threshold validation
-- E2E testing utilities
-- Test configuration management
+#### Tests
+- Umfassende Test-Utilities und Mock-Helper
+- Unit-Tests für alle Kernfunktionen
+- Barrierefreiheits-Tests mit automatisierten Checks
+- Performance-Tests mit Schwellenwert-Validierung
+- E2E-Test-Utilities
+- Test-Konfigurations-Management
 
-### Setup matrix
-- **Local**: Docker Compose (API, Worker, Postgres, Redis). Stripe Test.
-- **Staging**: Production-like, sandbox integrations.
-- **Production**: HA, observability, ratelimits.
+### Setup-Matrix
+- **Lokal**: Docker Compose (API, Worker, Postgres, Redis). Stripe Test.
+- **Staging**: Produktionsähnlich, Sandbox-Integrationen.
+- **Produktion**: HA, Observability, Ratelimits.
 
-### Configuration
-- Catalogs in `/config/*`:
+### Konfiguration
+- Kataloge in `/config/*`:
   - `pricing.catalog.json`, `modules.catalog.json`, `industries.catalog.json`, `feature-bundles.json`
-- Frontend utilities in `/apps/frontend/lib/`:
-  - `seo.ts` - SEO and internationalization utilities
-  - `performance.ts` - Performance monitoring and optimization
-  - `security.ts` - Security utilities and protection
-  - `a11y.ts` - Accessibility utilities
-  - `test-utils.ts` - Testing utilities and helpers
-- Secrets via KMS/Vault, not in repo. See `docs/security/secrets.md`.
+- Frontend-Utilities in `/apps/frontend/lib/`:
+  - `seo.ts` - SEO und Internationalisierungs-Utilities
+  - `performance.ts` - Performance-Monitoring und -Optimierung
+  - `security.ts` - Sicherheits-Utilities und -Schutz
+  - `a11y.ts` - Barrierefreiheits-Utilities
+  - `test-utils.ts` - Test-Utilities und -Helfer
+- Secrets über KMS/Vault, nicht im Repo. Siehe `docs/security/secrets.md`.
 
 ### API
-- OpenAPI specification at `apps/backend/openapi.yaml`
-- Comprehensive endpoint documentation
-- Stripe integration for payments and webhooks
-- Rate limiting and security headers
+- OpenAPI-Spezifikation unter `apps/backend/openapi.yaml`
+- Umfassende Endpoint-Dokumentation
+- Stripe-Integration für Zahlungen und Webhooks
+- Rate Limiting und Security Headers
 
-### Repository structure
-- `apps/frontend/lib/` - Frontend utilities and implementations
-- `apps/backend/` - API specifications and backend code
-- `docs/` - Architecture, ops, security, privacy documentation
-- `config/` - Configuration catalogs and data
-- `tests/` - Test suites and utilities
+### Repository-Struktur
+- `apps/frontend/lib/` - Frontend-Utilities und -Implementierungen
+- `apps/backend/` - API-Spezifikationen und Backend-Code
+- `docs/` - Architektur-, Ops-, Sicherheits- und Datenschutz-Dokumentation
+- `config/` - Konfigurations-Kataloge und -Daten
+- `tests/` - Test-Suites und -Utilities
 
-### Commit conventions
-- Conventional Commits (e.g., `feat(seo): ...`, `fix(security): ...`, `perf: ...`)
+### Commit-Konventionen
+- Conventional Commits (z.B. `feat(seo): ...`, `fix(security): ...`, `perf: ...`)
 
-### Getting started
-1. Review architecture documentation in `docs/architecture/`
-2. Set up development environment with Docker Compose
-3. Configure Stripe test keys
-4. Run tests: `npm test`
-5. Start development server: `npm run dev`
+### Erste Schritte
+1. Architektur-Dokumentation in `docs/architecture/` durchgehen
+2. Entwicklungsumgebung mit Docker Compose einrichten
+3. Stripe-Test-Keys konfigurieren
+4. Tests ausführen: `npm test`
+5. Entwicklungsserver starten: `npm run dev`
 
-### Legal & privacy
-- DPIA skeleton provided under `docs/privacy/dpia-skeleton.md`
-- GDPR compliance considerations documented
-- Security policies and procedures outlined
+### Rechtliches & Datenschutz
+- DPIA-Skelett unter `docs/privacy/dpia-skeleton.md` bereitgestellt
+- DSGVO-Konformitäts-Überlegungen dokumentiert
+- Sicherheitsrichtlinien und -verfahren umrissen
 
 ### Roadmap
-- ✅ SEO and accessibility implementation
-- ✅ Performance optimization
-- ✅ Security hardening
-- ✅ Comprehensive testing
-- 🔄 Backend API implementation
-- 🔄 Frontend UI components
-- 🔄 Stripe integration
-- 🔄 CI/CD pipeline
+- ✅ SEO und Barrierefreiheits-Implementierung
+- ✅ Performance-Optimierung
+- ✅ Sicherheits-Härtung
+- ✅ Umfassende Tests
+- 🔄 Backend API-Implementierung
+- 🔄 Frontend UI-Komponenten
+- 🔄 Stripe-Integration
+- 🔄 CI/CD-Pipeline
