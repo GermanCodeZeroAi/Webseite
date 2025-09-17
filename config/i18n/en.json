@@ -8,6 +8,16 @@
     "primary": "Request a live demo",
     "secondary": "Book a consultation"
   },
+  "nav": {
+    "services": "Services",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "legal": "Legal"
+  },
+  "footer": {
+    "cta": "Schedule a call",
+    "disclaimer": "Information provided as is. Terms and Privacy apply."
+  },
   "services": {
     "email": {
       "short": "Smarter email tools for higher opens, better clicks, and less effort.",

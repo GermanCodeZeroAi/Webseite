@@ -8,6 +8,16 @@
     "primary": "Live‑Demo anfragen",
     "secondary": "Beratungsgespräch vereinbaren"
   },
+  "nav": {
+    "services": "Leistungen",
+    "pricing": "Preise",
+    "contact": "Kontakt",
+    "legal": "Rechtliches"
+  },
+  "footer": {
+    "cta": "Gespräch vereinbaren",
+    "disclaimer": "Alle Angaben ohne Gewähr. Es gelten AGB und Datenschutzerklärung."
+  },
   "services": {
     "email": {
       "short": "Smarte E-Mail-Tools für höhere Öffnungen, bessere Klicks und weniger Aufwand.",
