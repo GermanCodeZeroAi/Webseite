@@ -1,5 +1,5 @@
 /**
- * Test Utilities for German Code Zero AI Frontend
+ * Test Utilities for German Code Zero Frontend
  * 
  * Provides comprehensive testing utilities including:
  * - Component testing helpers
@@ -89,7 +89,7 @@ export class TestDataGenerator {
       ],
       modules: [
         { code: 'email-routing', name: 'E-Mail Routing', price: 99 },
-        { code: 'voicebot', name: 'Voicebot', price: 149 },
+        { code: 'voicebot', name: 'Voice Solution', price: 149 },
         { code: 'image-gen', name: 'Image Generation', price: 79 }
       ],
       ...overrides

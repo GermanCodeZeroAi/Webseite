@@ -44,17 +44,17 @@ describe('SEO Utilities', () => {
 
     it('should generate correct title for category page', () => {
       const title = buildTitle('category', 'de', { category: 'Email' });
-      expect(title).toBe('Email – Premium Email | German Code Zero AI');
+      expect(title).toBe('Email – Premium Email | German Code Zero');
     });
 
     it('should generate correct title for industry page', () => {
       const title = buildTitle('industry', 'en', { industry: 'Manufacturing' });
-      expect(title).toBe('Branchenlösungen – Manufacturing | German Code Zero AI');
+      expect(title).toBe('Branchenlösungen – Manufacturing | German Code Zero');
     });
 
     it('should fallback to organization name for unknown page', () => {
       const title = buildTitle('unknown' as any, 'de');
-      expect(title).toBe('German Code Zero AI');
+      expect(title).toBe('German Code Zero');
     });
   });
 
@@ -118,7 +118,7 @@ describe('SEO Utilities', () => {
       // Check Organization schema
       const organization = schema['@graph'].find((item: any) => item['@type'] === 'Organization');
       expect(organization).toBeDefined();
-      expect(organization.name).toBe('German Code Zero AI');
+      expect(organization.name).toBe('German Code Zero');
       expect(organization.url).toBe('https://germancodezero.ai');
       expect(organization.logo).toBe('https://germancodezero.ai/logo/gcz-logo-black-gold.svg');
     });
@@ -260,12 +260,12 @@ describe('SEO Utilities', () => {
   describe('Edge cases and error handling', () => {
     it('should handle undefined options gracefully', () => {
       const title = buildTitle('category', 'de', undefined);
-      expect(title).toBe('German Code Zero AI');
+      expect(title).toBe('German Code Zero');
     });
 
     it('should handle empty category name', () => {
       const title = buildTitle('category', 'de', { category: '' });
-      expect(title).toBe('German Code Zero AI');
+      expect(title).toBe('German Code Zero');
     });
 
     it('should handle special characters in category names', () => {

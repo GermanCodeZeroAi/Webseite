@@ -1,5 +1,5 @@
 /**
- * Sitemap Generator for German Code Zero AI
+ * Sitemap Generator for German Code Zero
  * 
  * Generates XML sitemaps for search engines including:
  * - Static pages

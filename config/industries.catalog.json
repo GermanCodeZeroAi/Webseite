@@ -11,7 +11,7 @@
       "code": "financial-services",
       "name": "Financial Services",
       "recommended_modules": ["email-routing", "image-gen", "web-content"],
-      "notes": "Compliance-driven content and automation"
+      "notes": "Compliance-driven content and orchestration"
     },
     {
       "code": "ecommerce",
