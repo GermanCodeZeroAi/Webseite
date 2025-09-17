@@ -1,17 +1,24 @@
 /**
- * Shop Configurator Page
+ * Service Configurator Page
  * 
- * Mock implementation for testing purposes
+ * Configure your perfect automation package with live pricing and accessibility
  */
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import PricingDisplay from './components/PricingDisplay';
+import ServiceOption from './components/ServiceOption';
+import CouponInput from './components/CouponInput';
 
-interface ConfigOption {
+interface ServiceConfig {
   id: string;
   name: string;
-  price: number;
+  description: string;
+  benefits: string[];
+  monthlyPrice: number;
+  annualPrice: number;
+  oneTimePrice: number;
   selected: boolean;
 }
 
@@ -19,7 +26,7 @@ interface PricingData {
   basePrice: number;
   totalPrice: number;
   currency: string;
-  billingCycle: 'monthly' | 'annual';
+  billingCycle: 'monthly' | 'annual' | 'one-time';
   discount?: {
     code: string;
     amount: number;
@@ -32,11 +39,67 @@ interface PricingData {
 }
 
 export default function ConfiguratorPage() {
-  const [configOptions, setConfigOptions] = useState<ConfigOption[]>([
-    { id: 'base-starter', name: 'Base Starter', price: 99, selected: false },
-    { id: 'base-enterprise', name: 'Base Enterprise', price: 299, selected: false },
-    { id: 'addon-analytics', name: 'Analytics Module', price: 49, selected: false },
-    { id: 'addon-security', name: 'Security Module', price: 79, selected: false },
+  const [serviceOptions, setServiceOptions] = useState<ServiceConfig[]>([
+    {
+      id: 'email-automation',
+      name: 'Email Automation',
+      description: 'Smart email tools that boost opens and clicks while saving time',
+      benefits: [
+        'Subject lines that drive 40% more opens',
+        'Automated nurturing sequences',
+        'Personalization at scale',
+        'A/B testing built-in'
+      ],
+      monthlyPrice: 99,
+      annualPrice: 990,
+      oneTimePrice: 1200,
+      selected: false
+    },
+    {
+      id: 'telephony-assistant',
+      name: 'Telephony Assistant',
+      description: 'Intelligent call flows for faster resolution and happier customers',
+      benefits: [
+        'Auto-route to right department',
+        '24/7 natural language responses',
+        'Reduce wait times by 60%',
+        'Lower cost per contact'
+      ],
+      monthlyPrice: 149,
+      annualPrice: 1490,
+      oneTimePrice: 1800,
+      selected: false
+    },
+    {
+      id: 'visual-content',
+      name: 'Visual Content Suite',
+      description: 'Image and video tools for consistent brand assets and faster production',
+      benefits: [
+        'On-brand image variants in seconds',
+        'Auto background removal',
+        'Video editing with subtitles',
+        'Cut agency costs by 70%'
+      ],
+      monthlyPrice: 199,
+      annualPrice: 1990,
+      oneTimePrice: 2400,
+      selected: false
+    },
+    {
+      id: 'website-optimizer',
+      name: 'Website Optimizer',
+      description: 'Ship faster with compelling copy, optimized visuals, and better UX',
+      benefits: [
+        'SEO-optimized content generation',
+        'Performance optimization',
+        'Accessibility compliance',
+        'Brand-consistent visuals'
+      ],
+      monthlyPrice: 129,
+      annualPrice: 1290,
+      oneTimePrice: 1550,
+      selected: false
+    }
   ]);
 
   const [pricing, setPricing] = useState<PricingData>({
@@ -46,206 +109,255 @@ export default function ConfiguratorPage() {
     billingCycle: 'monthly',
   });
 
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
-  const [couponCode, setCouponCode] = useState('');
-  const [couponApplied, setCouponApplied] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual' | 'one-time'>('monthly');
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discount: number;
+    type: 'percent' | 'fixed';
+  } | undefined>();
+  const [priceAnnouncement, setPriceAnnouncement] = useState('');
 
-  // Calculate pricing
+  // Calculate pricing with live updates and announcements
   useEffect(() => {
-    const selectedOptions = configOptions.filter(option => option.selected);
-    const basePrice = selectedOptions.reduce((sum, option) => sum + option.price, 0);
+    const selectedOptions = serviceOptions.filter(option => option.selected);
+    
+    let basePrice = 0;
+    selectedOptions.forEach(option => {
+      switch (billingCycle) {
+        case 'monthly':
+          basePrice += option.monthlyPrice;
+          break;
+        case 'annual':
+          basePrice += option.annualPrice;
+          break;
+        case 'one-time':
+          basePrice += option.oneTimePrice;
+          break;
+      }
+    });
     
     let totalPrice = basePrice;
-    
-    // Apply billing cycle discount
-    if (billingCycle === 'annual') {
-      totalPrice = basePrice * 10; // 10 months price for annual
-    }
+    let discount;
     
     // Apply coupon discount
-    let discount;
-    if (couponApplied && couponCode === 'LAUNCH50') {
-      discount = {
-        code: couponCode,
-        amount: totalPrice * 0.5,
-        type: 'percent' as const,
-      };
-      totalPrice = totalPrice * 0.5;
+    if (appliedCoupon) {
+      if (appliedCoupon.type === 'percent') {
+        const discountAmount = totalPrice * (appliedCoupon.discount / 100);
+        discount = {
+          code: appliedCoupon.code,
+          amount: discountAmount,
+          type: 'percent' as const,
+        };
+        totalPrice = totalPrice - discountAmount;
+      } else {
+        discount = {
+          code: appliedCoupon.code,
+          amount: appliedCoupon.discount,
+          type: 'fixed' as const,
+        };
+        totalPrice = Math.max(0, totalPrice - appliedCoupon.discount);
+      }
     }
     
-    // Add VAT
+    // Add VAT (19% for EU)
     const vat = {
       rate: 19,
       amount: totalPrice * 0.19,
     };
     
+    const finalPrice = totalPrice + vat.amount;
+    
     setPricing({
       basePrice,
-      totalPrice: totalPrice + vat.amount,
+      totalPrice: finalPrice,
       currency: 'EUR',
       billingCycle,
       discount,
       vat,
     });
-  }, [configOptions, billingCycle, couponApplied, couponCode]);
 
-  const handleOptionToggle = (optionId: string) => {
-    setConfigOptions(prev => 
+    // Announce price changes to screen readers
+    if (selectedOptions.length > 0) {
+      const formattedPrice = new Intl.NumberFormat('en-EU', {
+        style: 'currency',
+        currency: 'EUR'
+      }).format(finalPrice);
+      
+      setPriceAnnouncement(`Price updated to ${formattedPrice} ${
+        billingCycle === 'monthly' ? 'per month' : 
+        billingCycle === 'annual' ? 'per year' : 'one-time'
+      }`);
+      
+      // Clear announcement after screen reader has time to read it
+      setTimeout(() => setPriceAnnouncement(''), 2000);
+    }
+  }, [serviceOptions, billingCycle, appliedCoupon]);
+
+  // Handle service option toggle
+  const handleServiceToggle = (serviceId: string) => {
+    setServiceOptions(prev => 
       prev.map(option => 
-        option.id === optionId 
+        option.id === serviceId 
           ? { ...option, selected: !option.selected }
           : option
       )
     );
   };
 
-  const handleApplyCoupon = () => {
-    setLoading(true);
-    setTimeout(() => {
-      if (couponCode === 'LAUNCH50') {
-        setCouponApplied(true);
-        setError('');
-      } else {
-        setError('Invalid coupon code');
-      }
-      setLoading(false);
-    }, 1000);
+  // Handle billing cycle change
+  const handleBillingCycleChange = (cycle: 'monthly' | 'annual' | 'one-time') => {
+    setBillingCycle(cycle);
+    
+    // Announce billing change
+    const announcement = `Billing changed to ${
+      cycle === 'monthly' ? 'monthly subscription' :
+      cycle === 'annual' ? 'annual subscription with 2 months free' :
+      'one-time purchase'
+    }`;
+    setPriceAnnouncement(announcement);
+    setTimeout(() => setPriceAnnouncement(''), 2000);
   };
 
-  const handleCheckout = () => {
-    window.location.href = '/checkout';
+  // Handle coupon application
+  const handleCouponApply = async (code: string): Promise<boolean> => {
+    // Simulate API call
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        if (code === 'LAUNCH50') {
+          setAppliedCoupon({
+            code,
+            discount: 50,
+            type: 'percent'
+          });
+          setPriceAnnouncement(`Coupon ${code} applied successfully. 50% discount added.`);
+          setTimeout(() => setPriceAnnouncement(''), 2000);
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      }, 1000);
+    });
   };
+
+  // Handle coupon removal
+  const handleCouponRemove = () => {
+    setAppliedCoupon(undefined);
+    setPriceAnnouncement('Coupon removed');
+    setTimeout(() => setPriceAnnouncement(''), 2000);
+  };
+
+  // Handle checkout
+  const handleCheckout = () => {
+    const selectedServices = serviceOptions.filter(s => s.selected).map(s => s.id);
+    const params = new URLSearchParams({
+      services: selectedServices.join(','),
+      billing: billingCycle,
+      ...(appliedCoupon && { coupon: appliedCoupon.code })
+    });
+    window.location.href = `/checkout?${params.toString()}`;
+  };
+
+  const hasSelectedServices = serviceOptions.some(option => option.selected);
 
   return (
     <div data-testid="configurator-container" className="configurator-page">
       <div className="container">
         <header className="page-header">
-          <h1>Service Configurator</h1>
-          <p>Configure your perfect service package</p>
+          <h1>Build Your Automation Package</h1>
+          <p>Choose the tools that will save your team time and boost results</p>
         </header>
 
         <div className="configurator-content">
           <div className="configuration-options">
-            <h2>Select Your Services</h2>
-            
-            <div className="options-grid">
-              {configOptions.map(option => (
-                <div 
-                  key={option.id}
-                  data-testid="config-option"
-                  className={`option-card ${option.selected ? 'selected' : ''}`}
-                  onClick={() => handleOptionToggle(option.id)}
-                >
-                  <div className="option-header">
-                    <h3>{option.name}</h3>
-                    <div className="option-price">
-                      €{option.price}/{billingCycle === 'monthly' ? 'mo' : 'year'}
-                    </div>
-                  </div>
-                  <div className="option-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={option.selected}
-                      onChange={() => handleOptionToggle(option.id)}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-
             <div className="billing-cycle-selector">
-              <label htmlFor="billing-cycle">Billing Cycle:</label>
-              <select
-                id="billing-cycle"
-                data-testid="billing-cycle-selector"
-                value={billingCycle}
-                onChange={(e) => setBillingCycle(e.target.value as 'monthly' | 'annual')}
-              >
-                <option value="monthly">Monthly</option>
-                <option value="annual">Annual (2 months free)</option>
-              </select>
+              <fieldset>
+                <legend>Choose your billing preference:</legend>
+                <div className="billing-options" role="radiogroup">
+                  <label className={`billing-option ${billingCycle === 'monthly' ? 'active' : ''}`}>
+                    <input
+                      type="radio"
+                      name="billing-cycle"
+                      value="monthly"
+                      checked={billingCycle === 'monthly'}
+                      onChange={(e) => handleBillingCycleChange(e.target.value as 'monthly')}
+                    />
+                    <span className="option-label">
+                      <strong>Monthly Subscription</strong>
+                      <small>Flexible, cancel anytime</small>
+                    </span>
+                  </label>
+                  
+                  <label className={`billing-option ${billingCycle === 'annual' ? 'active' : ''}`}>
+                    <input
+                      type="radio"
+                      name="billing-cycle"
+                      value="annual"
+                      checked={billingCycle === 'annual'}
+                      onChange={(e) => handleBillingCycleChange(e.target.value as 'annual')}
+                    />
+                    <span className="option-label">
+                      <strong>Annual Subscription</strong>
+                      <small>Save 2 months - best value!</small>
+                    </span>
+                  </label>
+                  
+                  <label className={`billing-option ${billingCycle === 'one-time' ? 'active' : ''}`}>
+                    <input
+                      type="radio"
+                      name="billing-cycle"
+                      value="one-time"
+                      checked={billingCycle === 'one-time'}
+                      onChange={(e) => handleBillingCycleChange(e.target.value as 'one-time')}
+                    />
+                    <span className="option-label">
+                      <strong>One-Time Purchase</strong>
+                      <small>Own it forever, no recurring fees</small>
+                    </span>
+                  </label>
+                </div>
+              </fieldset>
             </div>
 
-            <div className="coupon-section">
-              <div className="coupon-input-group">
-                <input
-                  type="text"
-                  data-testid="coupon-input"
-                  placeholder="Enter coupon code"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                />
-                <button
-                  data-testid="apply-coupon"
-                  onClick={handleApplyCoupon}
-                  disabled={loading || !couponCode}
-                >
-                  {loading ? 'Applying...' : 'Apply'}
-                </button>
+            <CouponInput
+              onCouponApply={handleCouponApply}
+              onCouponRemove={handleCouponRemove}
+              appliedCoupon={appliedCoupon}
+            />
+            
+            <div className="services-section">
+              <h2>Select Your Automation Tools</h2>
+              <p className="services-intro">
+                Each tool is designed to save time and improve results. Mix and match based on your needs.
+              </p>
+              
+              <div className="services-grid">
+                {serviceOptions.map(service => (
+                  <ServiceOption
+                    key={service.id}
+                    id={service.id}
+                    name={service.name}
+                    description={service.description}
+                    benefits={service.benefits}
+                    price={
+                      billingCycle === 'monthly' ? service.monthlyPrice :
+                      billingCycle === 'annual' ? service.annualPrice :
+                      service.oneTimePrice
+                    }
+                    billingCycle={billingCycle}
+                    selected={service.selected}
+                    onToggle={handleServiceToggle}
+                  />
+                ))}
               </div>
-              
-              {couponApplied && (
-                <div data-testid="coupon-success" className="coupon-success">
-                  ✓ Coupon {couponCode} applied successfully!
-                </div>
-              )}
-              
-              {error && (
-                <div data-testid="validation-error" className="error-message">
-                  {error}
-                </div>
-              )}
             </div>
           </div>
 
-          <div data-testid="pricing-section" className="pricing-sidebar">
-            <div data-testid="price-display" className="price-summary">
-              <h3>Pricing Summary</h3>
-              
-              <div className="price-breakdown">
-                <div data-testid="base-price" className="price-line">
-                  <span>Base Price:</span>
-                  <span>€{pricing.basePrice.toFixed(2)}</span>
-                </div>
-                
-                {pricing.discount && (
-                  <div data-testid="discount-amount" className="price-line discount">
-                    <span>Discount ({pricing.discount.code}):</span>
-                    <span>-€{pricing.discount.amount.toFixed(2)}</span>
-                  </div>
-                )}
-                
-                {pricing.vat && (
-                  <div data-testid="vat-breakdown" className="vat-section">
-                    <div data-testid="vat-amount" className="price-line">
-                      <span>VAT ({pricing.vat.rate}%):</span>
-                      <span>€{pricing.vat.amount.toFixed(2)}</span>
-                    </div>
-                  </div>
-                )}
-                
-                <div data-testid="total-price" className="price-line total">
-                  <span>Total Price:</span>
-                  <span>€{pricing.totalPrice.toFixed(2)}</span>
-                </div>
-              </div>
-              
-              <div className="billing-info">
-                <small>Billed {billingCycle}</small>
-              </div>
-            </div>
-
-            <button
-              data-testid="checkout-button"
-              className="checkout-button"
-              onClick={handleCheckout}
-              disabled={configOptions.every(option => !option.selected)}
-            >
-              Proceed to Checkout
-            </button>
-          </div>
+          <PricingDisplay
+            pricing={pricing}
+            onCheckout={handleCheckout}
+            hasSelectedOptions={hasSelectedServices}
+            priceChangeAnnouncement={priceAnnouncement}
+          />
         </div>
       </div>
 
@@ -258,7 +370,7 @@ export default function ConfiguratorPage() {
         }
 
         .container {
-          max-width: 1200px;
+          max-width: 1400px;
           margin: 0 auto;
           padding: 0 2rem;
         }
@@ -272,195 +384,130 @@ export default function ConfiguratorPage() {
           font-size: 2.5rem;
           color: #FFD700;
           margin-bottom: 0.5rem;
+          font-weight: 700;
+        }
+
+        .page-header p {
+          font-size: 1.2rem;
+          color: rgba(255, 255, 255, 0.8);
+          max-width: 600px;
+          margin: 0 auto;
         }
 
         .configurator-content {
           display: grid;
-          grid-template-columns: 2fr 1fr;
+          grid-template-columns: 1fr 400px;
           gap: 3rem;
+          align-items: start;
         }
 
-        .configuration-options h2 {
-          color: #FFD700;
-          margin-bottom: 1.5rem;
+        .billing-cycle-selector {
+          margin-bottom: 2.5rem;
         }
 
-        .options-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 1rem;
-          margin-bottom: 2rem;
-        }
-
-        .option-card {
-          background: rgba(255, 255, 255, 0.05);
-          border: 2px solid transparent;
-          border-radius: 8px;
+        .billing-cycle-selector fieldset {
+          border: 1px solid rgba(255, 215, 0, 0.3);
+          border-radius: 12px;
           padding: 1.5rem;
+          margin: 0;
+        }
+
+        .billing-cycle-selector legend {
+          color: #FFD700;
+          font-size: 1.1rem;
+          font-weight: 600;
+          padding: 0 1rem;
+        }
+
+        .billing-options {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
+          margin-top: 1rem;
+        }
+
+        .billing-option {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 2px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          padding: 1rem;
           cursor: pointer;
           transition: all 0.3s ease;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
         }
 
-        .option-card:hover {
-          border-color: #FFD700;
+        .billing-option:hover {
+          border-color: rgba(255, 215, 0, 0.5);
         }
 
-        .option-card.selected {
+        .billing-option.active {
           border-color: #FFD700;
           background: rgba(255, 215, 0, 0.1);
         }
 
-        .option-header h3 {
-          margin: 0 0 0.5rem 0;
-          color: #ffffff;
+        .billing-option input[type="radio"] {
+          accent-color: #FFD700;
+          width: 18px;
+          height: 18px;
         }
 
-        .option-price {
-          color: #FFD700;
-          font-weight: bold;
-        }
-
-        .billing-cycle-selector {
-          margin-bottom: 2rem;
-        }
-
-        .billing-cycle-selector label {
-          display: block;
-          margin-bottom: 0.5rem;
-          color: #FFD700;
-        }
-
-        .billing-cycle-selector select {
-          background: rgba(255, 255, 255, 0.1);
-          border: 1px solid #FFD700;
-          color: #ffffff;
-          padding: 0.5rem;
-          border-radius: 4px;
-        }
-
-        .coupon-section {
-          margin-bottom: 2rem;
-        }
-
-        .coupon-input-group {
+        .option-label {
           display: flex;
-          gap: 0.5rem;
-          margin-bottom: 1rem;
+          flex-direction: column;
+          gap: 0.25rem;
         }
 
-        .coupon-input-group input {
-          flex: 1;
-          background: rgba(255, 255, 255, 0.1);
-          border: 1px solid #FFD700;
-          color: #ffffff;
-          padding: 0.5rem;
-          border-radius: 4px;
-        }
-
-        .coupon-input-group button {
-          background: #FFD700;
-          color: #000000;
-          border: none;
-          padding: 0.5rem 1rem;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-
-        .coupon-input-group button:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        .coupon-success {
-          color: #00ff00;
-          font-size: 0.9rem;
-        }
-
-        .error-message {
-          color: #ff6b6b;
-          font-size: 0.9rem;
-        }
-
-        .pricing-sidebar {
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 8px;
-          padding: 2rem;
-          height: fit-content;
-          position: sticky;
-          top: 2rem;
-        }
-
-        .price-summary h3 {
+        .option-label strong {
           color: #FFD700;
-          margin-bottom: 1.5rem;
+          font-size: 1rem;
         }
 
-        .price-breakdown {
-          margin-bottom: 2rem;
-        }
-
-        .price-line {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 0.5rem;
-        }
-
-        .price-line.total {
-          border-top: 1px solid #FFD700;
-          padding-top: 0.5rem;
-          font-weight: bold;
-          font-size: 1.1rem;
-        }
-
-        .price-line.discount {
-          color: #00ff00;
-        }
-
-        .vat-section {
-          margin: 1rem 0;
-          padding: 0.5rem 0;
-          border-top: 1px solid rgba(255, 215, 0, 0.3);
-          border-bottom: 1px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .billing-info {
+        .option-label small {
           color: rgba(255, 255, 255, 0.7);
+          font-size: 0.85rem;
+        }
+
+        .services-section h2 {
+          color: #FFD700;
+          margin-bottom: 0.75rem;
+          font-size: 1.8rem;
+        }
+
+        .services-intro {
+          color: rgba(255, 255, 255, 0.8);
           margin-bottom: 2rem;
+          line-height: 1.6;
         }
 
-        .checkout-button {
-          width: 100%;
-          background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-          color: #000000;
-          border: none;
-          padding: 1rem;
-          border-radius: 8px;
-          font-size: 1.1rem;
-          font-weight: bold;
-          cursor: pointer;
-          transition: all 0.3s ease;
+        .services-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+          gap: 1.5rem;
         }
 
-        .checkout-button:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
-        }
-
-        .checkout-button:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        @media (max-width: 768px) {
+        @media (max-width: 1200px) {
           .configurator-content {
             grid-template-columns: 1fr;
           }
           
-          .options-grid {
+          .billing-options {
             grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .page-header h1 {
+            font-size: 2rem;
+          }
+          
+          .services-grid {
+            grid-template-columns: 1fr;
+          }
+          
+          .billing-cycle-selector fieldset {
+            padding: 1rem;
           }
         }
       `}</style>
