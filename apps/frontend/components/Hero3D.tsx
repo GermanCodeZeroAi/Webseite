@@ -287,6 +287,7 @@ export default function Hero3D({ locale, onCtaClick }: Hero3DProps) {
           <div className="hero-3d__actions">
             <button
               className="hero-3d__cta"
+              data-testid="hero-cta-button"
               onClick={handleCtaClick}
               aria-label={content.ctaAriaLabel}
               type="button"
