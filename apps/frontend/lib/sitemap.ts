@@ -9,12 +9,12 @@
  */
 
 import { buildSitemapData } from './seo';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import fs from 'fs';
+import path from 'path';
 
 // Load catalog data
-const modulesCatalog = JSON.parse(readFileSync(join(process.cwd(), 'config/modules.catalog.json'), 'utf8'));
-const industriesCatalog = JSON.parse(readFileSync(join(process.cwd(), 'config/industries.catalog.json'), 'utf8'));
+const modulesCatalog = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'config/modules.catalog.json'), 'utf8'));
+const industriesCatalog = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'config/industries.catalog.json'), 'utf8'));
 
 const BASE_URL = 'https://germancodezero.ai';
 
@@ -41,6 +41,7 @@ export function generateSitemapEntries(): SitemapEntry[] {
   entries.push(
     { url: BASE_URL, lastmod: now, changefreq: 'weekly', priority: 1.0 },
     { url: `${BASE_URL}/shop`, lastmod: now, changefreq: 'weekly', priority: 0.9 },
+    { url: `${BASE_URL}/solutions`, lastmod: now, changefreq: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/industries`, lastmod: now, changefreq: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/pricing`, lastmod: now, changefreq: 'monthly', priority: 0.9 },
     { url: `${BASE_URL}/about`, lastmod: now, changefreq: 'monthly', priority: 0.6 },
@@ -51,6 +52,7 @@ export function generateSitemapEntries(): SitemapEntry[] {
   entries.push(
     { url: `${BASE_URL}/en`, lastmod: now, changefreq: 'weekly', priority: 1.0 },
     { url: `${BASE_URL}/en/shop`, lastmod: now, changefreq: 'weekly', priority: 0.9 },
+    { url: `${BASE_URL}/en/solutions`, lastmod: now, changefreq: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/en/industries`, lastmod: now, changefreq: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/en/pricing`, lastmod: now, changefreq: 'monthly', priority: 0.9 },
     { url: `${BASE_URL}/en/about`, lastmod: now, changefreq: 'monthly', priority: 0.6 },
@@ -129,6 +131,42 @@ export function generateSitemapEntries(): SitemapEntry[] {
     });
   });
 
+  // Solutions pages (DE) - Dynamic industry solution pages
+  industriesCatalog.industries.forEach((industry: any) => {
+    const industrySlug = industry.code;
+    entries.push({
+      url: `${BASE_URL}/solutions/${industrySlug}`,
+      lastmod: now,
+      changefreq: 'monthly',
+      priority: 0.8,
+      images: [
+        {
+          loc: `${BASE_URL}/images/solutions/${industrySlug}-hero.jpg`,
+          title: `Branchenlösungen – ${industry.name}`,
+          caption: `Vorkonfigurierte Playbooks für ${industry.name}. Planbare Ergebnisse, klare SLAs.`
+        }
+      ]
+    });
+  });
+
+  // Solutions pages (EN) - Dynamic industry solution pages
+  industriesCatalog.industries.forEach((industry: any) => {
+    const industrySlug = industry.code;
+    entries.push({
+      url: `${BASE_URL}/en/solutions/${industrySlug}`,
+      lastmod: now,
+      changefreq: 'monthly',
+      priority: 0.8,
+      images: [
+        {
+          loc: `${BASE_URL}/images/solutions/${industrySlug}-hero.jpg`,
+          title: `Industry Solutions – ${industry.name}`,
+          caption: `Preconfigured playbooks for ${industry.name}. Predictable outcomes, clear SLAs.`
+        }
+      ]
+    });
+  });
+
   return entries;
 }
 
@@ -189,6 +227,7 @@ Disallow: /static/
 
 # Allow important pages
 Allow: /shop/
+Allow: /solutions/
 Allow: /industries/
 Allow: /pricing/
 Allow: /about/
