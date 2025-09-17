@@ -48,24 +48,24 @@ const DEFAULT_OG_IMAGE = '/og/default-black-gold.png';
 const CONTENT = {
   de: {
     organization: {
-      name: 'German Code Zero AI',
+      name: 'Premium B2B Services',
       description: 'Premium B2B Services für Revenue- und Service-Orchestrierung',
       url: BASE_URL,
-      logo: `${BASE_URL}/logo/gcz-logo-black-gold.svg`,
+      logo: `${BASE_URL}/logo/premium-logo-black-gold.svg`,
       sameAs: [
-        'https://linkedin.com/company/germancodezeroai',
-        'https://x.com/germancodezeroai'
+        'https://linkedin.com/company/premium-b2b-services',
+        'https://x.com/premium-b2b-services'
       ]
     },
     pages: {
       home: {
-        title: 'Autonomy Grid – Mehr Umsatz. Weniger Reibung. Premium B2B.',
+        title: 'Mehr Umsatz. Weniger Reibung. Premium B2B.',
         description: 'Orchestrieren Sie Revenue- und Service-Prozesse Ende‑zu‑Ende – Premium-Erlebnis in Gold/Schwarz. Refer‑a‑Friend (bald verfügbar).',
         ogTitle: 'Mehr Umsatz. Weniger Reibung.',
         ogDescription: 'Premium B2B Services für Revenue- und Service-Orchestrierung. Refer‑a‑Friend (bald verfügbar).'
       },
       shop: {
-        title: 'Autonomy Grid Konfigurator – Module & Bundles zusammenstellen',
+        title: 'Konfigurator – Module & Bundles zusammenstellen',
         description: 'Stellen Sie Module und Bundles transparent zusammen. Preise live, skalierbar, premium.',
         ogTitle: 'Module & Bundles konfigurieren',
         ogDescription: 'Transparente Konfiguration mit Live-Preisen. Premium B2B Services.'
@@ -94,28 +94,39 @@ const CONTENT = {
         ogTitle: 'Kontakt & Demo',
         ogDescription: 'Sprechen wir über Wirkung, nicht nur Features. Demo anfragen.'
       }
+    },
+    hero: {
+      headline: 'Mehr Umsatz. Weniger Reibung.',
+      subheadline: 'Orchestrieren Sie Revenue- und Service-Prozesse Ende‑zu‑Ende – mit Premium-Erlebnis, konsistenten Journeys und planbarem Wachstum.',
+      bullets: [
+        'Schnellere Zyklen: von Anfrage bis Abschluss in Rekordzeit',
+        'Konsistente Qualität: jeder Touchpoint sitzt',
+        'Skalierbares Wachstum: mehr Pipeline, weniger Operatives'
+      ],
+      ctaText: 'Jetzt konfigurieren',
+      ctaAriaLabel: 'Zum Shop Konfigurator wechseln'
     }
   },
   en: {
     organization: {
-      name: 'German Code Zero AI',
+      name: 'Premium B2B Services',
       description: 'Premium B2B Services for Revenue and Service Orchestration',
       url: BASE_URL,
-      logo: `${BASE_URL}/logo/gcz-logo-black-gold.svg`,
+      logo: `${BASE_URL}/logo/premium-logo-black-gold.svg`,
       sameAs: [
-        'https://linkedin.com/company/germancodezeroai',
-        'https://x.com/germancodezeroai'
+        'https://linkedin.com/company/premium-b2b-services',
+        'https://x.com/premium-b2b-services'
       ]
     },
     pages: {
       home: {
-        title: 'Autonomy Grid – More revenue. Less friction. Premium B2B.',
+        title: 'More revenue. Less friction. Premium B2B.',
         description: 'Orchestrate revenue and service processes end‑to‑end—premium experience in gold/black. Refer‑a‑Friend (coming soon).',
         ogTitle: 'More revenue. Less friction.',
         ogDescription: 'Premium B2B Services for Revenue and Service Orchestration. Refer‑a‑Friend (coming soon).'
       },
       shop: {
-        title: 'Autonomy Grid Configurator – Assemble modules & bundles',
+        title: 'Configurator – Assemble modules & bundles',
         description: 'Configure modules and bundles transparently. Live pricing, scalable, premium.',
         ogTitle: 'Configure modules & bundles',
         ogDescription: 'Transparent configuration with live pricing. Premium B2B Services.'
@@ -144,6 +155,17 @@ const CONTENT = {
         ogTitle: 'Contact & Demo',
         ogDescription: 'Let\'s talk impact, not just features. Request a demo.'
       }
+    },
+    hero: {
+      headline: 'More revenue. Less friction.',
+      subheadline: 'Orchestrate your revenue and service processes end‑to‑end—with premium experience, consistent journeys, and predictable growth.',
+      bullets: [
+        'Faster cycles: request to close in record time',
+        'Consistent quality: every touchpoint on point',
+        'Scalable growth: more pipeline, less busywork'
+      ],
+      ctaText: 'Configure now',
+      ctaAriaLabel: 'Go to Shop Configurator'
     }
   }
 };
@@ -423,6 +445,19 @@ export function getPricingSeo(locale: Locale): SEOData {
  */
 export function getContactSeo(locale: Locale): SEOData {
   return getPageSeo('contact', locale);
+}
+
+/**
+ * Get hero content based on locale
+ */
+export function getHeroContent(locale: Locale): {
+  headline: string;
+  subheadline: string;
+  bullets: string[];
+  ctaText: string;
+  ctaAriaLabel: string;
+} {
+  return CONTENT[locale].hero;
 }
 
 /**
