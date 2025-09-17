@@ -12,7 +12,7 @@
 
 import React from 'react';
 import { Metadata } from 'next';
-import Hero3D from '../../components/Hero3D';
+import Hero3DLazy from '../../components/Hero3DLazy';
 import { getPageSeo, type Locale } from '../../lib/seo';
 
 interface PageProps {
@@ -57,6 +57,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     other: {
       'application/ld+json': JSON.stringify(seoData.jsonLd),
     },
+    // Performance and resource hints
+    icons: {
+      icon: '/favicon.ico',
+      shortcut: '/favicon-16x16.png',
+      apple: '/apple-touch-icon.png',
+    },
+    manifest: '/site.webmanifest',
+    themeColor: '#FFD700',
+    viewport: {
+      width: 'device-width',
+      initialScale: 1,
+      maximumScale: 5,
+      userScalable: true,
+    },
   };
 }
 
@@ -81,7 +95,7 @@ export default function MarketingPage({ params }: PageProps) {
 
       {/* Main Content */}
       <main role="main">
-        <Hero3D 
+        <Hero3DLazy 
           locale={locale}
           onCtaClick={handleCtaClick}
         />

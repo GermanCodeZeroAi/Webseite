@@ -671,30 +671,220 @@ export class BundleAnalyzer {
 }
 
 /**
- * Initialize performance optimizations
+ * Performance budget configuration
+ */
+export const PERFORMANCE_BUDGETS = {
+  // Bundle size budgets (in bytes)
+  totalBundle: 500000, // 500KB total
+  initialJS: 180000,   // 180KB initial JS (as per requirements)
+  initialCSS: 50000,   // 50KB initial CSS
+  images: 1000000,     // 1MB images per page
+  fonts: 100000,       // 100KB fonts
+
+  // Performance metrics budgets
+  lcp: 2500,           // 2.5s LCP (as per requirements)
+  fid: 100,            // 100ms FID
+  cls: 0.1,            // 0.1 CLS
+  fcp: 1800,           // 1.8s FCP
+  ttfb: 600,           // 600ms TTFB
+} as const;
+
+/**
+ * Performance audit utility
+ */
+export class PerformanceAuditor {
+  private metrics: PerformanceMetrics = {} as PerformanceMetrics;
+  private bundleAnalysis: BundleAnalysis | null = null;
+
+  /**
+   * Run complete performance audit
+   */
+  async runAudit(): Promise<{
+    metrics: PerformanceMetrics;
+    bundle: BundleAnalysis;
+    compliance: {
+      budgetCompliance: boolean;
+      coreWebVitals: boolean;
+      recommendations: string[];
+    };
+  }> {
+    // Get current metrics
+    const monitor = new PerformanceMonitor();
+    this.metrics = monitor.getMetrics() as PerformanceMetrics;
+
+    // Analyze bundle
+    this.bundleAnalysis = BundleAnalyzer.analyzeBundle();
+
+    // Check compliance
+    const compliance = this.checkCompliance();
+
+    return {
+      metrics: this.metrics,
+      bundle: this.bundleAnalysis,
+      compliance,
+    };
+  }
+
+  private checkCompliance(): {
+    budgetCompliance: boolean;
+    coreWebVitals: boolean;
+    recommendations: string[];
+  } {
+    const recommendations: string[] = [];
+    let budgetCompliance = true;
+    let coreWebVitals = true;
+
+    // Check bundle budgets
+    if (this.bundleAnalysis) {
+      if (this.bundleAnalysis.jsSize > PERFORMANCE_BUDGETS.initialJS) {
+        budgetCompliance = false;
+        recommendations.push(`JavaScript bundle size (${Math.round(this.bundleAnalysis.jsSize / 1000)}KB) exceeds budget (${PERFORMANCE_BUDGETS.initialJS / 1000}KB)`);
+      }
+
+      if (this.bundleAnalysis.totalSize > PERFORMANCE_BUDGETS.totalBundle) {
+        budgetCompliance = false;
+        recommendations.push(`Total bundle size (${Math.round(this.bundleAnalysis.totalSize / 1000)}KB) exceeds budget (${PERFORMANCE_BUDGETS.totalBundle / 1000}KB)`);
+      }
+    }
+
+    // Check Core Web Vitals
+    if (this.metrics.lcp && this.metrics.lcp > PERFORMANCE_BUDGETS.lcp) {
+      coreWebVitals = false;
+      recommendations.push(`LCP (${Math.round(this.metrics.lcp)}ms) exceeds target (${PERFORMANCE_BUDGETS.lcp}ms)`);
+    }
+
+    if (this.metrics.fid && this.metrics.fid > PERFORMANCE_BUDGETS.fid) {
+      coreWebVitals = false;
+      recommendations.push(`FID (${Math.round(this.metrics.fid)}ms) exceeds target (${PERFORMANCE_BUDGETS.fid}ms)`);
+    }
+
+    if (this.metrics.cls && this.metrics.cls > PERFORMANCE_BUDGETS.cls) {
+      coreWebVitals = false;
+      recommendations.push(`CLS (${this.metrics.cls.toFixed(3)}) exceeds target (${PERFORMANCE_BUDGETS.cls})`);
+    }
+
+    // Add general recommendations
+    if (recommendations.length === 0) {
+      recommendations.push('All performance metrics are within acceptable ranges');
+    } else {
+      recommendations.push('Consider implementing code splitting and lazy loading');
+      recommendations.push('Optimize images with modern formats (AVIF/WebP)');
+      recommendations.push('Use preconnect for external resources');
+    }
+
+    return {
+      budgetCompliance,
+      coreWebVitals,
+      recommendations,
+    };
+  }
+}
+
+/**
+ * Enhanced bundle analyzer with more detailed analysis
+ */
+export class EnhancedBundleAnalyzer extends BundleAnalyzer {
+  /**
+   * Analyze bundle with performance recommendations
+   */
+  static analyzeWithRecommendations(): {
+    analysis: BundleAnalysis;
+    recommendations: string[];
+    score: number; // 0-100
+  } {
+    const analysis = this.analyzeBundle();
+    const recommendations: string[] = [];
+    let score = 100;
+
+    // Check JS bundle size
+    if (analysis.jsSize > PERFORMANCE_BUDGETS.initialJS) {
+      const excess = analysis.jsSize - PERFORMANCE_BUDGETS.initialJS;
+      score -= Math.min(30, (excess / PERFORMANCE_BUDGETS.initialJS) * 100);
+      recommendations.push(`Reduce JavaScript bundle size by ${Math.round(excess / 1000)}KB`);
+    }
+
+    // Check total bundle size
+    if (analysis.totalSize > PERFORMANCE_BUDGETS.totalBundle) {
+      const excess = analysis.totalSize - PERFORMANCE_BUDGETS.totalBundle;
+      score -= Math.min(20, (excess / PERFORMANCE_BUDGETS.totalBundle) * 100);
+      recommendations.push(`Reduce total bundle size by ${Math.round(excess / 1000)}KB`);
+    }
+
+    // Check for large chunks
+    const largeChunks = analysis.chunks.filter(chunk => chunk.size > 100000);
+    if (largeChunks.length > 0) {
+      score -= largeChunks.length * 10;
+      recommendations.push(`${largeChunks.length} chunk(s) are larger than 100KB - consider splitting`);
+    }
+
+    // Add specific recommendations based on analysis
+    if (analysis.chunks.length < 3) {
+      score -= 15;
+      recommendations.push('Consider implementing more aggressive code splitting');
+    }
+
+    if (recommendations.length === 0) {
+      recommendations.push('Bundle size is optimal');
+    }
+
+    return {
+      analysis,
+      recommendations,
+      score: Math.max(0, Math.round(score)),
+    };
+  }
+}
+
+/**
+ * Initialize performance optimizations with enhanced monitoring
  */
 export function initializePerformance(): {
   monitor: PerformanceMonitor;
   lazyLoader: LazyLoader;
+  auditor: PerformanceAuditor;
 } {
   // Set up resource hints for external services
   ResourceHints.preconnect('https://js.stripe.com', true);
   ResourceHints.preconnect('https://api.stripe.com', true);
+  ResourceHints.preconnect('https://checkout.stripe.com', true);
   ResourceHints.dnsPrefetch('https://fonts.googleapis.com');
   ResourceHints.dnsPrefetch('https://fonts.gstatic.com');
+  ResourceHints.dnsPrefetch('https://www.googletagmanager.com');
 
   // Initialize performance monitoring
   const monitor = new PerformanceMonitor();
 
-  // Initialize lazy loading
+  // Initialize lazy loading with optimized settings
   const lazyLoader = new LazyLoader({
     rootMargin: '100px',
-    threshold: 0.1
+    threshold: 0.1,
+    placeholder: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB2aWV3Qm94PSIwIDAgMSAxIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxYTFhMWEiLz48L3N2Zz4='
   });
+
+  // Initialize performance auditor
+  const auditor = new PerformanceAuditor();
 
   // Start observing lazy load elements
   lazyLoader.observeAll('[data-lazy-src]');
   lazyLoader.observeAll('[data-lazy-component]');
 
-  return { monitor, lazyLoader };
+  // Set up periodic performance reporting (in production)
+  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+    setTimeout(() => {
+      auditor.runAudit().then(audit => {
+        console.log('Performance Audit:', audit);
+        
+        // Send to analytics if available
+        if (window.gtag) {
+          window.gtag('event', 'performance_audit', {
+            custom_parameter_1: audit.compliance.coreWebVitals,
+            custom_parameter_2: audit.compliance.budgetCompliance,
+            value: audit.bundle.jsSize,
+          });
+        }
+      });
+    }, 5000); // Run audit 5 seconds after initialization
+  }
+
+  return { monitor, lazyLoader, auditor };
 }
