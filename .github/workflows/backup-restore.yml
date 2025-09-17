@@ -1,0 +1,280 @@
+name: Database Backup & Restore Drill
+
+on:
+  schedule:
+    # Run every Sunday at 02:00 UTC (weekly)
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      force_run:
+        description: 'Force run even without DATABASE_URL'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  POSTGRES_VERSION: '15'
+  BACKUP_RETENTION_DAYS: 30
+
+jobs:
+  backup-restore-drill:
+    name: Weekly Backup & Restore Test
+    runs-on: ubuntu-latest
+    
+    # Set timeout to prevent hanging jobs
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Check DATABASE_URL availability
+        id: check_db_url
+        run: |
+          if [ -z "${{ secrets.DATABASE_URL }}" ] && [ "${{ github.event.inputs.force_run }}" != "true" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "reason=DATABASE_URL secret not configured" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "DATABASE_URL is available, proceeding with backup drill"
+          fi
+
+      - name: Skip workflow notification
+        if: steps.check_db_url.outputs.skip == 'true'
+        run: |
+          echo "⚠️ Skipping backup drill: ${{ steps.check_db_url.outputs.reason }}"
+          echo "To run this workflow, either:"
+          echo "1. Configure DATABASE_URL secret in repository settings"
+          echo "2. Run manually with 'Force run' option enabled"
+          
+          # Append skip notification to documentation
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          echo "" >> docs/ops/backup-restore.md
+          echo "### Backup Drill Results" >> docs/ops/backup-restore.md
+          echo "" >> docs/ops/backup-restore.md
+          echo "**$TIMESTAMP** - SKIPPED: DATABASE_URL secret not configured" >> docs/ops/backup-restore.md
+
+      - name: Set up PostgreSQL client
+        if: steps.check_db_url.outputs.skip == 'false'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-${{ env.POSTGRES_VERSION }}
+
+      - name: Create backup directory
+        if: steps.check_db_url.outputs.skip == 'false'
+        run: |
+          mkdir -p backups
+          TIMESTAMP=$(date -u '+%Y%m%d_%H%M%S')
+          echo "BACKUP_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+          echo "BACKUP_FILE=backups/backup_${TIMESTAMP}.sql" >> $GITHUB_ENV
+
+      - name: Create database backup
+        if: steps.check_db_url.outputs.skip == 'false'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          echo "🔄 Creating database backup..."
+          
+          # Extract connection details from DATABASE_URL
+          # Format: postgresql://user:password@host:port/database
+          DB_HOST=$(echo $DATABASE_URL | sed -n 's/.*@\([^:]*\):.*/\1/p')
+          DB_PORT=$(echo $DATABASE_URL | sed -n 's/.*:\([0-9]*\)\/.*/\1/p')
+          DB_NAME=$(echo $DATABASE_URL | sed -n 's/.*\/\([^?]*\).*/\1/p')
+          DB_USER=$(echo $DATABASE_URL | sed -n 's/.*:\/\/\([^:]*\):.*/\1/p')
+          DB_PASS=$(echo $DATABASE_URL | sed -n 's/.*:\/\/[^:]*:\([^@]*\)@.*/\1/p')
+          
+          # Set PGPASSWORD for non-interactive pg_dump
+          export PGPASSWORD="$DB_PASS"
+          
+          # Create backup with comprehensive options
+          pg_dump \
+            --host="$DB_HOST" \
+            --port="$DB_PORT" \
+            --username="$DB_USER" \
+            --dbname="$DB_NAME" \
+            --verbose \
+            --clean \
+            --if-exists \
+            --create \
+            --format=plain \
+            --no-owner \
+            --no-privileges \
+            --file="$BACKUP_FILE"
+          
+          # Verify backup file was created and has content
+          if [ -f "$BACKUP_FILE" ] && [ -s "$BACKUP_FILE" ]; then
+            BACKUP_SIZE=$(du -h "$BACKUP_FILE" | cut -f1)
+            echo "✅ Backup created successfully: $BACKUP_FILE ($BACKUP_SIZE)"
+            echo "BACKUP_SUCCESS=true" >> $GITHUB_ENV
+            echo "BACKUP_SIZE=$BACKUP_SIZE" >> $GITHUB_ENV
+          else
+            echo "❌ Backup failed or is empty"
+            echo "BACKUP_SUCCESS=false" >> $GITHUB_ENV
+            exit 1
+          fi
+
+      - name: Start ephemeral PostgreSQL container
+        if: steps.check_db_url.outputs.skip == 'false' && env.BACKUP_SUCCESS == 'true'
+        run: |
+          echo "🔄 Starting ephemeral PostgreSQL container for restore test..."
+          
+          docker run -d \
+            --name restore-test-postgres \
+            --env POSTGRES_PASSWORD=testpassword \
+            --env POSTGRES_USER=testuser \
+            --env POSTGRES_DB=testdb \
+            --publish 5433:5432 \
+            postgres:${{ env.POSTGRES_VERSION }}
+          
+          # Wait for PostgreSQL to be ready
+          echo "Waiting for PostgreSQL to be ready..."
+          for i in {1..30}; do
+            if docker exec restore-test-postgres pg_isready -U testuser -d testdb; then
+              echo "✅ PostgreSQL is ready"
+              break
+            fi
+            echo "Waiting... ($i/30)"
+            sleep 2
+          done
+
+      - name: Perform restore drill
+        if: steps.check_db_url.outputs.skip == 'false' && env.BACKUP_SUCCESS == 'true'
+        run: |
+          echo "🔄 Performing restore drill..."
+          
+          # Set up connection for restore test
+          export PGPASSWORD=testpassword
+          
+          # Restore backup to test database
+          psql \
+            --host=localhost \
+            --port=5433 \
+            --username=testuser \
+            --dbname=testdb \
+            --file="$BACKUP_FILE" \
+            --quiet
+          
+          # Verify restore by checking basic database structure
+          echo "🔍 Verifying restore..."
+          
+          # Count tables in restored database
+          TABLE_COUNT=$(psql \
+            --host=localhost \
+            --port=5433 \
+            --username=testuser \
+            --dbname=testdb \
+            --tuples-only \
+            --command="SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public';")
+          
+          # Check if we have any tables
+          if [ "$TABLE_COUNT" -gt 0 ]; then
+            echo "✅ Restore verification passed: $TABLE_COUNT tables found"
+            echo "RESTORE_SUCCESS=true" >> $GITHUB_ENV
+            echo "TABLE_COUNT=$TABLE_COUNT" >> $GITHUB_ENV
+            
+            # Get list of tables for documentation
+            TABLES=$(psql \
+              --host=localhost \
+              --port=5433 \
+              --username=testuser \
+              --dbname=testdb \
+              --tuples-only \
+              --command="SELECT string_agg(table_name, ', ') FROM information_schema.tables WHERE table_schema = 'public';")
+            echo "RESTORED_TABLES=$TABLES" >> $GITHUB_ENV
+          else
+            echo "❌ Restore verification failed: no tables found"
+            echo "RESTORE_SUCCESS=false" >> $GITHUB_ENV
+          fi
+
+      - name: Cleanup test container
+        if: always() && steps.check_db_url.outputs.skip == 'false'
+        run: |
+          echo "🧹 Cleaning up test container..."
+          docker stop restore-test-postgres || true
+          docker rm restore-test-postgres || true
+
+      - name: Upload backup artifact
+        if: steps.check_db_url.outputs.skip == 'false' && env.BACKUP_SUCCESS == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-backup-${{ env.BACKUP_TIMESTAMP }}
+          path: ${{ env.BACKUP_FILE }}
+          retention-days: ${{ env.BACKUP_RETENTION_DAYS }}
+          compression-level: 9
+
+      - name: Update documentation
+        if: steps.check_db_url.outputs.skip == 'false'
+        run: |
+          echo "📝 Updating backup-restore documentation..."
+          
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          
+          # Ensure the results section exists
+          if ! grep -q "### Backup Drill Results" docs/ops/backup-restore.md; then
+            echo "" >> docs/ops/backup-restore.md
+            echo "### Backup Drill Results" >> docs/ops/backup-restore.md
+            echo "" >> docs/ops/backup-restore.md
+          fi
+          
+          # Append results
+          echo "" >> docs/ops/backup-restore.md
+          echo "**$TIMESTAMP** - Automated Weekly Drill:" >> docs/ops/backup-restore.md
+          
+          if [ "$BACKUP_SUCCESS" == "true" ]; then
+            echo "- ✅ Backup: SUCCESS ($BACKUP_SIZE)" >> docs/ops/backup-restore.md
+          else
+            echo "- ❌ Backup: FAILED" >> docs/ops/backup-restore.md
+          fi
+          
+          if [ "$RESTORE_SUCCESS" == "true" ]; then
+            echo "- ✅ Restore: SUCCESS ($TABLE_COUNT tables restored)" >> docs/ops/backup-restore.md
+            echo "- 📊 Tables: $RESTORED_TABLES" >> docs/ops/backup-restore.md
+          else
+            echo "- ❌ Restore: FAILED" >> docs/ops/backup-restore.md
+          fi
+          
+          echo "- 📦 Artifact: database-backup-$BACKUP_TIMESTAMP" >> docs/ops/backup-restore.md
+
+      - name: Commit documentation updates
+        if: steps.check_db_url.outputs.skip == 'false' || steps.check_db_url.outputs.skip == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          if git diff --quiet docs/ops/backup-restore.md; then
+            echo "No documentation changes to commit"
+          else
+            git add docs/ops/backup-restore.md
+            git commit -m "docs(ops): update backup drill results - $(date -u '+%Y-%m-%d')"
+            git push origin main
+          fi
+
+      - name: Report results
+        if: steps.check_db_url.outputs.skip == 'false'
+        run: |
+          echo "📋 BACKUP & RESTORE DRILL SUMMARY"
+          echo "=================================="
+          echo "Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "Backup Status: $([ "$BACKUP_SUCCESS" == "true" ] && echo "✅ SUCCESS" || echo "❌ FAILED")"
+          echo "Restore Status: $([ "$RESTORE_SUCCESS" == "true" ] && echo "✅ SUCCESS" || echo "❌ FAILED")"
+          
+          if [ "$BACKUP_SUCCESS" == "true" ]; then
+            echo "Backup Size: $BACKUP_SIZE"
+            echo "Artifact: database-backup-$BACKUP_TIMESTAMP"
+          fi
+          
+          if [ "$RESTORE_SUCCESS" == "true" ]; then
+            echo "Tables Restored: $TABLE_COUNT"
+          fi
+          
+          # Set job status for GitHub UI
+          if [ "$BACKUP_SUCCESS" == "true" ] && [ "$RESTORE_SUCCESS" == "true" ]; then
+            echo "🎉 All tests passed!"
+            exit 0
+          else
+            echo "❌ Some tests failed!"
+            exit 1
+          fi
