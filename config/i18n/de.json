@@ -1,11 +1,69 @@
 {
   "hero": {
-    "headline": "Lokal‑first‑Automatisierung, die Geschäftsergebnisse skaliert",
-    "sub": "Orchestrieren und automatisieren Sie kritische Prozesse auf Ihrer Infrastruktur—für schnellere Time‑to‑Value, messbare Effizienzgewinne und verlässliche Skalierung.",
-    "bullets": ["Lokal‑first: Datenhoheit ohne Kompromisse.", "Produktivität: Automatisierte Abläufe reduzieren Aufwand und Durchlaufzeiten.", "Skalierung: Vom ersten Team bis unternehmensweit—ohne Reibungsverluste."]
+    "headline": "Lokal‑first‑Automatisierung, die Ergebnisse skaliert",
+    "sub": "Automatisieren Sie geschäftskritische Workflows sicher auf Ihrer Infrastruktur – für schnellere Ergebnisse, deutliche Zeitersparnis und verlässliche Skalierung.",
+    "bullets": ["Lokal‑first: Ihre Daten bleiben auf Ihrer Infrastruktur.", "Spürbare Zeitersparnis durch Ende‑zu‑Ende‑Automatisierung.", "Für Skalierung gebaut: von einem Team bis zur gesamten Organisation."]
   },
   "cta": {
-    "primary": "Personalisierte Demo anfordern",
-    "secondary": "Mit Expert:innen sprechen"
+    "primary": "Demo anfordern",
+    "secondary": "Mit dem Vertrieb sprechen"
+  },
+  "services": {
+    "email": {
+      "short": "Smarte E-Mail-Tools für höhere Öffnungen, bessere Klicks und weniger Aufwand.",
+      "benefits": [
+        "Betreffzeilen, die mehr öffnen und klicken lassen.",
+        "Automationen, die Zeit sparen und Leads pflegen.",
+        "Personalisierung ohne Mehraufwand – passend zum Empfänger."
+      ]
+    },
+    "telephony": {
+      "short": "Intelligente Anrufflows für schnellere Lösungen, zufriedene Kunden und geringere Wartezeiten.",
+      "benefits": [
+        "Routet Anliegen automatisch an die richtige Stelle.",
+        "Antworten in natürlicher Sprache, rund um die Uhr.",
+        "Reduziert Kosten pro Kontakt bei höherer Qualität."
+      ]
+    },
+    "image": {
+      "short": "Bild-Assistent für schnelle Visuals, konsistente Markenbilder und zeitsparende Bearbeitung.",
+      "benefits": [
+        "Erzeugt Varianten im Markenlook in Sekunden.",
+        "Entfernt Hintergründe und optimiert für Kanäle.",
+        "Spart Agentur- und Stockkosten."
+      ]
+    },
+    "video": {
+      "short": "Video-Assistent für Skript, Schnitt und Untertitel – schneller produzieren, mehr Reichweite.",
+      "benefits": [
+        "Erstellt Rohschnitt und Untertitel automatisch.",
+        "Lokalisierung für Märkte ohne Zusatzdrehs.",
+        "Mehr Content aus vorhandenem Material."
+      ]
+    },
+    "music": {
+      "short": "Lizenzfreie Musik nach Stimmung und Länge – passgenau für Marken und Formate.",
+      "benefits": [
+        "Kompositionen, die zu Tempo und Ton passen.",
+        "Saubere Rechte – ohne komplizierte Lizenzen.",
+        "Nahtlose Loops und Stems für den Schnitt."
+      ]
+    },
+    "websites": {
+      "short": "Webseiten, die schneller online gehen: klare Texte, passende Bilder, optimierte UX.",
+      "benefits": [
+        "Startet Seiten mit überzeugendem Messaging.",
+        "Erzeugt Bild- und Iconvorschläge im Stil der Marke.",
+        "Optimiert für SEO, Performance und Barrierefreiheit."
+      ]
+    },
+    "industryBundles": {
+      "short": "Vorkonfigurierte Lösungen für Ihre Branche – schneller Start mit klaren Ergebnissen.",
+      "benefits": [
+        "Vorlagen und Workflows für typische Use-Cases.",
+        "KPIs und Reports, die wirklich zählen.",
+        "Onboarding in Tagen statt Wochen."
+      ]
+    }
   }
 }

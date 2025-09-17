@@ -1,11 +1,69 @@
 {
   "hero": {
-    "headline": "Local‑first automation that scales business outcomes",
-    "sub": "Orchestrate and automate critical processes on your infrastructure—for faster time‑to‑value, measurable efficiency gains, and reliable scale.",
-    "bullets": ["Local‑first: data ownership without compromise.", "Productivity: automated workflows reduce effort and cycle times.", "Scale: from first team to enterprise—without friction."]
+    "headline": "Local‑first automation that scales results",
+    "sub": "Automate critical workflows securely on your infrastructure—for faster results, meaningful time savings, and reliable scale.",
+    "bullets": ["Local‑first by design: your data stays on your infrastructure.", "Automation that saves teams time and boosts measurable results.", "Built for scale: from one team to the entire organization."]
   },
   "cta": {
-    "primary": "Request a demo",
-    "secondary": "Speak with an expert"
+    "primary": "Get a demo",
+    "secondary": "Talk to sales"
+  },
+  "services": {
+    "email": {
+      "short": "Smarter email tools for higher opens, better clicks, and less effort.",
+      "benefits": [
+        "Subject lines that drive more opens and clicks.",
+        "Automations that save time and nurture leads.",
+        "Personalization at scale—tailored to each recipient."
+      ]
+    },
+    "telephony": {
+      "short": "Intelligent call flows for faster resolution, happier customers, and shorter waits.",
+      "benefits": [
+        "Routes requests to the right place automatically.",
+        "Natural-language answers, available 24/7.",
+        "Lower cost per contact with higher quality."
+      ]
+    },
+    "image": {
+      "short": "Image assistant for quick visuals, consistent brand assets, and faster edits.",
+      "benefits": [
+        "Generates on-brand variants in seconds.",
+        "Removes backgrounds and optimizes per channel.",
+        "Cuts agency and stock costs."
+      ]
+    },
+    "video": {
+      "short": "Video assistant for script, edit, and subtitles—produce faster, reach more.",
+      "benefits": [
+        "Auto rough cuts and subtitles.",
+        "Localization for markets without reshoots.",
+        "More content from the footage you already have."
+      ]
+    },
+    "music": {
+      "short": "Royalty-free music by mood and length—made to fit brand and format.",
+      "benefits": [
+        "Compositions that match pace and tone.",
+        "Clear rights—no licensing headache.",
+        "Seamless loops and stems for editing."
+      ]
+    },
+    "websites": {
+      "short": "Websites that ship faster: sharp copy, fitting visuals, optimized UX.",
+      "benefits": [
+        "Launch pages with compelling messaging.",
+        "Generates image and icon suggestions in your brand style.",
+        "Optimized for SEO, performance, and accessibility."
+      ]
+    },
+    "industryBundles": {
+      "short": "Preconfigured solutions for your industry—start faster with clear outcomes.",
+      "benefits": [
+        "Templates and workflows for common use cases.",
+        "KPIs and reports that actually matter.",
+        "Onboarding in days, not weeks."
+      ]
+    }
   }
 }
