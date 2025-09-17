@@ -126,6 +126,46 @@
         }
       ],
       "cta": "Request finance demo"
+    },
+    "realestate": {
+      "h1": "Real Estate: Faster deals, higher occupancy—from lead to lease",
+      "p1": "Qualify inquiries, coordinate viewings, and keep prospects warm with on‑brand follow‑ups—less vacancy, shorter time‑to‑lease.",
+      "p2": "From listing to contract: playbooks for residential and commercial lift close rates and agent productivity.",
+      "faqs": [
+        {
+          "q": "How do I reduce vacancy days?",
+          "a": "Centralize inquiries, prioritize hot leads, and trigger actions on time—more viewings turn into signed contracts; tracked by vacancy days and conversion."
+        },
+        {
+          "q": "Will it work with my CRM/portals?",
+          "a": "We align to common workflows and exports; scope and sequencing are defined together—without custom overhead."
+        },
+        {
+          "q": "What about disclosure and compliance?",
+          "a": "Templates and approvals ensure consistent wording; auditable logs support internal and external reviews."
+        }
+      ],
+      "cta": "Book real estate demo"
+    },
+    "edu": {
+      "h1": "Education: Raise enrollments and retention—from first touch to alumni",
+      "p1": "Automate lead nurturing, application coordination, and onboarding—fewer questions, higher enrollment.",
+      "p2": "For universities and training providers: playbooks for marketing, advising, and student success deliver measurable KPIs.",
+      "faqs": [
+        {
+          "q": "How does it increase enrollments?",
+          "a": "Segmented journeys, reminders, and clear next steps reduce drop‑offs; progress and conversion are tracked transparently."
+        },
+        {
+          "q": "Does it fit my campus stack?",
+          "a": "We support common systems and file exchanges; scope and priorities are defined collaboratively."
+        },
+        {
+          "q": "How do you address privacy?",
+          "a": "Only necessary data is processed; policies and approvals ensure transparency. See the public privacy notice for details."
+        }
+      ],
+      "cta": "Request education demo"
     }
   }
 }

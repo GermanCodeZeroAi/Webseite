@@ -126,6 +126,46 @@
         }
       ],
       "cta": "Finanz‑Demo anfragen"
+    },
+    "realestate": {
+      "h1": "Immobilien: Schnellere Abschlüsse, höhere Auslastung – digital von Lead bis Mietvertrag",
+      "p1": "Leads qualifizieren, Besichtigungen koordinieren und Interessenten mit markenkonformen Follow‑ups warmhalten – weniger Leerstand, kürzere Time‑to‑Lease.",
+      "p2": "Von Exposé bis Vertrag: Playbooks für Wohnen und Gewerbe erhöhen Abschlussquote und Makler‑Produktivität.",
+      "faqs": [
+        {
+          "q": "Wie fülle ich Leerstände schneller?",
+          "a": "Anfragen zentralisieren, heiße Leads priorisieren und rechtzeitig anstoßen – mehr Besichtigungen werden zu unterschriebenen Verträgen; gemessen an Leerstandstagen und Conversion."
+        },
+        {
+          "q": "Funktioniert das mit meinem CRM/Portalen?",
+          "a": "Wir richten uns nach gängigen Abläufen und Exporten; Umfang und Reihenfolge passen wir gemeinsam an – ohne Custom‑Overhead."
+        },
+        {
+          "q": "Wie sieht es mit Compliance und Offenlegung aus?",
+          "a": "Vorlagen und Freigaben sorgen für konsistente Formulierungen; prüffähige Protokolle unterstützen interne und externe Reviews."
+        }
+      ],
+      "cta": "Immobilien‑Demo buchen"
+    },
+    "edu": {
+      "h1": "Bildung: Einschreibungen und Bindung steigern – vom Erstkontakt bis Alumni",
+      "p1": "Lead‑Nurturing, Antragskoordination und Onboarding automatisieren – weniger Rückfragen, höhere Einschreibung.",
+      "p2": "Für Hochschulen und Bildungsanbieter: Playbooks für Marketing, Beratung und Studienerfolg liefern messbare KPIs.",
+      "faqs": [
+        {
+          "q": "Wie steigern wir Einschreibungen?",
+          "a": "Segmentierte Journeys, Erinnerungen und klare nächste Schritte reduzieren Abbrüche; Fortschritt und Conversion werden transparent gemessen."
+        },
+        {
+          "q": "Passt das zu unserer Systemlandschaft?",
+          "a": "Wir unterstützen gängige Systeme und Dateiimporte; Umfang und Prioritäten legen wir gemeinsam fest."
+        },
+        {
+          "q": "Wie adressieren Sie Datenschutz?",
+          "a": "Es werden nur notwendige Daten verarbeitet; Richtlinien und Freigaben sichern Transparenz. Details stehen in der öffentlichen Datenschutzerklärung."
+        }
+      ],
+      "cta": "Education‑Demo anfragen"
     }
   }
 }

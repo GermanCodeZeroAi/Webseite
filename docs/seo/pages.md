@@ -289,6 +289,24 @@ The following public-safe keys are available in `config/i18n/de.json` and `confi
   - `solutions.fin.faqs[2].q` / `.a`: FAQ 3 question/answer
   - `solutions.fin.cta`: Primary CTA label
 
+ - Real Estate — `solutions.realestate.*`
+  - `solutions.realestate.h1`: Page H1
+  - `solutions.realestate.p1`: Short paragraph (benefit/outcome)
+  - `solutions.realestate.p2`: Short paragraph (benefit/outcome)
+  - `solutions.realestate.faqs[0].q` / `.a`: FAQ 1 question/answer
+  - `solutions.realestate.faqs[1].q` / `.a`: FAQ 2 question/answer
+  - `solutions.realestate.faqs[2].q` / `.a`: FAQ 3 question/answer
+  - `solutions.realestate.cta`: Primary CTA label
+
+ - Education — `solutions.edu.*`
+  - `solutions.edu.h1`: Page H1
+  - `solutions.edu.p1`: Short paragraph (benefit/outcome)
+  - `solutions.edu.p2`: Short paragraph (benefit/outcome)
+  - `solutions.edu.faqs[0].q` / `.a`: FAQ 1 question/answer
+  - `solutions.edu.faqs[1].q` / `.a`: FAQ 2 question/answer
+  - `solutions.edu.faqs[2].q` / `.a`: FAQ 3 question/answer
+  - `solutions.edu.cta`: Primary CTA label
+
 Notes:
 - Keys are mirrored in DE/EN with identical structure.
 - Copy is public‑safe and free of internal implementation details.
