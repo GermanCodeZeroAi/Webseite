@@ -1,106 +1,194 @@
-## German Code Zero AI – B2B Services (DE/EN)
+# German Code Zero AI – Premium B2B Services Plattform 🚀
 
-This repository contains a comprehensive B2B services platform with configurator, checkout (Stripe), FastAPI backend, Postgres/Redis, SEO, accessibility, performance optimization, security, and testing. Production-ready implementation with enterprise-grade features.
+Eine umfassende B2B-Services-Plattform mit Konfigurator, Checkout (Stripe), FastAPI Backend, Postgres/Redis, SEO, Barrierefreiheit, Performance-Optimierung, Sicherheit und Testing. Produktionsreife Implementierung mit Enterprise-Features.
 
-### What we offer (public overview)
-- Configurable service packages (base + add-ons) across Email, Telephony, Generative Media (Image/Video/Music), and Websites.
-- Enterprise-grade checkout and subscriptions via Stripe.
-- Clear pricing logic (rules-based), referrals, and invoices.
-- Premium B2B experience with gold/black branding.
+## 🌟 Was wir bieten
 
-### Architecture overview
-- **Frontend**: React/TypeScript with comprehensive SEO, accessibility (WCAG 2.2 AA), and performance optimization
-- **Backend**: FastAPI with pricing, catalog, checkout session creation, Stripe webhook handling, orders, referrals
-- **Database**: Postgres (source of truth), Redis (cache/ratelimits/idempotency)
-- **Security**: CSP, XSS protection, CSRF tokens, rate limiting, secure storage
-- **Performance**: Core Web Vitals monitoring, lazy loading, image optimization, code splitting
-- **Testing**: Comprehensive test suites with 80%+ coverage, E2E testing, accessibility testing
+Unsere Plattform ermöglicht es Unternehmen, digitale Services effizient zu konfigurieren und zu verwalten:
 
-### Key Features Implemented
+- **📧 Email-Services**: Professionelle E-Mail-Lösungen mit erweiterten Funktionen
+- **📞 Telefonie**: Moderne VoIP-Systeme und Kommunikationslösungen  
+- **🎨 Generative Medien**: KI-gestützte Erstellung von Bildern, Videos und Musik
+- **🌐 Websites**: Professionelle Webauftritte mit modernem Design
+- **💳 Enterprise Checkout**: Sichere Zahlungsabwicklung über Stripe
+- **📊 Transparente Preisgestaltung**: Regelbasierte Logik, Empfehlungssystem und Rechnungsstellung
+- **✨ Premium B2B-Erlebnis**: Elegantes Gold/Schwarz-Branding für professionelle Auftritte
 
-#### SEO & Accessibility
-- Complete SEO utilities with DE/EN internationalization
-- JSON-LD structured data for all page types
-- OpenGraph optimization with proper meta tags
-- Sitemap generation with multi-language support
-- WCAG 2.2 AA compliance with focus management
-- ARIA live regions for dynamic content updates
-- Keyboard navigation and screen reader support
+## 🏗️ Architektur-Überblick
 
-#### Performance Optimization
-- Core Web Vitals monitoring (LCP ≤ 2.5s, CLS ≤ 0.1, INP ≤ 200ms)
-- Bundle size analysis with 180KB JS limit enforcement
-- Lazy loading with IntersectionObserver
-- Image optimization (AVIF/WebP with fallbacks)
-- Code splitting with dynamic imports
-- Resource hints management (preconnect, prefetch, preload)
+Unsere moderne, skalierbare Architektur basiert auf bewährten Technologien:
 
-#### Security
-- Content Security Policy (CSP) with nonce-based inline scripts
-- XSS protection with input sanitization
-- CSRF token management
-- Secure storage with encryption
-- Rate limiting and input validation
-- Security headers management
+- **🎯 Frontend**: React/TypeScript mit umfassendem SEO, Barrierefreiheit (WCAG 2.2 AA) und Performance-Optimierung
+- **⚡ Backend**: FastAPI mit Preislogik, Katalog, Checkout-Session-Erstellung, Stripe Webhook-Handling, Bestellungen und Empfehlungen
+- **🗄️ Datenbank**: PostgreSQL (Single Source of Truth), Redis (Cache/Rate Limits/Idempotenz)
+- **🔒 Sicherheit**: Content Security Policy, XSS-Schutz, CSRF-Tokens, Rate Limiting, sichere Speicherung
+- **🚀 Performance**: Core Web Vitals Monitoring, Lazy Loading, Bildoptimierung, Code Splitting
+- **🧪 Testing**: Umfassende Testsuites mit 80%+ Abdeckung, E2E-Tests, Barrierefreiheitstests
 
-#### Testing
-- Comprehensive test utilities and mock helpers
-- Unit tests for all core functionality
-- Accessibility testing with automated checks
-- Performance testing with threshold validation
-- E2E testing utilities
-- Test configuration management
+## ✨ Implementierte Hauptfunktionen
 
-### Setup matrix
-- **Local**: Docker Compose (API, Worker, Postgres, Redis). Stripe Test.
-- **Staging**: Production-like, sandbox integrations.
-- **Production**: HA, observability, ratelimits.
+### 🔍 SEO & Barrierefreiheit
+- **Mehrsprachige SEO-Tools**: Vollständige DE/EN-Internationalisierung
+- **Strukturierte Daten**: JSON-LD für alle Seitentypen (Organization, WebSite, WebPage, Product, BreadcrumbList)
+- **OpenGraph-Optimierung**: Perfekte Meta-Tags und Bildbehandlung
+- **Sitemap-Generierung**: Mehrsprachige Unterstützung mit Bild-Sitemaps
+- **WCAG 2.2 AA-Konformität**: Umfassendes Focus-Management
+- **ARIA Live Regions**: Dynamische Inhalts-Updates für Screenreader
+- **Tastaturnavigation**: Vollständige Barrierefreiheit ohne Maus
 
-### Configuration
-- Catalogs in `/config/*`:
-  - `pricing.catalog.json`, `modules.catalog.json`, `industries.catalog.json`, `feature-bundles.json`
-- Frontend utilities in `/apps/frontend/lib/`:
-  - `seo.ts` - SEO and internationalization utilities
-  - `performance.ts` - Performance monitoring and optimization
-  - `security.ts` - Security utilities and protection
-  - `a11y.ts` - Accessibility utilities
-  - `test-utils.ts` - Testing utilities and helpers
-- Secrets via KMS/Vault, not in repo. See `docs/security/secrets.md`.
+### ⚡ Performance-Optimierung
+- **Core Web Vitals**: Monitoring (LCP ≤ 2.5s, CLS ≤ 0.1, INP ≤ 200ms)
+- **Bundle-Analyse**: 180KB JS-Limit mit automatischer Überwachung
+- **Lazy Loading**: Intelligente Ressourcen-Ladung mit IntersectionObserver
+- **Bildoptimierung**: AVIF/WebP mit Fallbacks für maximale Kompatibilität
+- **Code Splitting**: Dynamische Imports für optimale Ladezeiten
+- **Resource Hints**: Preconnect, Prefetch, Preload-Management
 
-### API
-- OpenAPI specification at `apps/backend/openapi.yaml`
-- Comprehensive endpoint documentation
-- Stripe integration for payments and webhooks
-- Rate limiting and security headers
+### 🛡️ Sicherheit
+- **Content Security Policy**: CSP mit Nonce-basierten Inline-Scripts
+- **XSS-Schutz**: Eingabe-Sanitization und URL-Validierung
+- **CSRF-Token-Management**: Automatische Aktualisierung und Verwaltung
+- **Sichere Speicherung**: Verschlüsselung für sensible Daten
+- **Rate Limiting**: Konfigurierbare Grenzen und Zeitfenster
+- **Security Headers**: HSTS, X-Frame-Options und weitere Schutzmaßnahmen
 
-### Repository structure
-- `apps/frontend/lib/` - Frontend utilities and implementations
-- `apps/backend/` - API specifications and backend code
-- `docs/` - Architecture, ops, security, privacy documentation
-- `config/` - Configuration catalogs and data
-- `tests/` - Test suites and utilities
+### 🧪 Umfassendes Testing
+- **Test-Utilities**: Mock-Helpers für APIs, localStorage und Browser-APIs
+- **Unit Tests**: 80%+ Abdeckung für alle Kernfunktionen
+- **Barrierefreiheitstests**: Automatisierte WCAG-Compliance-Prüfungen
+- **Performance-Tests**: Core Web Vitals Validierung mit Schwellenwerten
+- **E2E-Tests**: Formular-Interaktionen und Navigation
+- **Test-Konfiguration**: Umgebungssetup und Mock-Utilities
 
-### Commit conventions
-- Conventional Commits (e.g., `feat(seo): ...`, `fix(security): ...`, `perf: ...`)
+## 🔧 Umgebungssetup
 
-### Getting started
-1. Review architecture documentation in `docs/architecture/`
-2. Set up development environment with Docker Compose
-3. Configure Stripe test keys
-4. Run tests: `npm test`
-5. Start development server: `npm run dev`
+### Entwicklungsumgebungen
+- **🏠 Lokal**: Docker Compose (API, Worker, PostgreSQL, Redis) mit Stripe Test-Modus
+- **🧪 Staging**: Produktionsähnliche Umgebung mit Sandbox-Integrationen
+- **🚀 Produktion**: Hochverfügbarkeit, Observability und Rate Limits
 
-### Legal & privacy
-- DPIA skeleton provided under `docs/privacy/dpia-skeleton.md`
-- GDPR compliance considerations documented
-- Security policies and procedures outlined
+## ⚙️ Konfiguration
 
-### Roadmap
-- ✅ SEO and accessibility implementation
-- ✅ Performance optimization
-- ✅ Security hardening
-- ✅ Comprehensive testing
-- 🔄 Backend API implementation
-- 🔄 Frontend UI components
-- 🔄 Stripe integration
-- 🔄 CI/CD pipeline
+### Katalog-Dateien (`/config/`)
+- `pricing.catalog.json` - Preismodelle und Tarife
+- `modules.catalog.json` - Verfügbare Service-Module
+- `industries.catalog.json` - Branchenspezifische Konfigurationen
+- `feature-bundles.json` - Feature-Pakete und Add-ons
+
+### Frontend-Utilities (`/apps/frontend/lib/`)
+- `seo.ts` - SEO und Internationalisierung
+- `performance.ts` - Performance-Monitoring und Optimierung
+- `security.ts` - Sicherheits-Utilities und Schutzfunktionen
+- `a11y.ts` - Barrierefreiheits-Utilities
+- `test-utils.ts` - Test-Utilities und Helper-Funktionen
+
+### Sicherheit
+🔒 **Sensible Daten** werden über KMS/Vault verwaltet, nicht im Repository gespeichert.  
+📖 Details siehe `docs/security/secrets.md`
+
+## 🌐 API-Dokumentation
+
+- **📋 OpenAPI-Spezifikation**: `apps/backend/openapi.yaml`
+- **🔗 Umfassende Endpoint-Dokumentation**: Alle verfügbaren API-Endpunkte
+- **💳 Stripe-Integration**: Zahlungen und Webhooks
+- **🛡️ Rate Limiting**: Automatische Sicherheitsmaßnahmen
+
+## 📁 Repository-Struktur
+
+```
+├── apps/
+│   ├── frontend/lib/     # Frontend-Utilities und Implementierungen
+│   └── backend/          # API-Spezifikationen und Backend-Code
+├── docs/                 # Architektur, Ops, Sicherheit, Datenschutz
+├── config/               # Konfigurations-Kataloge und Daten
+└── tests/                # Test-Suites und Utilities
+```
+
+## 📝 Commit-Konventionen
+
+Wir verwenden **Conventional Commits** für bessere Nachverfolgbarkeit:
+- `feat(seo): neue Sitemap-Generierung`
+- `fix(security): XSS-Schutz verbessert`
+- `perf: Bundle-Größe um 20% reduziert`
+
+## 🚀 Schnellstart
+
+### 1. 📖 Dokumentation lesen
+Beginnen Sie mit der Architektur-Dokumentation in `docs/architecture/`
+
+### 2. 🐳 Entwicklungsumgebung einrichten
+```bash
+# Repository klonen
+git clone https://github.com/GermanCodeZeroAi/Webseite.git
+cd Webseite
+
+# Abhängigkeiten installieren
+npm install
+
+# Docker-Umgebung starten
+docker-compose up -d
+```
+
+### 3. 🔑 Stripe Test-Keys konfigurieren
+Fügen Sie Ihre Stripe Test-Keys in die Umgebungsvariablen ein
+
+### 4. 🧪 Tests ausführen
+```bash
+# Alle Tests
+npm test
+
+# Mit Coverage-Report
+npm run test:coverage
+
+# Spezifische Test-Kategorien
+npm run test:performance
+npm run test:a11y
+npm run test:security
+```
+
+### 5. 🖥️ Entwicklungsserver starten
+```bash
+npm run dev
+```
+
+## ⚖️ Rechtliches & Datenschutz
+
+- **📋 DPIA-Vorlage**: `docs/privacy/dpia-skeleton.md`
+- **🇪🇺 GDPR-Compliance**: Umfassende Datenschutz-Überlegungen dokumentiert
+- **🔒 Sicherheitsrichtlinien**: Detaillierte Verfahren und Richtlinien
+
+## 🗺️ Roadmap
+
+### ✅ Abgeschlossen
+- SEO und Barrierefreiheits-Implementierung
+- Performance-Optimierung
+- Sicherheitshärtung
+- Umfassende Test-Implementierung
+
+### 🔄 In Arbeit
+- Backend API-Implementierung
+- Frontend UI-Komponenten
+- Stripe-Integration
+- CI/CD-Pipeline
+
+### 📋 Geplant
+- Erweiterte Analytics-Integration
+- Multi-Tenant-Architektur
+- Mobile App-Entwicklung
+- KI-basierte Empfehlungssysteme
+
+---
+
+## 💬 Support & Community
+
+**Haben Sie Fragen oder benötigen Unterstützung?**
+
+- 🐛 **Issues**: [GitHub Issues](https://github.com/GermanCodeZeroAi/Webseite/issues)
+- 📧 **E-Mail**: support@germancodezero.ai
+- 🌐 **Website**: [germancodezero.ai](https://germancodezero.ai)
+
+**Beiträge sind willkommen!** Lesen Sie unsere Contribution Guidelines und werden Sie Teil unserer Community.
+
+---
+
+*Entwickelt mit ❤️ von German Code Zero AI*
