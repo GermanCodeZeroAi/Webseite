@@ -8,6 +8,9 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
+import LiquidCard from '../../../components/LiquidCard';
+import NeuralButton from '../../../components/NeuralButton';
+import QuantumLoader from '../../../components/QuantumLoader';
 
 // Loading component for better UX during code-splitting
 const ConfiguratorLoading = () => (
