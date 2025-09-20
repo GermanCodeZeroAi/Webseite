@@ -341,14 +341,18 @@ export default function ConfiguratorPage() {
               </div>
             </div>
 
-            <button
+            <NeuralButton
               data-testid="checkout-button"
-              className="checkout-button"
               onClick={handleCheckout}
               disabled={configOptions.every(option => !option.selected)}
+              variant="primary"
+              size="large"
+              neural={true}
+              quantum={true}
+              className="checkout-neural-btn"
             >
-              Proceed to Checkout
-            </button>
+              🛒 Proceed to Checkout
+            </NeuralButton>
           </div>
         </div>
       </div>

@@ -387,22 +387,42 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              <button
-                type="button"
-                data-testid="submit-order"
-                className="submit-button"
-                onClick={handleSubmitOrder}
-                disabled={loading}
-              >
-                {loading ? 'Processing...' : `Complete Order - €${orderSummary.total.toFixed(2)}`}
-              </button>
+              {loading ? (
+                <QuantumLoader
+                  progress={75}
+                  type="business"
+                  size="medium"
+                  showProgress={true}
+                  showMetrics={true}
+                  className="checkout-loader"
+                />
+              ) : (
+                <NeuralButton
+                  type="button"
+                  data-testid="submit-order"
+                  onClick={handleSubmitOrder}
+                  disabled={loading}
+                  variant="primary"
+                  size="large"
+                  neural={true}
+                  quantum={true}
+                  className="submit-order-btn"
+                >
+                  🚀 Complete Order - €{orderSummary.total.toFixed(2)}
+                </NeuralButton>
+              )}
             </form>
           </div>
 
           <div className="order-summary-section">
-            <div data-testid="order-summary" className="order-summary">
-              <h2>Order Summary</h2>
-              
+            <LiquidCard
+              title="💰 Order Summary"
+              description="Your premium service configuration"
+              type="primary"
+              holographic={true}
+              className="order-summary-card"
+              data-testid="order-summary"
+            >
               <div className="order-items">
                 {orderSummary.items.map((item, index) => (
                   <div key={index} className="order-item">
@@ -420,7 +440,7 @@ export default function CheckoutPage() {
                 
                 {orderSummary.discount && (
                   <div data-testid="discount-amount" className="total-line discount">
-                    <span>Discount:</span>
+                    <span>💎 Discount:</span>
                     <span>-€{orderSummary.discount.toFixed(2)}</span>
                   </div>
                 )}
@@ -431,11 +451,11 @@ export default function CheckoutPage() {
                 </div>
                 
                 <div data-testid="total-price" className="total-line final-total">
-                  <span>Total:</span>
+                  <span>🚀 Total:</span>
                   <span>€{orderSummary.total.toFixed(2)}</span>
                 </div>
               </div>
-            </div>
+            </LiquidCard>
           </div>
         </div>
       </div>
