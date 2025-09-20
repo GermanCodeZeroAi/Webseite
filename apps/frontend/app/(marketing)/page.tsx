@@ -15,6 +15,7 @@ import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { getPageSeo, type Locale } from '../../lib/seo';
+import MasterLayout from '../../components/MasterLayout';
 
 // Lazy load Hero3D component for better initial performance
 const Hero3D = dynamic(() => import('../../components/Hero3D'), {
@@ -91,7 +92,13 @@ export default function MarketingPage({ params }: PageProps) {
   };
 
   return (
-    <>
+    <MasterLayout
+      enableSound={true}
+      enableGestures={true}
+      enableEasterEggs={true}
+      enableTransitions={true}
+      className="marketing-page"
+    >
       {/* Performance optimizations - preconnect to external services */}
       <Head>
         <link rel="preconnect" href="https://js.stripe.com" crossOrigin="anonymous" />
@@ -110,7 +117,7 @@ export default function MarketingPage({ params }: PageProps) {
         }}
       />
 
-      {/* Main Content */}
+      {/* Main Content with ALL KRASSE EFFECTS */}
       <main role="main">
         <Hero3D 
           locale={locale}
@@ -262,6 +269,6 @@ export default function MarketingPage({ params }: PageProps) {
           }
         }
       `}</style>
-    </>
+    </MasterLayout>
   );
 }
