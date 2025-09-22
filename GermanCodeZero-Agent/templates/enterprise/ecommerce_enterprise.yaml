@@ -1,0 +1,232 @@
+name: ecommerce_enterprise_template
+description: Enterprise-Agent Template für E-Commerce Komplettlösung
+version: 1.0.0
+category: ecommerce_enterprise
+
+template:
+  name: ecommerce_automation_platform
+  type: enterprise
+  industry: ecommerce
+  company_name: "Digital Shop GmbH"
+  description: Vollautomatisierte E-Commerce Plattform mit KI-Agenten
+  
+  domain_agents:
+    - name: order_management
+      domain_type: order_ops
+      priority: critical
+      
+    - name: customer_service
+      domain_type: customer_ops
+      priority: high
+      
+    - name: inventory_management
+      domain_type: inventory_ops
+      priority: high
+      
+    - name: marketing_automation
+      domain_type: marketing_ops
+      priority: medium
+      
+    - name: payment_processing
+      domain_type: finance_ops
+      priority: critical
+      
+    - name: shipping_logistics
+      domain_type: logistics_ops
+      priority: high
+      
+  business_processes:
+    order_fulfillment:
+      description: Kompletter Bestellprozess
+      flow:
+        - domain: order_management
+          action: receive_order
+          
+        - domain: inventory_management
+          action: check_stock
+          conditions:
+            items_available: true
+            
+        - domain: payment_processing
+          action: process_payment
+          conditions:
+            payment_method_valid: true
+            fraud_check_passed: true
+            
+        - domain: inventory_management
+          action: reserve_items
+          
+        - domain: shipping_logistics
+          action: create_shipping_label
+          
+        - domain: customer_service
+          action: send_order_confirmation
+          
+        - domain: shipping_logistics
+          action: dispatch_order
+          
+    return_handling:
+      description: Retouren-Management
+      flow:
+        - domain: customer_service
+          action: receive_return_request
+          
+        - domain: order_management
+          action: validate_return_eligibility
+          conditions:
+            within_return_period: true
+            item_condition: acceptable
+            
+        - domain: shipping_logistics
+          action: generate_return_label
+          
+        - domain: customer_service
+          action: send_return_instructions
+          
+        - domain: inventory_management
+          action: process_returned_items
+          
+        - domain: payment_processing
+          action: process_refund
+          
+    customer_inquiry:
+      description: Kundenanfragen-Bearbeitung
+      flow:
+        - domain: customer_service
+          action: receive_inquiry
+          
+        - domain: customer_service
+          action: classify_inquiry
+          
+        - domain: customer_service
+          action: auto_respond
+          conditions:
+            can_auto_resolve: true
+            
+        - domain: order_management
+          action: provide_order_status
+          conditions:
+            inquiry_type: order_status
+            
+    abandoned_cart_recovery:
+      description: Warenkorbabbruch-Recovery
+      flow:
+        - domain: marketing_automation
+          action: detect_abandoned_cart
+          
+        - domain: customer_service
+          action: send_reminder_email
+          conditions:
+            time_since_abandonment: 2_hours
+            
+        - domain: marketing_automation
+          action: offer_discount
+          conditions:
+            no_response_to_reminder: true
+            customer_value: high
+            
+  global_policies:
+    data_handling:
+      customer_data_retention: 5_years
+      order_history_retention: 10_years
+      pci_compliance: required
+      
+    pricing_rules:
+      dynamic_pricing: enabled
+      competitor_monitoring: true
+      margin_protection: 15_percent_minimum
+      
+    fraud_prevention:
+      payment_verification: required
+      address_verification: enabled
+      velocity_checks: true
+      
+  compliance_requirements:
+    - DSGVO
+    - PCI_DSS
+    - eCommerce_Directive
+    - Consumer_Rights_Directive
+    - WEEE
+    - Packaging_Act
+    
+  integrations:
+    apis:
+      payment_gateway:
+        provider: stripe
+        endpoint: https://api.stripe.com
+        
+      shipping_providers:
+        - name: dhl
+          endpoint: https://api.dhl.de
+        - name: dpd
+          endpoint: https://api.dpd.com
+        - name: ups
+          endpoint: https://api.ups.com
+          
+      marketplace_connections:
+        - amazon
+        - ebay
+        - otto
+        
+    databases:
+      product_catalog:
+        type: elasticsearch
+        replicas: 3
+        
+      customer_db:
+        type: postgresql
+        encrypted: true
+        
+      order_db:
+        type: postgresql
+        sharded: true
+        
+    external_services:
+      cdn:
+        provider: cloudflare
+        
+      email_marketing:
+        provider: mailchimp
+        
+      analytics:
+        provider: google_analytics
+        
+      review_system:
+        provider: trustpilot
+        
+  orchestration_rules:
+    order_priority:
+      express_shipping: highest
+      prime_customer: high
+      standard: normal
+      
+    inventory_allocation:
+      strategy: fifo
+      reserve_for_prime: 10_percent
+      
+    customer_service_routing:
+      vip_customers: dedicated_agent
+      complaints: senior_agent
+      general: auto_response_first
+      
+  monitoring:
+    kpis:
+      - conversion_rate
+      - average_order_value
+      - cart_abandonment_rate
+      - customer_lifetime_value
+      - return_rate
+      - customer_satisfaction_score
+      
+    alerts:
+      low_stock:
+        threshold: 20_units
+        action: reorder_automatically
+        
+      high_return_rate:
+        threshold: 15_percent
+        action: quality_investigation
+        
+      payment_failures:
+        threshold: 5_consecutive
+        action: fraud_alert

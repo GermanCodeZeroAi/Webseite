@@ -1,0 +1,176 @@
+version: '3.8'
+
+services:
+  # Ollama für leichte LLM-Modelle
+  ollama:
+    image: ollama/ollama:latest
+    container_name: gcz_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+      - ./configs/ollama:/config
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_MODELS=/root/.ollama/models
+      - OLLAMA_NUM_PARALLEL=2
+      - OLLAMA_MAX_LOADED_MODELS=2
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+          cpus: '4'
+        reservations:
+          memory: 4G
+          cpus: '2'
+    restart: unless-stopped
+    networks:
+      - gcz_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Qdrant Vektor-Datenbank für Embeddings
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: gcz_qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"  # gRPC port
+    volumes:
+      - qdrant_storage:/qdrant/storage
+      - ./configs/qdrant:/qdrant/config
+    environment:
+      - QDRANT__SERVICE__HTTP_PORT=6333
+      - QDRANT__SERVICE__GRPC_PORT=6334
+      - QDRANT__LOG_LEVEL=INFO
+    restart: unless-stopped
+    networks:
+      - gcz_network
+
+  # Redis für Caching und Message Queue
+  redis:
+    image: redis:7-alpine
+    container_name: gcz_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./configs/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    restart: unless-stopped
+    networks:
+      - gcz_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # PostgreSQL für Agent-Registry und Audit Trail
+  postgres:
+    image: postgres:15-alpine
+    container_name: gcz_postgres
+    environment:
+      POSTGRES_DB: germancodezero
+      POSTGRES_USER: gcz_agent
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secure_gcz_password_2024}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./configs/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    networks:
+      - gcz_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gcz_agent -d germancodezero"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # n8n für Workflow-Automatisierung
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: gcz_n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=germancodezero
+      - DB_POSTGRESDB_USER=gcz_agent
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD:-secure_gcz_password_2024}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY:-gcz_n8n_encryption_key_2024}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./workflows:/workflows
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - gcz_network
+
+  # Whisper für Spracherkennung (optional)
+  whisper:
+    image: onerahmet/openai-whisper-asr-webservice:latest
+    container_name: gcz_whisper
+    ports:
+      - "9000:9000"
+    environment:
+      - ASR_MODEL=base
+      - ASR_ENGINE=openai_whisper
+    volumes:
+      - whisper_models:/root/.cache/whisper
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2'
+    restart: unless-stopped
+    networks:
+      - gcz_network
+
+  # Agent API Service (wird später hinzugefügt)
+  # agent_api:
+  #   build: ./services/api
+  #   container_name: gcz_api
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - OLLAMA_HOST=http://ollama:11434
+  #     - REDIS_URL=redis://redis:6379
+  #     - DATABASE_URL=postgresql://gcz_agent:${POSTGRES_PASSWORD}@postgres:5432/germancodezero
+  #   depends_on:
+  #     - ollama
+  #     - redis
+  #     - postgres
+  #   networks:
+  #     - gcz_network
+
+networks:
+  gcz_network:
+    driver: bridge
+    name: germancodezero_network
+
+volumes:
+  ollama_models:
+    name: gcz_ollama_models
+  qdrant_storage:
+    name: gcz_qdrant_storage
+  redis_data:
+    name: gcz_redis_data
+  postgres_data:
+    name: gcz_postgres_data
+  n8n_data:
+    name: gcz_n8n_data
+  whisper_models:
+    name: gcz_whisper_models
