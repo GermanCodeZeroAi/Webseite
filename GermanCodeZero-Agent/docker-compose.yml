@@ -1,5 +1,11 @@
 version: '3.8'
 
+# HINWEIS: Diese docker-compose.yml ist OPTIONAL!
+# GermanCodeZero-Agent läuft standardmäßig Windows-nativ ohne Docker.
+# 
+# Nutze diese Datei nur wenn du Docker bevorzugst.
+# Für Windows-native Installation führe aus: python setup_windows_native.py
+
 services:
   # Ollama für leichte LLM-Modelle
   ollama:

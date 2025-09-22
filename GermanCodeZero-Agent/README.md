@@ -35,29 +35,46 @@ GermanCodeZero-Agent ist ein modulares System zum Erstellen von AI-Agenten in 5 
 
 ## 🛠️ Technologie-Stack
 
-- **LLM-Backend**: Ollama (lokal)
-- **Schwere Modelle**: Windows 11 nativ mit DirectML/Vulkan
-- **Leichte Modelle**: Docker Container
+- **LLM-Backend**: Ollama (Windows-nativ)
+- **GPU-Beschleunigung**: DirectML/Vulkan auf Windows 11
+- **Alle Modelle**: Laufen nativ auf Windows (kein Docker nötig!)
 - **Programmiersprache**: Python 3.11+
 - **Framework**: FastAPI für Web-Interface
 - **CLI**: Click für Kommandozeile
+- **Services**: PostgreSQL, Redis, Qdrant - alle Windows-nativ
 
-## 🚀 Installation
+## 🚀 Installation (Windows Native - KEIN Docker!)
 
+### Automatisches Setup:
 ```bash
 # Repository klonen
 git clone https://github.com/yourusername/GermanCodeZero-Agent.git
 cd GermanCodeZero-Agent
 
-# Virtuelle Umgebung erstellen
-python -m venv venv
-venv\Scripts\activate  # Windows
+# Windows-Native Setup ausführen (installiert ALLE Services nativ)
+python setup_windows_native.py
+```
 
-# Abhängigkeiten installieren
+### Manuelles Setup:
+```bash
+# 1. Python-Umgebung
+python -m venv venv
+venv\Scripts\activate
+
+# 2. Dependencies
 pip install -r requirements.txt
 
-# Ollama installieren (Windows)
-# Download von https://ollama.ai
+# 3. Services nativ installieren:
+# - Ollama: https://ollama.ai/download/windows
+# - PostgreSQL: https://www.postgresql.org/download/windows/
+# - Redis: Wird automatisch heruntergeladen
+# - Qdrant: Wird automatisch heruntergeladen
+
+# 4. Environment-Datei
+copy .env.windows .env
+
+# 5. Services starten
+%USERPROFILE%\GermanCodeZero\start_services.bat
 ```
 
 ## 📖 Schnellstart

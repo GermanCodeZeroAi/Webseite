@@ -4,32 +4,44 @@ Ollama Integration für lokale LLM-Modelle
 
 import aiohttp
 import asyncio
-from typing import Dict, Any, List, Optional, AsyncGenerator
+from typing import Dict, Any, List, Optional, AsyncGenerator, Union
 import json
 from datetime import datetime
 import logging
+import os
+import platform
+import subprocess
 
 
 class OllamaClient:
     """
     Client für die Kommunikation mit Ollama API
-    Unterstützt lokale LLM-Modelle auf Windows 11
+    Unterstützt lokale LLM-Modelle auf Windows 11 - NATIV ohne Docker
     """
     
     def __init__(self, 
-                 base_url: str = "http://localhost:11434",
+                 base_url: str = None,
                  timeout: int = 120):
         """
         Initialisiere Ollama Client
         
         Args:
-            base_url: Basis-URL der Ollama API
+            base_url: Basis-URL der Ollama API (auto-detect wenn None)
             timeout: Timeout für Requests in Sekunden
         """
+        # Auto-detect Ollama URL (Windows native)
+        if base_url is None:
+            base_url = os.environ.get('OLLAMA_HOST', 'http://localhost:11434')
+            
         self.base_url = base_url
         self.timeout = timeout
         self.logger = logging.getLogger("OllamaClient")
         self._session: Optional[aiohttp.ClientSession] = None
+        
+        # Windows-spezifische Einstellungen
+        self.is_windows = platform.system() == "Windows"
+        if self.is_windows:
+            self._configure_windows_native()
         
         # Model-Konfigurationen für verschiedene Aufgaben
         self.model_configs = {
@@ -52,6 +64,23 @@ class OllamaClient:
                 'model': 'nomic-embed-text:latest'
             }
         }
+        
+    def _configure_windows_native(self):
+        """Konfiguriere Windows-native Einstellungen"""
+        # Setze Umgebungsvariablen für DirectML
+        os.environ['OLLAMA_NUM_GPU'] = '999'  # Alle GPU-Layer verwenden
+        os.environ['OLLAMA_GPU_DRIVER'] = 'directml'  # DirectML verwenden
+        
+        # Prüfe ob Ollama läuft
+        try:
+            result = subprocess.run(['ollama', '--version'], 
+                                  capture_output=True, 
+                                  text=True,
+                                  shell=True)
+            if result.returncode != 0:
+                self.logger.warning("Ollama nicht gefunden. Bitte 'ollama serve' ausführen!")
+        except Exception as e:
+            self.logger.warning(f"Ollama-Check fehlgeschlagen: {e}")
         
     async def __aenter__(self):
         """Async Context Manager Entry"""
