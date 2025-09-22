@@ -176,4 +176,40 @@ export class EventsRepo {
     
     return stats;
   }
+
+  // Generische Event-Logging-Methode
+  logEvent(eventType: string, source: string, data?: Record<string, unknown>): number {
+    const stmt = this.db.prepare(`
+      INSERT INTO events (
+        event_type, source, data, processed
+      ) VALUES (
+        @event_type, @source, @data, FALSE
+      )
+    `);
+
+    const result = stmt.run({
+      event_type: eventType,
+      source: source,
+      data: data ? JSON.stringify(data) : null,
+    });
+
+    return result.lastInsertRowid as number;
+  }
+
+  // Holt Events nach Typ in einem Zeitrahmen
+  getEventsByType(eventTypes: string[], startDate: Date, endDate: Date): EventRow[] {
+    const placeholders = eventTypes.map(() => '?').join(',');
+    const stmt = this.db.prepare(`
+      SELECT * FROM events 
+      WHERE event_type IN (${placeholders})
+        AND created_at >= @startDate
+        AND created_at <= @endDate
+      ORDER BY created_at DESC
+    `);
+
+    return stmt.all(...eventTypes, { 
+      startDate: startDate.toISOString(), 
+      endDate: endDate.toISOString() 
+    }) as EventRow[];
+  }
 }

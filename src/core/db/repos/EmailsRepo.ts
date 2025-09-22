@@ -192,4 +192,18 @@ export class EmailsRepo {
 
     stmt.run({ id, hash });
   }
+
+  updateMetadata(id: number, metadata: Record<string, unknown>): void {
+    const stmt = this.db.prepare(`
+      UPDATE emails 
+      SET headers = json_patch(
+            COALESCE(headers, '{}'),
+            json(@metadata)
+          ),
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = @id
+    `);
+
+    stmt.run({ id, metadata: JSON.stringify(metadata) });
+  }
 }
