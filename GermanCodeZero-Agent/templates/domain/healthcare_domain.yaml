@@ -1,0 +1,182 @@
+name: healthcare_domain_template
+description: Domain-Agent Template für Gesundheitswesen/Praxis
+version: 1.0.0
+category: healthcare
+
+template:
+  name: praxis_operations
+  type: domain
+  domain_type: healthcare
+  description: Komplette Praxisverwaltung mit allen Fachbereichen
+  
+  sub_agents:
+    - agent: appointment_booking_agent
+      template_ref: appointment_booking_sub_template
+      capabilities:
+        - book_appointment
+        - reschedule_appointment
+        - cancel_appointment
+        - manage_waiting_list
+        
+    - agent: patient_communication_agent
+      capabilities:
+        - answer_inquiries
+        - send_reminders
+        - provide_information
+        - handle_prescriptions
+        
+    - agent: medical_records_agent
+      capabilities:
+        - update_patient_records
+        - retrieve_history
+        - manage_documents
+        - ensure_privacy
+        
+    - agent: billing_insurance_agent
+      capabilities:
+        - process_billing
+        - insurance_claims
+        - payment_tracking
+        - invoice_generation
+        
+    - agent: compliance_monitor_agent
+      capabilities:
+        - dsgvo_compliance
+        - medical_regulations
+        - audit_trail
+        - data_protection
+        
+  policies:
+    global:
+      data_retention:
+        medical_records: "10 years"
+        billing_records: "10 years"
+        communication: "3 years"
+        
+      access_control:
+        medical_data: ["doctor", "authorized_staff"]
+        billing_data: ["admin", "billing_staff"]
+        
+    medical_policies:
+      prescription_handling:
+        requires_doctor_approval: true
+        electronic_signature_required: true
+        controlled_substances_forbidden: true
+        
+      emergency_protocols:
+        priority_handling: true
+        immediate_notification: ["doctor", "emergency_staff"]
+        
+    privacy_policies:
+      patient_data:
+        encryption_required: true
+        anonymization_for_analytics: true
+        consent_required_for_sharing: true
+        
+  integrations:
+    - medical_software
+    - laboratory_systems
+    - pharmacy_network
+    - insurance_providers
+    - government_health_portal
+    
+  routing_rules:
+    appointment_request:
+      - appointment_booking_agent
+      
+    medical_question:
+      - patient_communication_agent
+      - medical_records_agent
+      
+    billing_inquiry:
+      - billing_insurance_agent
+      
+    data_request:
+      - compliance_monitor_agent
+      - medical_records_agent
+      
+  domain_knowledge:
+    working_hours:
+      monday_friday: "08:00-18:00"
+      saturday: "09:00-13:00"
+      sunday: "closed"
+      
+    specializations:
+      - general_practice
+      - pediatrics
+      - internal_medicine
+      
+    emergency_contacts:
+      emergency_number: "112"
+      on_call_service: "+49-xxx-xxxxx"
+
+---
+
+name: mailops_domain_template
+description: Domain-Agent Template für Mail-Operationen
+version: 1.0.0
+category: mail_operations
+
+template:
+  name: mail_operations_center
+  type: domain
+  domain_type: mail_ops
+  description: Zentralisierte E-Mail-Verwaltung
+  
+  sub_agents:
+    - agent: inbox_manager
+      capabilities:
+        - sort_emails
+        - prioritize_urgent
+        - filter_spam
+        - categorize_incoming
+        
+    - agent: auto_responder
+      capabilities:
+        - send_confirmations
+        - vacation_replies
+        - standard_responses
+        - personalized_replies
+        
+    - agent: attachment_processor
+      capabilities:
+        - scan_attachments
+        - extract_documents
+        - archive_files
+        - compress_large_files
+        
+    - agent: mail_analytics
+      capabilities:
+        - track_response_times
+        - analyze_patterns
+        - generate_reports
+        - identify_trends
+        
+  policies:
+    email_retention:
+      business_critical: "7 years"
+      general_correspondence: "2 years"
+      spam: "30 days"
+      
+    auto_response_rules:
+      max_auto_replies_per_sender: 1
+      vacation_mode_duration: "30 days"
+      business_hours_only: true
+      
+    security_policies:
+      scan_all_attachments: true
+      block_executable_files: true
+      phishing_detection: true
+      
+  routing_rules:
+    customer_inquiry:
+      - auto_responder
+      - inbox_manager
+      
+    invoice_email:
+      - attachment_processor
+      - billing_system_forward
+      
+    newsletter:
+      - mail_analytics
+      - archive_system

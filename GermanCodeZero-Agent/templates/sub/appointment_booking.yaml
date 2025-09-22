@@ -1,0 +1,120 @@
+name: appointment_booking_sub_template
+description: Sub-Agent Template für Terminbuchung mit Entscheidungslogik
+version: 1.0.0
+category: appointment_management
+
+template:
+  name: intelligent_appointment_booker
+  type: sub
+  description: Verwaltet Terminbuchungen mit intelligenter Entscheidungslogik
+  
+  mikro_agents:
+    - name: mail_processor
+      template_ref: mail_processor_mikro_template
+      capabilities:
+        - parse_appointment_request
+        - extract_preferred_times
+        
+    - name: calendar_checker
+      description: Prüft Kalenderverfügbarkeit
+      nano_agents:
+        - check_availability
+        - find_next_slot
+        
+    - name: conflict_resolver
+      description: Löst Terminkonflikte
+      nano_agents:
+        - analyze_priorities
+        - suggest_alternatives
+        - reschedule_existing
+        
+    - name: booking_creator
+      description: Erstellt und bestätigt Buchungen
+      nano_agents:
+        - create_appointment
+        - send_confirmation
+        - update_crm
+        
+  workflows:
+    standard_booking:
+      steps:
+        - mail_processor
+        - calendar_checker
+        - booking_creator
+      condition: "request_type == 'new_appointment'"
+      
+    reschedule_request:
+      steps:
+        - mail_processor
+        - calendar_checker
+        - conflict_resolver
+        - booking_creator
+      condition: "request_type == 'reschedule'"
+      
+    urgent_booking:
+      steps:
+        - mail_processor
+        - conflict_resolver
+        - booking_creator
+      condition: "priority == 'urgent'"
+      
+  decision_logic:
+    required_fields:
+      - requested_date
+      - duration
+      - participant_email
+      
+    routing_rules:
+      - condition:
+          field: urgent
+          operator: "=="
+          value: true
+        workflow: urgent_booking
+        
+      - condition:
+          field: existing_appointment_id
+          operator: exists
+        workflow: reschedule_request
+        
+      - condition:
+          field: request_type
+          operator: "=="
+          value: new_appointment
+        workflow: standard_booking
+        
+    business_rules:
+      - name: working_hours_only
+        condition: "time >= '08:00' AND time <= '18:00'"
+        action: proceed
+        else_action: suggest_alternative
+        
+      - name: max_duration_check
+        condition: "duration_minutes <= 120"
+        action: proceed
+        else_action: require_approval
+        
+      - name: doctor_availability
+        condition: "doctor_on_duty == true"
+        action: proceed
+        else_action: check_substitute
+        
+  error_handlers:
+    calendar_full:
+      type: fallback
+      fallback_agent: alternative_slot_finder
+      
+    invalid_request:
+      type: recover
+      recovery_data:
+        message: "Bitte geben Sie Datum und Uhrzeit an"
+        request_clarification: true
+        
+    system_error:
+      type: retry
+      delay: 5
+      max_retries: 3
+      
+  retry_config:
+    max_retries: 3
+    retry_delay: 2
+    exponential_backoff: true

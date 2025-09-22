@@ -1,0 +1,212 @@
+name: praxis_enterprise_template
+description: Enterprise-Agent Template für komplette Praxisverwaltung
+version: 1.0.0
+category: healthcare_enterprise
+
+template:
+  name: praxis_complete_solution
+  type: enterprise
+  industry: healthcare
+  company_name: "Muster-Praxis GmbH"
+  description: Vollständige Praxis-Automatisierung mit KI-Agenten
+  
+  domain_agents:
+    - name: mail_operations
+      template_ref: mailops_domain_template
+      priority: high
+      
+    - name: patient_management
+      template_ref: healthcare_domain_template
+      priority: critical
+      
+    - name: calendar_operations
+      domain_type: calendar_ops
+      priority: high
+      
+    - name: financial_operations
+      domain_type: finance_ops
+      priority: medium
+      
+    - name: compliance_operations
+      domain_type: compliance_ops
+      priority: critical
+      
+  business_processes:
+    patient_onboarding:
+      description: Neupatienten-Aufnahme
+      flow:
+        - domain: mail_operations
+          action: receive_registration
+          
+        - domain: patient_management
+          action: create_patient_record
+          conditions:
+            valid_insurance: true
+            
+        - domain: calendar_operations
+          action: schedule_first_appointment
+          
+        - domain: mail_operations
+          action: send_welcome_package
+          
+    appointment_lifecycle:
+      description: Kompletter Termin-Lebenszyklus
+      flow:
+        - domain: mail_operations
+          action: receive_appointment_request
+          
+        - domain: calendar_operations
+          action: check_availability
+          
+        - domain: patient_management
+          action: verify_patient_data
+          
+        - domain: calendar_operations
+          action: book_appointment
+          conditions:
+            slot_available: true
+            patient_verified: true
+            
+        - domain: mail_operations
+          action: send_confirmation
+          
+        - domain: patient_management
+          action: send_reminder
+          conditions:
+            days_until_appointment: 1
+            
+    prescription_handling:
+      description: Rezept-Verwaltung
+      flow:
+        - domain: patient_management
+          action: receive_prescription_request
+          
+        - domain: compliance_operations
+          action: check_prescription_validity
+          conditions:
+            controlled_substance: false
+            
+        - domain: patient_management
+          action: doctor_approval
+          conditions:
+            requires_approval: true
+            
+        - domain: mail_operations
+          action: send_prescription
+          
+    billing_process:
+      description: Abrechnungsprozess
+      flow:
+        - domain: financial_operations
+          action: create_invoice
+          
+        - domain: compliance_operations
+          action: validate_billing_codes
+          
+        - domain: financial_operations
+          action: submit_to_insurance
+          
+        - domain: mail_operations
+          action: send_invoice_to_patient
+          
+  global_policies:
+    required_fields:
+      - patient_id
+      - insurance_number
+      - consent_given
+      
+    data_protection:
+      encryption: AES-256
+      backup_frequency: daily
+      retention_period: 10_years
+      
+    access_control:
+      admin:
+        permissions: ["*"]
+        
+      doctor:
+        permissions: ["read_medical", "write_medical", "prescribe"]
+        
+      staff:
+        permissions: ["read_appointments", "write_appointments", "read_basic_patient"]
+        
+      billing:
+        permissions: ["read_financial", "write_financial", "submit_claims"]
+        
+  compliance_requirements:
+    - DSGVO
+    - BDSG_neu
+    - SGB_V
+    - GOÄ
+    - EBM
+    - KHZG
+    - DiGA
+    - ePA
+    
+  integrations:
+    apis:
+      kvb_connect:
+        type: medical_billing
+        endpoint: https://api.kvb.de
+        
+      doctolib:
+        type: appointment_booking
+        endpoint: https://api.doctolib.de
+        
+    databases:
+      patient_db:
+        type: postgresql
+        encrypted: true
+        
+      billing_db:
+        type: postgresql
+        encrypted: true
+        
+    external_services:
+      sms_gateway:
+        provider: twilio
+        purpose: appointment_reminders
+        
+      email_service:
+        provider: sendgrid
+        purpose: patient_communication
+        
+      cloud_storage:
+        provider: aws_s3
+        purpose: document_archive
+        region: eu-central-1
+        
+  orchestration_rules:
+    priority_routing:
+      emergency: immediate
+      urgent: within_1_hour
+      normal: within_24_hours
+      
+    load_balancing:
+      strategy: round_robin
+      health_check_interval: 60
+      
+    failover:
+      backup_domains: true
+      notification_on_failure: true
+      
+  monitoring:
+    metrics_to_track:
+      - request_processing_time
+      - domain_availability
+      - error_rates
+      - compliance_violations
+      - patient_satisfaction
+      
+    alerts:
+      high_error_rate:
+        threshold: 5_percent
+        action: notify_admin
+        
+      compliance_violation:
+        severity: critical
+        action: immediate_notification
+        
+      system_overload:
+        threshold: 80_percent_cpu
+        action: scale_resources
